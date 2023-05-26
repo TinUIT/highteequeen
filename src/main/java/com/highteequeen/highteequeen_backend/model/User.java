@@ -20,12 +20,16 @@ public class User {
     @Column(name = "full_name")
     private String fullName;
 
+    @Column(name = "role")
+    private Role role;
+
     public User() {}
 
-    public User(String email, String password, String fullName) {
+    public User(String email, String password, String fullName, Role role) {
         this.email = email;
         this.password = password;
         this.fullName = fullName;
+        this.role = role;
     }
 
     // Getters and setters
@@ -60,5 +64,13 @@ public class User {
 
     public void setFullName(String fullName) {
         this.fullName = fullName;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
     }
 }

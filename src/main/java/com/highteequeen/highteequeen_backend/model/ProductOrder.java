@@ -38,7 +38,7 @@ public class ProductOrder {
     @Column(name = "status")
     private String status;
 
-    @OneToMany(mappedBy = "productOrder", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "ProductOrder", cascade = CascadeType.ALL)
     private List<OrderDetail> orderDetails;
 
     public Long getOrderId() {

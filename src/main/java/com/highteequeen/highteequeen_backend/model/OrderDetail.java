@@ -10,11 +10,11 @@ public class OrderDetail {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id")
-    private ProductOrder order;
+    private ProductOrder ProductOrder;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
     private Product product;
 
@@ -29,7 +29,7 @@ public class OrderDetail {
     }
 
     public OrderDetail(ProductOrder order, Product product, Integer quantity, Double subtotal) {
-        this.order = order;
+        this.ProductOrder = order;
         this.product = product;
         this.quantity = quantity;
         this.subtotal = subtotal;
@@ -46,11 +46,11 @@ public class OrderDetail {
     }
 
     public ProductOrder getOrder() {
-        return order;
+        return ProductOrder;
     }
 
     public void setOrder(ProductOrder order) {
-        this.order = order;
+        this.ProductOrder = order;
     }
 
     public Product getProduct() {
