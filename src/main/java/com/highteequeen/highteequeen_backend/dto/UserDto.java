@@ -4,8 +4,16 @@ public class UserDto {
     private String fullname;
     private String email;
     private String password;
+    private String token;
 
-    // Constructors
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+// Constructors
 
     public UserDto() {
     }
@@ -22,7 +30,7 @@ public class UserDto {
         return fullname;
     }
 
-    public void setUsername(String fullname) {
+    public void setFullname(String fullname) {
         this.fullname = fullname;
     }
 

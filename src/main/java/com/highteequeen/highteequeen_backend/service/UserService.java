@@ -1,6 +1,8 @@
 package com.highteequeen.highteequeen_backend.service;
 
+import com.highteequeen.highteequeen_backend.dto.ProductDto;
 import com.highteequeen.highteequeen_backend.dto.UserDto;
+import com.highteequeen.highteequeen_backend.model.Product;
 import com.highteequeen.highteequeen_backend.model.Role;
 import com.highteequeen.highteequeen_backend.model.User;
 import com.highteequeen.highteequeen_backend.repository.UserRepository;
@@ -17,6 +19,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtils jwtUtils;
+
 
     @Autowired
     public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder,  JwtUtils jwtUtils) {
@@ -39,11 +42,13 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public String loginUser(UserDto userDto) {
+    public UserDto loginUser(UserDto userDto) {
         User user = userRepository.findByEmail(userDto.getEmail());
 
         if (user != null && passwordEncoder.matches(userDto.getPassword(), user.getPassword())) {
-            return jwtUtils.generateToken(user.getEmail(), user.getRole());
+             userDto.setToken(jwtUtils.generateToken(user.getEmail(), user.getRole()));
+             userDto.setFullname(user.getFullName());
+             return userDto;
         }
 
         return null;

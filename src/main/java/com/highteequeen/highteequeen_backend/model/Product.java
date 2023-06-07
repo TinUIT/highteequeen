@@ -6,7 +6,6 @@ import java.util.Date;
 @Entity
 @Table(name = "product")
 public class Product {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "product_id")
@@ -23,7 +22,7 @@ public class Product {
 
     @Lob
     @Column(name = "image", nullable = false)
-    private byte[] image;
+    private String image;
 
     @Column(name = "price", nullable = false)
     private float price;
@@ -44,7 +43,7 @@ public class Product {
     public Product() {}
 
     // constructor with fields
-    public Product(String name, String branch, String description, byte[] image, float price, Date expiryDate,
+    public Product(String name, String branch, String description, String image, float price, Date expiryDate,
                    Date lastUpdateTime, Category category) {
         this.name = name;
         this.branch = branch;
@@ -89,11 +88,11 @@ public class Product {
         this.description = description;
     }
 
-    public byte[] getImage() {
+    public String getImage() {
         return image;
     }
 
-    public void setImage(byte[] image) {
+    public void setImage(String image) {
         this.image = image;
     }
 

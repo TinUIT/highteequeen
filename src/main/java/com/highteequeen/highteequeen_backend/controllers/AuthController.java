@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:8080")
+@CrossOrigin(origins = "*")
 @RequestMapping("/api/v1/auth")
 public class AuthController {
 
@@ -33,11 +33,10 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> loginUser(@Valid @RequestBody UserDto userDto) {
-        String jwtToken = userService.loginUser(userDto);
-
-        if (jwtToken != null) {
-            return new ResponseEntity<>(jwtToken, HttpStatus.OK);
+    public ResponseEntity<UserDto> loginUser(@Valid @RequestBody UserDto userDto) {
+        UserDto res = userService.loginUser(userDto);
+        if (res != null) {
+            return new ResponseEntity<>(res, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
