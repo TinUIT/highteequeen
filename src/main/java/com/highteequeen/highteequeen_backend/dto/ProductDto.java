@@ -6,6 +6,33 @@ public class ProductDto {
     private String name;
     private float price;
     private String categoryName;
+    private int sales;
+    private int sold;
+    private double rating;
+
+    public Double getRating() {
+        return rating;
+    }
+
+    public void setRating(Double rating) {
+        this.rating = rating;
+    }
+
+    public int getSold() {
+        return sold;
+    }
+
+    public void setSold(int sold) {
+        this.sold = sold;
+    }
+
+    public int getSales() {
+        return sales;
+    }
+
+    public void setSales(int sales) {
+        this.sales = sales;
+    }
 
     public String getCategoryName() {
         return categoryName;

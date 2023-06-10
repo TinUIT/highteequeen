@@ -39,6 +39,28 @@ public class Product {
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
+    @Column(name = "sales")
+    private int sales = 0;
+
+    @Column(name = "sold")
+    private int sold = 0;
+
+    public int getSold() {
+        return sold;
+    }
+
+    public void setSold(int sold) {
+        this.sold = sold;
+    }
+
+    public int getSales() {
+        return sales;
+    }
+
+    public void setSales(int sales) {
+        this.sales = sales;
+    }
+
     // default constructor
     public Product() {}
 

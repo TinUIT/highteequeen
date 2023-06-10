@@ -13,6 +13,10 @@ public class Customer {
     @Column(name = "customer_id")
     private int customerId;
 
+    @OneToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
+    private User user;
+
     @Column(name = "email", unique = true)
     private String email;
 
@@ -31,8 +35,6 @@ public class Customer {
     @Column(name = "phone")
     private String phone;
 
-    @Column(name = "password")
-    private String password;
 
     @Column(name = "register_date")
     private LocalDateTime registerDate;
@@ -42,14 +44,13 @@ public class Customer {
         // Default constructor
     }
 
-    public Customer(String email, String fullName, String address, String city, String country, String phone, String password, LocalDateTime registerDate) {
+    public Customer(String email, String fullName, String address, String city, String country, String phone, LocalDateTime registerDate) {
         this.email = email;
         this.fullName = fullName;
         this.address = address;
         this.city = city;
         this.country = country;
         this.phone = phone;
-        this.password = password;
         this.registerDate = registerDate;
     }
 
@@ -110,13 +111,6 @@ public class Customer {
         this.phone = phone;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
 
     public LocalDateTime getRegisterDate() {
         return registerDate;

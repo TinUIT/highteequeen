@@ -3,8 +3,10 @@ package com.highteequeen.highteequeen_backend.service;
 import com.highteequeen.highteequeen_backend.dto.ProductDto;
 import com.highteequeen.highteequeen_backend.model.Product;
 import com.highteequeen.highteequeen_backend.repository.ProductRepository;
+import com.highteequeen.highteequeen_backend.repository.ReviewRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -14,8 +16,14 @@ import java.util.Optional;
 @Service
 public class ProductService {
 
+    private final ProductRepository productRepository;
+    private final ReviewRepository reviewRepository;
+
     @Autowired
-    private ProductRepository productRepository;
+    public ProductService(ProductRepository productRepository, ReviewRepository reviewRepository) {
+        this.productRepository = productRepository;
+        this.reviewRepository = reviewRepository;
+    }
 
 //    public List<Product> findAll() {
 //        return productRepository.findAll();
@@ -23,6 +31,19 @@ public class ProductService {
 
     public List<Product> findByCategory(String category) {
         return productRepository.findByCategory(category);
+    }
+
+    public List<Product> findBySales() {
+        return productRepository.findBySales();
+    }
+    public List<Product> getTop4BestSellingProducts() {
+        return productRepository.findTopSellProducts(PageRequest.of(0, 4));
+    }
+    public List<Product> findTop4BySales() {
+        return productRepository.findTopSalesProducts(PageRequest.of(0, 4));
+    }
+    public Double getAverageRating(Long productId) {
+        return reviewRepository.findAverageRatingByProductId(productId);
     }
     public ProductDto toDto(Product product) {
         ProductDto dto = new ProductDto();

@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
+@CrossOrigin(origins = "*")
 @RequestMapping("/api/products")
 public class ProductController {
 
@@ -42,6 +43,41 @@ public class ProductController {
                 .collect(Collectors.toList());
         return new ResponseEntity<>(productDtos, HttpStatus.OK);
     }
+
+    @GetMapping("/best-sellers")
+    public ResponseEntity<List<ProductDto>> getTop4BestSellingProducts() {
+        List<Product> products = productService.getTop4BestSellingProducts();
+        List<ProductDto> productDtos = products.stream()
+                .map(product -> {
+                    ProductDto dto = new ProductDto();
+                    dto.setId(product.getProductId());
+                    dto.setName(product.getName());
+                    dto.setPrice(product.getPrice());
+                    dto.setCategoryName(product.getCategory().getName());
+                    dto.setSold(product.getSold());
+                    dto.setRating(productService.getAverageRating(product.getProductId()));
+                    return dto;
+                })
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(productDtos, HttpStatus.OK);
+    }
+    @GetMapping("/sales")
+    public ResponseEntity<List<ProductDto>> getTop4ProductsBySales() {
+        List<Product> products = productService.findTop4BySales();
+        List<ProductDto> productDtos = products.stream()
+                .map(product -> {
+                    ProductDto dto = new ProductDto();
+                    dto.setId(product.getProductId());
+                    dto.setName(product.getName());
+                    dto.setPrice(product.getPrice());
+                    dto.setCategoryName(product.getCategory().getName());
+                    dto.setSales(product.getSales());
+                    return dto;
+                })
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(productDtos, HttpStatus.OK);
+    }
+
     @GetMapping
     public ResponseEntity<Page<ProductDto>> getAllProducts(@PageableDefault(size = 5) Pageable pageable) {
         Page<Product> products = productService.findAll(pageable);
