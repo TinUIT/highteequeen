@@ -1,6 +1,8 @@
 package com.highteequeen.highteequeen_backend.controllers;
 
+import com.highteequeen.highteequeen_backend.dto.TokenId;
 import com.highteequeen.highteequeen_backend.dto.UserDto;
+import com.highteequeen.highteequeen_backend.model.Customer;
 import com.highteequeen.highteequeen_backend.model.User;
 import com.highteequeen.highteequeen_backend.service.UserService;
 import org.slf4j.LoggerFactory;
@@ -16,6 +18,8 @@ import org.slf4j.Logger;
 @CrossOrigin(origins = "*")
 @RequestMapping("/api/v1/auth")
 public class AuthController {
+
+
     private Logger logger =  LoggerFactory.getLogger(AuthController.class);
 
     private final UserService userService;
@@ -26,8 +30,18 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<User> registerUser(@Valid @RequestBody UserDto userDto) {
-        User registeredUser = userService.registerUser(userDto);
+    public ResponseEntity<?> registerUser(@Valid @RequestBody UserDto userDto) {
+        Customer registeredUser = userService.registerUser(userDto);
+        if (registeredUser != null) {
+            return new ResponseEntity<>(registeredUser, HttpStatus.CREATED);
+        } else {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PostMapping("/register/google")
+    public ResponseEntity<User> googleRegister(@RequestBody TokenId tokenId) {
+        User registeredUser = userService.registerGoogleUser(tokenId.getToken());
         if (registeredUser != null) {
             return new ResponseEntity<>(registeredUser, HttpStatus.CREATED);
         } else {
@@ -36,12 +50,17 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<UserDto> loginUser(@Valid @RequestBody UserDto userDto) {
+    public ResponseEntity<?> loginUser(@Valid @RequestBody UserDto userDto) {
         UserDto res = userService.loginUser(userDto);
         if (res != null) {
             return new ResponseEntity<>(res, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
+    }
+
+    @PostMapping("/login/google")
+    public ResponseEntity<User> googleLogin(@RequestBody TokenId tokenId) {
+        return ResponseEntity.ok(userService.login(tokenId.getToken()));
     }
 }

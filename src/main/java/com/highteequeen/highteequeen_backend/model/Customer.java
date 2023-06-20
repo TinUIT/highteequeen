@@ -44,6 +44,13 @@ public class Customer {
         // Default constructor
     }
 
+    public Customer(User user, String email, String fullName, LocalDateTime registerDate) {
+        this.user = user;
+        this.email = email;
+        this.fullName = fullName;
+        this.registerDate = registerDate;
+    }
+
     public Customer(String email, String fullName, String address, String city, String country, String phone, LocalDateTime registerDate) {
         this.email = email;
         this.fullName = fullName;
