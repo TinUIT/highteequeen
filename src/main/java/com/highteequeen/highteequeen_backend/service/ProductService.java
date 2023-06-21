@@ -50,6 +50,7 @@ public class ProductService {
         dto.setId(product.getProductId());
         dto.setName(product.getName());
         dto.setPrice(product.getPrice());
+        dto.setImage(product.getImage());
         return dto;
     }
     public Page<Product> findAll(Pageable pageable) {

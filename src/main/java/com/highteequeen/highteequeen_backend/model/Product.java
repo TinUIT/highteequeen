@@ -17,22 +17,21 @@ public class Product {
     @Column(name = "branch", nullable = false)
     private String branch;
 
-    @Column(name = "description", nullable = false)
+    @Column(name = "description")
     private String description;
 
-    @Lob
-    @Column(name = "image", nullable = false)
+    @Column(name = "image")
     private String image;
 
     @Column(name = "price", nullable = false)
     private float price;
 
     @Temporal(TemporalType.DATE)
-    @Column(name = "expiry_date", nullable = false)
-    private Date expiryDate;
+    @Column(name = "origin", nullable = false)
+    private String origin;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "last_update_time", nullable = false)
+    @Column(name = "last_update_time")
     private Date lastUpdateTime;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -65,14 +64,14 @@ public class Product {
     public Product() {}
 
     // constructor with fields
-    public Product(String name, String branch, String description, String image, float price, Date expiryDate,
+    public Product(String name, String branch, String description, String image, float price, String origin,
                    Date lastUpdateTime, Category category) {
         this.name = name;
         this.branch = branch;
         this.description = description;
         this.image = image;
         this.price = price;
-        this.expiryDate = expiryDate;
+        this.origin = origin;
         this.lastUpdateTime = lastUpdateTime;
         this.category = category;
     }
@@ -126,12 +125,12 @@ public class Product {
         this.price = price;
     }
 
-    public Date getExpiryDate() {
-        return expiryDate;
+    public String getExpiryDate() {
+        return origin;
     }
 
-    public void setExpiryDate(Date expiryDate) {
-        this.expiryDate = expiryDate;
+    public void setExpiryDate(String expiryDate) {
+        this.origin = expiryDate;
     }
 
     public Date getLastUpdateTime() {

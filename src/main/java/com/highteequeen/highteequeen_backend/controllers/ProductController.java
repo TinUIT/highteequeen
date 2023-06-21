@@ -55,7 +55,8 @@ public class ProductController {
                     dto.setPrice(product.getPrice());
                     dto.setCategoryName(product.getCategory().getName());
                     dto.setSold(product.getSold());
-                    dto.setRating(productService.getAverageRating(product.getProductId()));
+                    dto.setImage(product.getImage());
+                    //dto.setRating(productService.getAverageRating(product.getProductId()));
                     return dto;
                 })
                 .collect(Collectors.toList());
@@ -72,6 +73,7 @@ public class ProductController {
                     dto.setPrice(product.getPrice());
                     dto.setCategoryName(product.getCategory().getName());
                     dto.setSales(product.getSales());
+                    dto.setImage(product.getImage());
                     return dto;
                 })
                 .collect(Collectors.toList());

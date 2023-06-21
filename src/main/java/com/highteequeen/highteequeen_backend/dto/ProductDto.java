@@ -8,7 +8,16 @@ public class ProductDto {
     private String categoryName;
     private int sales;
     private int sold;
-    private double rating;
+    private double rating = 0.0;
+    private String image;
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
 
     public Double getRating() {
         return rating;
