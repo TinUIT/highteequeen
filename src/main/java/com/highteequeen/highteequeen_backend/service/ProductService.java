@@ -33,14 +33,27 @@ public class ProductService {
         return productRepository.findByCategory(category);
     }
 
-    public List<Product> findBySales() {
-        return productRepository.findBySales();
+    public Page<Product> findByBestSellingProducts(Pageable pageable) {
+        return productRepository.findTopSellProducts(pageable);
     }
+
     public List<Product> getTop4BestSellingProducts() {
-        return productRepository.findTopSellProducts(PageRequest.of(0, 4));
+        return productRepository.findTopSellProducts(PageRequest.of(0, 4)).getContent();
+    }
+
+    public Page<Product> findByTopSalesProducts(Pageable pageable) {
+        return productRepository.findTopSalesProducts(pageable);
     }
     public List<Product> findTop4BySales() {
-        return productRepository.findTopSalesProducts(PageRequest.of(0, 4));
+        return productRepository.findTopSalesProducts(PageRequest.of(0, 4)).getContent();
+    }
+
+    public Page<Product> findByHighPriceProducts(Pageable pageable) {
+        return productRepository.findHighPriceProducts(pageable);
+    }
+
+    public Page<Product> findByLowPriceProducts(Pageable pageable) {
+        return productRepository.findLowPriceProducts(pageable);
     }
     public Double getAverageRating(Long productId) {
         return reviewRepository.findAverageRatingByProductId(productId);

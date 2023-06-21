@@ -45,6 +45,12 @@ public class ProductController {
     }
 
     @GetMapping("/best-sellers")
+    public ResponseEntity<Page<ProductDto>> getBestSellingProducts(@PageableDefault(size = 5) Pageable pageable) {
+        Page<Product> products = productService.findByBestSellingProducts(pageable);
+        Page<ProductDto> productDtos = products.map(productService::toDto);
+        return new ResponseEntity<>(productDtos, HttpStatus.OK);
+    }
+    @GetMapping("/best-sellers/top4")
     public ResponseEntity<List<ProductDto>> getTop4BestSellingProducts() {
         List<Product> products = productService.getTop4BestSellingProducts();
         List<ProductDto> productDtos = products.stream()
@@ -62,7 +68,7 @@ public class ProductController {
                 .collect(Collectors.toList());
         return new ResponseEntity<>(productDtos, HttpStatus.OK);
     }
-    @GetMapping("/sales")
+    @GetMapping("/sales/top4")
     public ResponseEntity<List<ProductDto>> getTop4ProductsBySales() {
         List<Product> products = productService.findTop4BySales();
         List<ProductDto> productDtos = products.stream()
@@ -77,6 +83,27 @@ public class ProductController {
                     return dto;
                 })
                 .collect(Collectors.toList());
+        return new ResponseEntity<>(productDtos, HttpStatus.OK);
+    }
+
+    @GetMapping("/sales")
+    public ResponseEntity<Page<ProductDto>> getProductsBySales(@PageableDefault(size = 5) Pageable pageable) {
+        Page<Product> products = productService.findByTopSalesProducts(pageable);
+        Page<ProductDto> productDtos = products.map(productService::toDto);
+        return new ResponseEntity<>(productDtos, HttpStatus.OK);
+    }
+
+    @GetMapping("/highPrice")
+    public ResponseEntity<Page<ProductDto>> getProductsByHighPrice(@PageableDefault(size = 5) Pageable pageable) {
+        Page<Product> products = productService.findByHighPriceProducts(pageable);
+        Page<ProductDto> productDtos = products.map(productService::toDto);
+        return new ResponseEntity<>(productDtos, HttpStatus.OK);
+    }
+
+    @GetMapping("/lowPrice")
+    public ResponseEntity<Page<ProductDto>> getProductsByLowPrice(@PageableDefault(size = 5) Pageable pageable) {
+        Page<Product> products = productService.findByLowPriceProducts(pageable);
+        Page<ProductDto> productDtos = products.map(productService::toDto);
         return new ResponseEntity<>(productDtos, HttpStatus.OK);
     }
 
