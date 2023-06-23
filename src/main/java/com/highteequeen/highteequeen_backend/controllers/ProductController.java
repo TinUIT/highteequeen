@@ -44,6 +44,25 @@ public class ProductController {
         return new ResponseEntity<>(productDtos, HttpStatus.OK);
     }
 
+    @GetMapping("/best-brand")
+    public ResponseEntity<List<ProductDto>> getBestBrandProduct() {
+        List<Product> products = productService.findBestBrandProduct();
+        List<ProductDto> productDtos = products.stream()
+                .map(product -> {
+                    ProductDto dto = new ProductDto();
+                    dto.setId(product.getProductId());
+                    dto.setName(product.getName());
+                    dto.setPrice(product.getPrice());
+                    dto.setCategoryName(product.getCategory().getName());
+                    dto.setSold(product.getSold());
+                    dto.setImage(product.getImage());
+                    //dto.setRating(productService.getAverageRating(product.getProductId()));
+                    return dto;
+                })
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(productDtos, HttpStatus.OK);
+    }
+
     @GetMapping("/best-sellers")
     public ResponseEntity<Page<ProductDto>> getBestSellingProducts(@PageableDefault(size = 5) Pageable pageable) {
         Page<Product> products = productService.findByBestSellingProducts(pageable);
@@ -51,7 +70,7 @@ public class ProductController {
         return new ResponseEntity<>(productDtos, HttpStatus.OK);
     }
     @GetMapping("/best-sellers/top4")
-    public ResponseEntity<List<ProductDto>> getTop4BestSellingProducts() {
+    public ResponseEntity<List<ProductDto>> getTop4BestSellingProduct() {
         List<Product> products = productService.getTop4BestSellingProducts();
         List<ProductDto> productDtos = products.stream()
                 .map(product -> {
@@ -93,20 +112,37 @@ public class ProductController {
         return new ResponseEntity<>(productDtos, HttpStatus.OK);
     }
 
-    @GetMapping("/highPrice")
+    @GetMapping("/high-price")
     public ResponseEntity<Page<ProductDto>> getProductsByHighPrice(@PageableDefault(size = 5) Pageable pageable) {
         Page<Product> products = productService.findByHighPriceProducts(pageable);
         Page<ProductDto> productDtos = products.map(productService::toDto);
         return new ResponseEntity<>(productDtos, HttpStatus.OK);
     }
 
-    @GetMapping("/lowPrice")
+    @GetMapping("/low-price")
     public ResponseEntity<Page<ProductDto>> getProductsByLowPrice(@PageableDefault(size = 5) Pageable pageable) {
         Page<Product> products = productService.findByLowPriceProducts(pageable);
         Page<ProductDto> productDtos = products.map(productService::toDto);
         return new ResponseEntity<>(productDtos, HttpStatus.OK);
     }
 
+    @GetMapping("/search/autocomplete")
+    public ResponseEntity<List<ProductDto>> autocomplete(@RequestParam String name) {
+        List<Product> products = productService.findByName(name);
+        List<ProductDto> productDtos = products.stream()
+                .map(product -> {
+                    ProductDto dto = new ProductDto();
+                    dto.setId(product.getProductId());
+                    dto.setName(product.getName());
+                    dto.setPrice(product.getPrice());
+                    dto.setCategoryName(product.getCategory().getName());
+                    dto.setSales(product.getSales());
+                    dto.setImage(product.getImage());
+                    return dto;
+                })
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(productDtos, HttpStatus.OK);
+    }
     @GetMapping
     public ResponseEntity<Page<ProductDto>> getAllProducts(@PageableDefault(size = 5) Pageable pageable) {
         Page<Product> products = productService.findAll(pageable);

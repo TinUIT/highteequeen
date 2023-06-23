@@ -55,6 +55,14 @@ public class ProductService {
     public Page<Product> findByLowPriceProducts(Pageable pageable) {
         return productRepository.findLowPriceProducts(pageable);
     }
+
+    public List<Product> findBestBrandProduct() {
+        return productRepository.findProductsOfTopTwoBrandsBySoldMost(PageRequest.of(0, 4)).getContent();
+    }
+    public List<Product> findByName(String name) {
+        return productRepository.findByName(name, PageRequest.of(0, 4));
+    }
+
     public Double getAverageRating(Long productId) {
         return reviewRepository.findAverageRatingByProductId(productId);
     }

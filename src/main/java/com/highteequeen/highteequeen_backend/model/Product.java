@@ -14,8 +14,8 @@ public class Product {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "branch", nullable = false)
-    private String branch;
+    @Column(name = "brand", nullable = false)
+    private String brand;
 
     @Column(name = "description")
     private String description;
@@ -64,10 +64,10 @@ public class Product {
     public Product() {}
 
     // constructor with fields
-    public Product(String name, String branch, String description, String image, float price, String origin,
+    public Product(String name, String brand, String description, String image, float price, String origin,
                    Date lastUpdateTime, Category category) {
         this.name = name;
-        this.branch = branch;
+        this.brand = brand;
         this.description = description;
         this.image = image;
         this.price = price;
@@ -94,11 +94,11 @@ public class Product {
     }
 
     public String getBranch() {
-        return branch;
+        return brand;
     }
 
     public void setBranch(String branch) {
-        this.branch = branch;
+        this.brand = branch;
     }
 
     public String getDescription() {

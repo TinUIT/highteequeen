@@ -39,15 +39,15 @@ public class AuthController {
         }
     }
 
-    @PostMapping("/register/google")
-    public ResponseEntity<User> googleRegister(@RequestBody TokenId tokenId) {
-        User registeredUser = userService.registerGoogleUser(tokenId.getToken());
-        if (registeredUser != null) {
-            return new ResponseEntity<>(registeredUser, HttpStatus.CREATED);
-        } else {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-    }
+//    @PostMapping("/register/google")
+//    public ResponseEntity<User> googleRegister(@RequestBody TokenId tokenId) {
+//        User registeredUser = userService.registerGoogleUser(tokenId.getToken());
+//        if (registeredUser != null) {
+//            return new ResponseEntity<>(registeredUser, HttpStatus.CREATED);
+//        } else {
+//            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+//        }
+//    }
 
     @PostMapping("/login")
     public ResponseEntity<?> loginUser(@Valid @RequestBody UserDto userDto) {
@@ -59,8 +59,8 @@ public class AuthController {
         }
     }
 
-    @PostMapping("/login/google")
-    public ResponseEntity<User> googleLogin(@RequestBody TokenId tokenId) {
-        return ResponseEntity.ok(userService.login(tokenId.getToken()));
-    }
+//    @PostMapping("/login/google")
+//    public ResponseEntity<User> googleLogin(@RequestBody TokenId tokenId) {
+//        return ResponseEntity.ok(userService.login(tokenId.getToken()));
+//    }
 }

@@ -28,4 +28,17 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @Query("SELECT p FROM Product p ORDER BY p.price ASC")
     Page<Product> findLowPriceProducts(Pageable pageable);
+
+    @Query(value = "SELECT p.* FROM product p " +
+            "JOIN (SELECT brand FROM product GROUP BY brand ORDER BY SUM(sold) DESC LIMIT 2) t " +
+            "ON p.brand = t.brand",
+            countQuery = "SELECT COUNT(*) FROM product p " +
+                    "JOIN (SELECT brand FROM product GROUP BY brand ORDER BY SUM(sold) DESC LIMIT 2) t " +
+                    "ON p.brand = t.brand",
+            nativeQuery = true)
+    Page<Product> findProductsOfTopTwoBrandsBySoldMost(Pageable pageable);
+
+    @Query("select p from Product p where p.name like ?1%")
+    List<Product> findByName(String name, Pageable pageable);
+
 }
