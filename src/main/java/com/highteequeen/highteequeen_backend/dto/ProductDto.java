@@ -10,6 +10,37 @@ public class ProductDto {
     private int sold;
     private double rating = 0.0;
     private String image;
+    private String brand;
+    private String origin;
+    private String Description;
+
+    public String getDescription() {
+        return Description;
+    }
+
+    public void setDescription(String description) {
+        Description = description;
+    }
+
+    public String getOrigin() {
+        return origin;
+    }
+
+    public void setOrigin(String origin) {
+        this.origin = origin;
+    }
+
+    public void setRating(double rating) {
+        this.rating = rating;
+    }
+
+    public String getBrand() {
+        return brand;
+    }
+
+    public void setBrand(String brand) {
+        this.brand = brand;
+    }
 
     public String getImage() {
         return image;

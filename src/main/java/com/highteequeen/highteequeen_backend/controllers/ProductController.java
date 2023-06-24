@@ -37,7 +37,9 @@ public class ProductController {
                     dto.setId(product.getProductId());
                     dto.setName(product.getName());
                     dto.setPrice(product.getPrice());
+                    dto.setSold(product.getSold());
                     dto.setCategoryName(product.getCategory().getName());
+                    dto.setDescription(product.getDescription());
                     return dto;
                 })
                 .collect(Collectors.toList());
@@ -56,6 +58,7 @@ public class ProductController {
                     dto.setCategoryName(product.getCategory().getName());
                     dto.setSold(product.getSold());
                     dto.setImage(product.getImage());
+                    dto.setDescription(product.getDescription());
                     //dto.setRating(productService.getAverageRating(product.getProductId()));
                     return dto;
                 })
@@ -81,6 +84,7 @@ public class ProductController {
                     dto.setCategoryName(product.getCategory().getName());
                     dto.setSold(product.getSold());
                     dto.setImage(product.getImage());
+                    dto.setDescription(product.getDescription());
                     //dto.setRating(productService.getAverageRating(product.getProductId()));
                     return dto;
                 })
@@ -99,6 +103,7 @@ public class ProductController {
                     dto.setCategoryName(product.getCategory().getName());
                     dto.setSales(product.getSales());
                     dto.setImage(product.getImage());
+                    dto.setDescription(product.getDescription());
                     return dto;
                 })
                 .collect(Collectors.toList());
@@ -138,13 +143,14 @@ public class ProductController {
                     dto.setCategoryName(product.getCategory().getName());
                     dto.setSales(product.getSales());
                     dto.setImage(product.getImage());
+                    dto.setDescription(product.getDescription());
                     return dto;
                 })
                 .collect(Collectors.toList());
         return new ResponseEntity<>(productDtos, HttpStatus.OK);
     }
     @GetMapping
-    public ResponseEntity<Page<ProductDto>> getAllProducts(@PageableDefault(size = 5) Pageable pageable) {
+    public ResponseEntity<Page<ProductDto>> getAllProducts(@PageableDefault(size = 10) Pageable pageable) {
         Page<Product> products = productService.findAll(pageable);
         Page<ProductDto> productDtos = products.map(productService::toDto);
         return new ResponseEntity<>(productDtos, HttpStatus.OK);
@@ -158,20 +164,18 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<Product> createProduct(@RequestBody Product product) {
-        Product newProduct = productService.save(product);
-        return new ResponseEntity<>(newProduct, HttpStatus.CREATED);
+    public Product addProduct(@RequestBody ProductDto product) {
+        return productService.addProduct(product);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Product> updateProduct(@PathVariable("id") Long id, @RequestBody Product product) {
-        Product updatedProduct = productService.update(id, product);
-        return new ResponseEntity<>(updatedProduct, HttpStatus.OK);
+    public ResponseEntity<Product> updateProduct(@PathVariable Long id, @RequestBody Product updatedProduct) {
+        Product product = productService.updateProduct(id, updatedProduct);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteProduct(@PathVariable("id") Long id) {
-        productService.delete(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    @DeleteMapping("/delete/{id}")
+    public void deleteProduct(@PathVariable("id") Long id) {
+        productService.deleteProductByName(id);
     }
 }

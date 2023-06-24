@@ -14,6 +14,9 @@ public class Category {
     @Column(name = "name")
     private String name;
 
+    @Column(name = "image")
+    private String image;
+
     // Constructors
     public Category() {}
 
