@@ -85,6 +85,7 @@ public class UserService {
         customerDto.setFullName(customer.getFullName());
         customerDto.setAddress(customer.getAddress());
         customerDto.setPhone(customer.getPhone());
+        customerDto.setRole(user.getRole());
 
         // Map associated orders
         List<ProductOrderDto> ordersDto = new ArrayList<>();

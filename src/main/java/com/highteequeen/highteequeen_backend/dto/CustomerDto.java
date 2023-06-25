@@ -1,5 +1,7 @@
 package com.highteequeen.highteequeen_backend.dto;
 
+import com.highteequeen.highteequeen_backend.model.Role;
+
 import java.util.List;
 
 public class CustomerDto {
@@ -11,6 +13,15 @@ public class CustomerDto {
     private String country;
     private String phone;
     private List<ProductOrderDto> orders;
+    private Role role;
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
 
     public int getCustomerId() {
         return customerId;
