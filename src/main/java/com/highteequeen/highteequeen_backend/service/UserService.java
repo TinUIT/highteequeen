@@ -4,20 +4,26 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.jackson2.JacksonFactory;
+import com.highteequeen.highteequeen_backend.dto.CustomerDto;
+import com.highteequeen.highteequeen_backend.dto.ProductDto;
+import com.highteequeen.highteequeen_backend.dto.ProductOrderDto;
 import com.highteequeen.highteequeen_backend.dto.UserDto;
-import com.highteequeen.highteequeen_backend.model.Customer;
-import com.highteequeen.highteequeen_backend.model.Role;
-import com.highteequeen.highteequeen_backend.model.User;
+import com.highteequeen.highteequeen_backend.model.*;
 import com.highteequeen.highteequeen_backend.repository.CustomerRepository;
 import com.highteequeen.highteequeen_backend.repository.UserRepository;
 import com.highteequeen.highteequeen_backend.utils.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.crossstore.ChangeSetPersister;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.time.*;
+import java.util.List;
 
 
 @Service
@@ -26,6 +32,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final CustomerRepository customerRepository;
     private final PasswordEncoder passwordEncoder;
+
     private final JwtUtils jwtUtils;
 
 
@@ -53,16 +60,55 @@ public class UserService {
         return customerRepository.save(customer);
     }
 
-    public UserDto loginUser(UserDto userDto) {
+    public CustomerDto loginUser(UserDto userDto) throws ChangeSetPersister.NotFoundException {
+        // Find user by email
         User user = userRepository.findByEmail(userDto.getEmail());
-
-        if (user != null && passwordEncoder.matches(userDto.getPassword(), user.getPassword())) {
-             userDto.setToken(jwtUtils.generateToken(user.getEmail(), user.getRole()));
-             userDto.setFullname(user.getFullName());
-             return userDto;
+        if (user == null) {
+            throw new UsernameNotFoundException("User not found with email: " + userDto.getEmail());
         }
 
-        return null;
+        // Check password
+        if (!passwordEncoder.matches(userDto.getPassword(), user.getPassword())) {
+            throw new BadCredentialsException("Invalid password");
+        }
+
+        // Find customer by user
+        Customer customer = customerRepository.findByUser(user);
+        if (customer == null) {
+            throw new ChangeSetPersister.NotFoundException();
+        }
+
+        // Create CustomerDto and populate it with data from Customer
+        CustomerDto customerDto = new CustomerDto();
+        customerDto.setCustomerId(customer.getCustomerId());
+        customerDto.setEmail(customer.getEmail());
+        customerDto.setFullName(customer.getFullName());
+        customerDto.setAddress(customer.getAddress());
+        customerDto.setPhone(customer.getPhone());
+
+        // Map associated orders
+        List<ProductOrderDto> ordersDto = new ArrayList<>();
+        for (ProductOrder order : customer.getOrders()) {
+            ProductOrderDto orderDto = new ProductOrderDto();
+            orderDto.setOrderId(order.getOrderId());
+
+            List<ProductDto> productDtos = new ArrayList<>();
+            for (OrderDetail detail : order.getOrderDetails()) {
+                ProductDto productDto = new ProductDto();
+                productDto.setId(detail.getProduct().getProductId());
+                productDto.setName(detail.getProduct().getName());
+                // Add other fields as required
+                productDtos.add(productDto);
+            }
+
+            orderDto.setProducts(productDtos);
+            ordersDto.add(orderDto);
+        }
+
+        // Populate the orders to customerDto
+        customerDto.setOrders(ordersDto);
+
+        return customerDto;
     }
 
     public User login(String token) {

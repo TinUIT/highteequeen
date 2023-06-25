@@ -1,46 +1,28 @@
-package com.highteequeen.highteequeen_backend.model;
+package com.highteequeen.highteequeen_backend.dto;
 
-import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Entity
-@Table(name = "product_order")
-public class ProductOrder {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "order_id")
+public class ProductOrderDto {
     private Long orderId;
-
-    @ManyToOne
-    @JoinColumn(name = "customer_id", referencedColumnName = "customer_id")
-    private Customer customer;
-
-    @Column(name = "order_date")
     private LocalDateTime orderDate;
-
-    @Column(name = "shipping_address")
     private String shippingAddress;
-
-    @Column(name = "recipient_name")
     private String recipientName;
-
-    @Column(name = "recipient_phone")
     private String recipientPhone;
-
-    @Column(name = "payment_method")
     private String paymentMethod;
-
-    @Column(name = "total")
     private Float total;
-
-    @Column(name = "status")
     private String status;
 
-    @OneToMany(mappedBy = "ProductOrder", cascade = CascadeType.ALL)
-    private List<OrderDetail> orderDetails;
+    private List<OrderDetailDto> orderDetails;
+    private List<ProductDto> products;
 
+    public List<ProductDto> getProducts() {
+        return products;
+    }
+
+    public void setProducts(List<ProductDto> products) {
+        this.products = products;
+    }
 
     public Long getOrderId() {
         return orderId;
@@ -48,14 +30,6 @@ public class ProductOrder {
 
     public void setOrderId(Long orderId) {
         this.orderId = orderId;
-    }
-
-    public Customer getCustomer() {
-        return customer;
-    }
-
-    public void setCustomer(Customer customer) {
-        this.customer = customer;
     }
 
     public LocalDateTime getOrderDate() {
@@ -114,12 +88,11 @@ public class ProductOrder {
         this.status = status;
     }
 
-    public List<OrderDetail> getOrderDetails() {
+    public List<OrderDetailDto> getOrderDetails() {
         return orderDetails;
     }
 
-    public void setOrderDetails(List<OrderDetail> orderDetails) {
+    public void setOrderDetails(List<OrderDetailDto> orderDetails) {
         this.orderDetails = orderDetails;
     }
 }
-

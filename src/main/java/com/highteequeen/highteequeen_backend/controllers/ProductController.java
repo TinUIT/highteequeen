@@ -74,7 +74,7 @@ public class ProductController {
     }
     @GetMapping("/best-sellers/top4")
     public ResponseEntity<List<ProductDto>> getTop4BestSellingProduct() {
-        List<Product> products = productService.getTop4BestSellingProducts();
+        List<Product> products = productService.getTop8BestSellingProducts();
         List<ProductDto> productDtos = products.stream()
                 .map(product -> {
                     ProductDto dto = new ProductDto();
@@ -91,9 +91,9 @@ public class ProductController {
                 .collect(Collectors.toList());
         return new ResponseEntity<>(productDtos, HttpStatus.OK);
     }
-    @GetMapping("/sales/top4")
-    public ResponseEntity<List<ProductDto>> getTop4ProductsBySales() {
-        List<Product> products = productService.findTop4BySales();
+    @GetMapping("/sales/top8")
+    public ResponseEntity<List<ProductDto>> getTop8ProductsBySales() {
+        List<Product> products = productService.findTop8BySales();
         List<ProductDto> productDtos = products.stream()
                 .map(product -> {
                     ProductDto dto = new ProductDto();

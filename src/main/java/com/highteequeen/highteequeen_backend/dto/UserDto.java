@@ -1,30 +1,25 @@
 package com.highteequeen.highteequeen_backend.dto;
 
+import com.highteequeen.highteequeen_backend.model.Role;
+
+import java.util.List;
+
 public class UserDto {
+    private Long id;
     private String fullname;
     private String email;
     private String password;
+    private Role role;
+
     private String token;
 
-    public String getToken() {
-        return token;
+    public Long getId() {
+        return id;
     }
 
-    public void setToken(String token) {
-        this.token = token;
+    public void setId(Long id) {
+        this.id = id;
     }
-// Constructors
-
-    public UserDto() {
-    }
-
-    public UserDto(String fullname, String email, String password) {
-        this.fullname = fullname;
-        this.email = email;
-        this.password = password;
-    }
-
-    // Getters and setters
 
     public String getFullname() {
         return fullname;
@@ -48,5 +43,21 @@ public class UserDto {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 }

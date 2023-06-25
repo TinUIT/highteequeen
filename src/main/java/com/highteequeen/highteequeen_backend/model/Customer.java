@@ -3,6 +3,7 @@ package com.highteequeen.highteequeen_backend.model;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "customer")
@@ -37,6 +38,17 @@ public class Customer {
 
     @Column(name = "image")
     private String name;
+
+    @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY)
+    private List<ProductOrder> orders;
+
+    public List<ProductOrder> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(List<ProductOrder> orders) {
+        this.orders = orders;
+    }
 
     public User getUser() {
         return user;

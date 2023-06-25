@@ -11,4 +11,5 @@ public interface CustomerRepository extends JpaRepository<Customer, Integer> {
     // Custom query methods
 
     Customer findByEmail(String email);
+    Customer findByUser(User user);
 }

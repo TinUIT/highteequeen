@@ -43,15 +43,15 @@ public class ProductService {
         return productRepository.findTopSellProducts(pageable);
     }
 
-    public List<Product> getTop4BestSellingProducts() {
-        return productRepository.findTopSellProducts(PageRequest.of(0, 4)).getContent();
+    public List<Product> getTop8BestSellingProducts() {
+        return productRepository.findTopSellProducts(PageRequest.of(0, 8)).getContent();
     }
 
     public Page<Product> findByTopSalesProducts(Pageable pageable) {
         return productRepository.findTopSalesProducts(pageable);
     }
-    public List<Product> findTop4BySales() {
-        return productRepository.findTopSalesProducts(PageRequest.of(0, 4)).getContent();
+    public List<Product> findTop8BySales() {
+        return productRepository.findTopSalesProducts(PageRequest.of(0, 8)).getContent();
     }
 
     public Page<Product> findByHighPriceProducts(Pageable pageable) {

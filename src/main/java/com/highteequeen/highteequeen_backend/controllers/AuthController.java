@@ -1,12 +1,12 @@
 package com.highteequeen.highteequeen_backend.controllers;
 
-import com.highteequeen.highteequeen_backend.dto.TokenId;
+import com.highteequeen.highteequeen_backend.dto.CustomerDto;
 import com.highteequeen.highteequeen_backend.dto.UserDto;
 import com.highteequeen.highteequeen_backend.model.Customer;
-import com.highteequeen.highteequeen_backend.model.User;
 import com.highteequeen.highteequeen_backend.service.UserService;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -35,7 +35,7 @@ public class AuthController {
         if (registeredUser != null) {
             return new ResponseEntity<>(registeredUser, HttpStatus.CREATED);
         } else {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Invalid Username or Password",HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -50,14 +50,15 @@ public class AuthController {
 //    }
 
     @PostMapping("/login")
-    public ResponseEntity<?> loginUser(@Valid @RequestBody UserDto userDto) {
-        UserDto res = userService.loginUser(userDto);
+    public ResponseEntity<?> loginUser(@Valid @RequestBody UserDto userDto) throws ChangeSetPersister.NotFoundException {
+        CustomerDto res = userService.loginUser(userDto);  //userService.loginUser now returns CustomerDto
         if (res != null) {
             return new ResponseEntity<>(res, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
     }
+
 
 //    @PostMapping("/login/google")
 //    public ResponseEntity<User> googleLogin(@RequestBody TokenId tokenId) {

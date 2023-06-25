@@ -11,11 +11,11 @@ public class OrderDetail {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "order_id")
+    @JoinColumn(name = "order_id", referencedColumnName = "order_id")
     private ProductOrder ProductOrder;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id")
+    @JoinColumn(name = "product_id", referencedColumnName = "product_id")
     private Product product;
 
     @Column(name = "quantity")
@@ -23,6 +23,8 @@ public class OrderDetail {
 
     @Column(name = "subtotal")
     private Double subtotal;
+
+
 
     public OrderDetail() {
 
