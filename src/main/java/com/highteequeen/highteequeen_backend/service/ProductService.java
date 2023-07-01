@@ -63,7 +63,7 @@ public class ProductService {
     }
 
     public List<Product> findBestBrandProduct() {
-        return productRepository.findProductsOfTopTwoBrandsBySoldMost(PageRequest.of(0, 4)).getContent();
+        return productRepository.findProductsOfTopTwoBrandsBySoldMost(PageRequest.of(0, 8)).getContent();
     }
     public List<Product> findByName(String name) {
         return productRepository.findByName(name, PageRequest.of(0, 4));

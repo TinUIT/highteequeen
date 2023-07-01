@@ -14,6 +14,15 @@ public class CustomerDto {
     private String phone;
     private List<ProductOrderDto> orders;
     private Role role;
+    private String image;
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
 
     public Role getRole() {
         return role;

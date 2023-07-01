@@ -29,6 +29,8 @@ public class CustomerService {
         customer.setAddress(customerDto.getAddress());
         customer.setEmail(customerDto.getEmail());
         customer.setPhone(customerDto.getPhone());
+        if(customer.getImage() != "")
+            customer.setImage(customerDto.getImage());
 
         // Save the updated customer
         Customer updatedCustomer = customerRepository.save(customer);
@@ -46,6 +48,7 @@ public class CustomerService {
         updatedCustomerDto.setFullName(updatedCustomer.getFullName());
         updatedCustomerDto.setAddress(updatedCustomer.getAddress());
         updatedCustomerDto.setPhone(updatedCustomer.getPhone());
+        updatedCustomerDto.setImage(updatedCustomer.getImage());
 
         return updatedCustomerDto;
     }

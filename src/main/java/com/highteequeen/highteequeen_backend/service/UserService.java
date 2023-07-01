@@ -56,6 +56,7 @@ public class UserService {
         user.setRole(Role.CUSTOMER);
 
         Customer customer = new Customer(user,userDto.getEmail(), userDto.getFullname(), LocalDateTime.now());
+        customer.setImage("avatar-default.jpg");
         userRepository.save(user);
         return customerRepository.save(customer);
     }
@@ -85,6 +86,7 @@ public class UserService {
         customerDto.setFullName(customer.getFullName());
         customerDto.setAddress(customer.getAddress());
         customerDto.setPhone(customer.getPhone());
+        customerDto.setImage(customer.getImage());
         customerDto.setRole(user.getRole());
 
         // Map associated orders

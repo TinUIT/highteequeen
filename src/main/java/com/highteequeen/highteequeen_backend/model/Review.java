@@ -23,7 +23,7 @@ public class Review {
     @Column(name = "rating", nullable = false)
     private int rating;
 
-    @Column(name = "headline", nullable = false)
+    @Column(name = "headline")
     private String headline;
 
     @Column(name = "comment", nullable = false, length = 500)
