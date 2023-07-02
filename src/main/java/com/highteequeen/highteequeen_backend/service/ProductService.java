@@ -35,8 +35,8 @@ public class ProductService {
 //        return productRepository.findAll();
 //    }
 
-    public List<Product> findByCategory(String category) {
-        return productRepository.findByCategory(category);
+    public Page<Product> findByCategory(String category, Pageable pageable) {
+        return productRepository.findByCategory(category, pageable);
     }
 
     public Page<Product> findByBestSellingProducts(Pageable pageable) {

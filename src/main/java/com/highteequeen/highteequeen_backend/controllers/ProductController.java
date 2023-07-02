@@ -29,20 +29,9 @@ public class ProductController {
 //    }
 
     @GetMapping("/category/{category}")
-    public ResponseEntity<List<ProductDto>> getProductsByCategory(@PathVariable("category") String category) {
-        List<Product> products = productService.findByCategory(category);
-        List<ProductDto> productDtos = products.stream()
-                .map(product -> {
-                    ProductDto dto = new ProductDto();
-                    dto.setId(product.getProductId());
-                    dto.setName(product.getName());
-                    dto.setPrice(product.getPrice());
-                    dto.setSold(product.getSold());
-                    dto.setCategoryName(product.getCategory().getName());
-                    dto.setDescription(product.getDescription());
-                    return dto;
-                })
-                .collect(Collectors.toList());
+    public ResponseEntity<Page<ProductDto>> getProductsByCategory(@PathVariable("category") String category, @PageableDefault(size = 5) Pageable pageable) {
+        Page<Product> products = productService.findByCategory(category, pageable);
+        Page<ProductDto> productDtos = products.map(productService::toDto);
         return new ResponseEntity<>(productDtos, HttpStatus.OK);
     }
 
@@ -59,7 +48,8 @@ public class ProductController {
                     dto.setSold(product.getSold());
                     dto.setImage(product.getImage());
                     dto.setDescription(product.getDescription());
-                    //dto.setRating(productService.getAverageRating(product.getProductId()));
+                    if(productService.getAverageRating(product.getProductId()) != null)
+                        dto.setRating(productService.getAverageRating(product.getProductId()));
                     return dto;
                 })
                 .collect(Collectors.toList());

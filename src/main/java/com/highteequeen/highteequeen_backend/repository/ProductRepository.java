@@ -13,7 +13,7 @@ import java.util.Optional;
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
     @Query("SELECT p FROM Product p WHERE p.category.name = ?1")
-    public List<Product> findByCategory(String category);
+    public Page<Product> findByCategory(String category, Pageable pageable);
 
     @Query("SELECT p FROM Product p WHERE p.sales > 0")
     public List<Product> findBySales();
