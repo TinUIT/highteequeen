@@ -104,7 +104,7 @@ public class UserService {
                 productDtos.add(productDto);
             }
 
-            orderDto.setProducts(productDtos);
+            //orderDto.setProducts(productDtos);
             ordersDto.add(orderDto);
         }
 

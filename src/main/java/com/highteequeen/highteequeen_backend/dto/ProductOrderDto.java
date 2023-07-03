@@ -5,6 +5,8 @@ import java.util.List;
 
 public class ProductOrderDto {
     private Long orderId;
+    private int customerId;
+
     private LocalDateTime orderDate;
     private String shippingAddress;
     private String recipientName;
@@ -14,14 +16,13 @@ public class ProductOrderDto {
     private String status;
 
     private List<OrderDetailDto> orderDetails;
-    private List<ProductDto> products;
 
-    public List<ProductDto> getProducts() {
-        return products;
+    public int getCustomerId() {
+        return customerId;
     }
 
-    public void setProducts(List<ProductDto> products) {
-        this.products = products;
+    public void setCustomerId(int customerId) {
+        this.customerId = customerId;
     }
 
     public Long getOrderId() {

@@ -80,6 +80,7 @@ public class ProductService {
         dto.setImage(product.getImage());
         dto.setBrand(product.getBrand());
         dto.setOrigin(product.getOrigin());
+        dto.setSales(product.getSales());
         dto.setCategoryName(product.getCategory().getName());
         dto.setDescription(product.getDescription());
         return dto;

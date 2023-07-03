@@ -1,5 +1,6 @@
 package com.highteequeen.highteequeen_backend.controllers;
 
+import com.highteequeen.highteequeen_backend.dto.ProductOrderDto;
 import com.highteequeen.highteequeen_backend.model.ProductOrder;
 import com.highteequeen.highteequeen_backend.service.ProductOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +18,10 @@ public class ProductOrderController {
     private ProductOrderService productOrderService;
 
     @PostMapping
-    public ResponseEntity<ProductOrder> createOrder(@Valid @RequestBody ProductOrder productOrder) {
+    public ResponseEntity<ProductOrderDto> createOrder(@Valid @RequestBody ProductOrderDto productOrder) {
         ProductOrder createdOrder = productOrderService.createOrder(productOrder);
-        return new ResponseEntity<>(createdOrder, HttpStatus.CREATED);
+        ProductOrderDto order = new ProductOrderDto();
+        return new ResponseEntity<>(order, HttpStatus.CREATED);
     }
 }
 
