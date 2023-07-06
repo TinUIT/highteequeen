@@ -29,7 +29,7 @@ public class CustomerService {
         customer.setAddress(customerDto.getAddress());
         customer.setEmail(customerDto.getEmail());
         customer.setPhone(customerDto.getPhone());
-        if(customer.getImage() != "")
+        if((customerDto.getImage() != "")&&(customerDto.getImage() != null))
             customer.setImage(customerDto.getImage());
 
         // Save the updated customer

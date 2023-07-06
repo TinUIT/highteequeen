@@ -1,4 +1,7 @@
 package com.highteequeen.highteequeen_backend.model;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import jakarta.persistence.*;
 
@@ -38,6 +41,17 @@ public class Customer {
 
     @Column(name = "image")
     private String image = "";
+
+    @Column(name = "gender")
+    private String Gender;
+
+    public String getGender() {
+        return Gender;
+    }
+
+    public void setGender(String gender) {
+        Gender = gender;
+    }
 
     public String getImage() {
         return image;

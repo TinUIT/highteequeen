@@ -1,5 +1,6 @@
 package com.highteequeen.highteequeen_backend.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 @Entity
@@ -24,6 +25,14 @@ public class OrderDetail {
     @Column(name = "subtotal")
     private Double subtotal;
 
+
+    public com.highteequeen.highteequeen_backend.model.ProductOrder getProductOrder() {
+        return ProductOrder;
+    }
+
+    public void setProductOrder(com.highteequeen.highteequeen_backend.model.ProductOrder productOrder) {
+        ProductOrder = productOrder;
+    }
 
 
     public OrderDetail() {

@@ -1,5 +1,8 @@
 package com.highteequeen.highteequeen_backend.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -33,7 +36,7 @@ public class ProductOrder {
     private String paymentMethod;
 
     @Column(name = "total")
-    private Float total;
+    private Double total;
 
     @Column(name = "status")
     private String status;
@@ -98,11 +101,11 @@ public class ProductOrder {
         this.paymentMethod = paymentMethod;
     }
 
-    public Float getTotal() {
+    public Double getTotal() {
         return total;
     }
 
-    public void setTotal(Float total) {
+    public void setTotal(Double total) {
         this.total = total;
     }
 

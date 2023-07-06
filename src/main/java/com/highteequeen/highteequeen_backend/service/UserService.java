@@ -4,10 +4,7 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.jackson2.JacksonFactory;
-import com.highteequeen.highteequeen_backend.dto.CustomerDto;
-import com.highteequeen.highteequeen_backend.dto.ProductDto;
-import com.highteequeen.highteequeen_backend.dto.ProductOrderDto;
-import com.highteequeen.highteequeen_backend.dto.UserDto;
+import com.highteequeen.highteequeen_backend.dto.*;
 import com.highteequeen.highteequeen_backend.model.*;
 import com.highteequeen.highteequeen_backend.repository.CustomerRepository;
 import com.highteequeen.highteequeen_backend.repository.UserRepository;
@@ -89,26 +86,26 @@ public class UserService {
         customerDto.setImage(customer.getImage());
         customerDto.setRole(user.getRole());
 
-        // Map associated orders
         List<ProductOrderDto> ordersDto = new ArrayList<>();
         for (ProductOrder order : customer.getOrders()) {
             ProductOrderDto orderDto = new ProductOrderDto();
-            orderDto.setOrderId(order.getOrderId());
 
-            List<ProductDto> productDtos = new ArrayList<>();
+            List<OrderDetailDto> details = new ArrayList<>();
             for (OrderDetail detail : order.getOrderDetails()) {
-                ProductDto productDto = new ProductDto();
-                productDto.setId(detail.getProduct().getProductId());
-                productDto.setName(detail.getProduct().getName());
+                OrderDetailDto orderDetailDto = new OrderDetailDto();
+                orderDetailDto.setProductName(detail.getProduct().getName());
+                orderDetailDto.setQuantity(detail.getQuantity());
+                orderDetailDto.setImage(detail.getProduct().getImage());
+                orderDetailDto.setSubtotal(detail.getSubtotal());
+
                 // Add other fields as required
-                productDtos.add(productDto);
+                details.add(orderDetailDto);
             }
 
-            //orderDto.setProducts(productDtos);
+            orderDto.setOrderDetails(details);
             ordersDto.add(orderDto);
         }
 
-        // Populate the orders to customerDto
         customerDto.setOrders(ordersDto);
 
         return customerDto;

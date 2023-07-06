@@ -30,18 +30,6 @@ public class Product {
     @Column(name = "origin", nullable = false)
     private String origin;
 
-    public void setBrand(String brand) {
-        this.brand = brand;
-    }
-
-    public String getOrigin() {
-        return origin;
-    }
-
-    public void setOrigin(String origin) {
-        this.origin = origin;
-    }
-
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "last_update_time")
     private Date lastUpdateTime;
@@ -55,6 +43,19 @@ public class Product {
 
     @Column(name = "sold")
     private int sold = 0;
+
+
+    public void setBrand(String brand) {
+        this.brand = brand;
+    }
+
+    public String getOrigin() {
+        return origin;
+    }
+
+    public void setOrigin(String origin) {
+        this.origin = origin;
+    }
 
     public int getSold() {
         return sold;

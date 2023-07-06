@@ -12,10 +12,35 @@ public class ProductOrderDto {
     private String recipientName;
     private String recipientPhone;
     private String paymentMethod;
-    private Float total;
+    private Double total;
     private String status;
-
+    private String email;
     private List<OrderDetailDto> orderDetails;
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public ProductOrderDto() {
+
+    }
+
+    public ProductOrderDto(int customerId, String shippingAddress, String recipientName, String recipientPhone, String paymentMethod, Double total, String status, List<OrderDetailDto> orderDetails) {
+        this.customerId = customerId;
+        this.shippingAddress = shippingAddress;
+        this.recipientName = recipientName;
+        this.recipientPhone = recipientPhone;
+        this.paymentMethod = paymentMethod;
+        this.total = total;
+        this.status = status;
+        this.orderDetails = orderDetails;
+    }
+
+
 
     public int getCustomerId() {
         return customerId;
@@ -73,11 +98,11 @@ public class ProductOrderDto {
         this.paymentMethod = paymentMethod;
     }
 
-    public Float getTotal() {
+    public Double getTotal() {
         return total;
     }
 
-    public void setTotal(Float total) {
+    public void setTotal(Double total) {
         this.total = total;
     }
 
