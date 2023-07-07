@@ -64,7 +64,6 @@ public class CustomerService {
                 orderDetailDto.setImage(detail.getProduct().getImage());
                 orderDetailDto.setSubtotal(detail.getSubtotal());
 
-                // Add other fields as required
                 details.add(orderDetailDto);
             }
 
