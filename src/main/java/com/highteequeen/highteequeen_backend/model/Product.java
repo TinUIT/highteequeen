@@ -2,6 +2,7 @@ package com.highteequeen.highteequeen_backend.model;
 
 import jakarta.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "product")
@@ -43,6 +44,9 @@ public class Product {
 
     @Column(name = "sold")
     private int sold = 0;
+
+    @ManyToMany(mappedBy = "Products")
+    private List<Favorite> favorites;
 
 
     public void setBrand(String brand) {

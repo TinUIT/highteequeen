@@ -25,7 +25,6 @@ public class OrderDetail {
     @Column(name = "subtotal")
     private Double subtotal;
 
-
     public com.highteequeen.highteequeen_backend.model.ProductOrder getProductOrder() {
         return ProductOrder;
     }
@@ -33,7 +32,6 @@ public class OrderDetail {
     public void setProductOrder(com.highteequeen.highteequeen_backend.model.ProductOrder productOrder) {
         ProductOrder = productOrder;
     }
-
 
     public OrderDetail() {
 

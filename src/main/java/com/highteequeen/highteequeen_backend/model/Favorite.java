@@ -15,7 +15,8 @@ public class Favorite {
     @JoinColumn(name = "customer_id", referencedColumnName = "customer_id")
     private Customer customer;
 
-    @OneToMany(mappedBy = "Favorite", cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "favorite_id", referencedColumnName = "favorite_id")
     private List<Product> Products;
 
     public int getFavorite_id() {
@@ -34,11 +35,11 @@ public class Favorite {
         this.customer = customer;
     }
 
-    public List<Product> getProducts() {
-        return Products;
-    }
-
-    public void setProducts(List<Product> products) {
-        Products = products;
-    }
+//    public List<Product> getProducts() {
+//        return Products;
+//    }
+//
+//    public void setProducts(List<Product> products) {
+//        Products = products;
+//    }
 }
