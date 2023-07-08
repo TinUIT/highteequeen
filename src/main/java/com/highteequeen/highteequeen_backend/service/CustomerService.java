@@ -63,6 +63,7 @@ public class CustomerService {
                 orderDetailDto.setQuantity(detail.getQuantity());
                 orderDetailDto.setImage(detail.getProduct().getImage());
                 orderDetailDto.setSubtotal(detail.getSubtotal());
+                orderDetailDto.setPrice(detail.getProduct().getPrice());
 
                 details.add(orderDetailDto);
             }

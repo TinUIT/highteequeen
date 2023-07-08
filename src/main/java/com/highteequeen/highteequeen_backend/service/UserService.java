@@ -96,6 +96,7 @@ public class UserService {
                 orderDetailDto.setProductName(detail.getProduct().getName());
                 orderDetailDto.setQuantity(detail.getQuantity());
                 orderDetailDto.setImage(detail.getProduct().getImage());
+                orderDetailDto.setPrice(detail.getProduct().getPrice());
                 orderDetailDto.setSubtotal(detail.getSubtotal());
 
                 // Add other fields as required
