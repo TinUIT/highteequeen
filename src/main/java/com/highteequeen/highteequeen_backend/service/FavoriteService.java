@@ -1,5 +1,7 @@
 package com.highteequeen.highteequeen_backend.service;
 
+import com.highteequeen.highteequeen_backend.dto.FavoriteDto;
+import com.highteequeen.highteequeen_backend.dto.ProductDto;
 import com.highteequeen.highteequeen_backend.model.Customer;
 import com.highteequeen.highteequeen_backend.model.Favorite;
 import com.highteequeen.highteequeen_backend.model.Product;
@@ -42,5 +44,41 @@ public class FavoriteService {
         favoriteRepository.save(favorite);
         return favorite;
     }
+
+    public FavoriteDto getFavorite(Integer customerId) {
+        Favorite favorite = favoriteRepository.findByCustomerId(customerId);
+        return convertFavoriteToFavoriteDto(favorite);
+    }
+
+
+    public FavoriteDto convertFavoriteToFavoriteDto(Favorite favorite) {
+        FavoriteDto favoriteDto = new FavoriteDto();
+        favoriteDto.setCustomerId(favorite.getCustomer().getCustomerId());
+
+        List<ProductDto> productDtos = new ArrayList<>();
+        for(Product product : favorite.getProducts()){
+            productDtos.add(convertProductToProductDto(product));
+        }
+        favoriteDto.setProducts(productDtos);
+
+        return favoriteDto;
+    }
+
+    public ProductDto convertProductToProductDto(Product product){
+        ProductDto productDto = new ProductDto();
+        productDto.setId(product.getProductId());
+        productDto.setName(product.getName());
+        productDto.setPrice(product.getPrice());
+        productDto.setCategoryName(product.getCategory().getName());
+        productDto.setSales(product.getSales());
+        productDto.setSold(product.getSold());
+        productDto.setImage(product.getImage());
+        productDto.setBrand(product.getBrand());
+        productDto.setOrigin(product.getOrigin());
+        productDto.setDescription(product.getDescription());
+
+        return productDto;
+    }
+
 }
 

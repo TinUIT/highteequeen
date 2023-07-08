@@ -7,6 +7,9 @@ import com.highteequeen.highteequeen_backend.model.ProductOrder;
 import com.highteequeen.highteequeen_backend.service.ProductOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -51,11 +54,10 @@ public class ProductOrderController {
     }
 
     @GetMapping
-    public List<ProductOrderDto> getAllOrders() {
-        List<ProductOrderDto> productOrderDtos = new ArrayList<>();
-        List<ProductOrder> productOrders = productOrderService.getAllOrders();
+    public Page<ProductOrderDto> getAllOrders(@PageableDefault(size = 5) Pageable pageable) {
+        Page<ProductOrder> productOrders = productOrderService.getAllOrders(pageable);
 
-        productOrderDtos = productOrders.stream().map(
+        Page<ProductOrderDto> productOrderDtos = productOrders.map(
                 productOrder -> {
                     ProductOrderDto productOrderDto = new ProductOrderDto();
                     productOrderDto.setOrderId(productOrder.getOrderId());
@@ -77,8 +79,7 @@ public class ProductOrderController {
                                 return orderDetailDto;
                             }).collect(Collectors.toList()));
                     return productOrderDto;
-                }
-        ).collect(Collectors.toList());
+                });
 
         return productOrderDtos;
     }

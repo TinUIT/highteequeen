@@ -1,5 +1,6 @@
 package com.highteequeen.highteequeen_backend.controllers;
 
+import com.highteequeen.highteequeen_backend.dto.FavoriteDto;
 import com.highteequeen.highteequeen_backend.model.Favorite;
 import com.highteequeen.highteequeen_backend.service.FavoriteService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,13 +27,13 @@ public class FavoriteController {
         }
     }
 
-//    @GetMapping("/{customerId}")
-//    public ResponseEntity<?> getFavorite(@PathVariable Integer customerId) {
-//        try {
-//            Favorite favorite = favoriteService.addFavorite(customerId, productId);
-//            return new ResponseEntity<>(favorite, HttpStatus.CREATED);
-//        } catch (Exception e) {
-//            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-//        }
-//    }
+    @GetMapping("/{customerId}")
+    public ResponseEntity<?> getFavorite(@PathVariable Integer customerId) {
+        try {
+            FavoriteDto favoriteDto = favoriteService.getFavorite(customerId);
+            return new ResponseEntity<>(favoriteDto, HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
 }

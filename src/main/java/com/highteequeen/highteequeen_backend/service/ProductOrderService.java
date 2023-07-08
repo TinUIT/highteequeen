@@ -12,6 +12,8 @@ import com.highteequeen.highteequeen_backend.repository.ProductOrderRepository;
 import com.highteequeen.highteequeen_backend.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -67,8 +69,8 @@ public class ProductOrderService {
         return productOrder;
     }
 
-    public List<ProductOrder> getAllOrders() {
-        return productOrderRepository.findAll();
+    public Page<ProductOrder> getAllOrders(Pageable pageable) {
+        return productOrderRepository.findAll(pageable);
     }
 
     public ProductOrderDto updateStatus(Long id, String status) throws ChangeSetPersister.NotFoundException {
