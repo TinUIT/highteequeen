@@ -19,6 +19,14 @@ public class Favorite {
     @JoinColumn(name = "favorite_id", referencedColumnName = "favorite_id")
     private List<Product> Products;
 
+    public List<Product> getProducts() {
+        return Products;
+    }
+
+    public void setProducts(List<Product> products) {
+        Products = products;
+    }
+
     public int getFavorite_id() {
         return favorite_id;
     }

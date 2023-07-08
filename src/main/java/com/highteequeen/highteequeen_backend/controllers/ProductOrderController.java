@@ -84,9 +84,9 @@ public class ProductOrderController {
     }
 
     @GetMapping("/{id}/{status}")
-    public ResponseEntity<?> updateStatus (@PathVariable Long Id,@PathVariable String Status) {
+    public ResponseEntity<?> updateStatus (@PathVariable Long id,@PathVariable String status) throws ChangeSetPersister.NotFoundException {
 
-        ProductOrderDto productOrderDto = new ProductOrderDto();
+        ProductOrderDto productOrderDto = productOrderService.updateStatus(id, status);
         return new ResponseEntity<>(productOrderDto, HttpStatus.CREATED);
     }
 }

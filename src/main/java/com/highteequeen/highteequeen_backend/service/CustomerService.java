@@ -68,6 +68,7 @@ public class CustomerService {
             }
 
             orderDto.setOrderDetails(details);
+            orderDto.setStatus(order.getStatus());
             ordersDto.add(orderDto);
         }
 

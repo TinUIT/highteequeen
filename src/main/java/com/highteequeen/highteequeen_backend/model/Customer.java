@@ -44,6 +44,8 @@ public class Customer {
 
     @Column(name = "gender")
     private String Gender;
+    @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY)
+    private List<ProductOrder> orders;
 
     public String getGender() {
         return Gender;
@@ -60,9 +62,6 @@ public class Customer {
     public void setImage(String image) {
         this.image = image;
     }
-
-    @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY)
-    private List<ProductOrder> orders;
 
     public List<ProductOrder> getOrders() {
         return orders;
