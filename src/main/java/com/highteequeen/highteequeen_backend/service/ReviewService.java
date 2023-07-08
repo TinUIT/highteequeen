@@ -32,6 +32,7 @@ public class ReviewService {
 
         Review review = new Review();
         review.setCustomer(customer.get());
+
         review.setProduct(product.get());
         review.setRating(reviewDto.getRating());
         review.setComment(reviewDto.getComment());
@@ -50,6 +51,7 @@ public class ReviewService {
             ReviewDto dto = new ReviewDto();
             dto.setProductId(review.getProduct().getProductId());
             dto.setCustomerId(review.getCustomer().getCustomerId());
+            dto.setCustomerFullName(review.getCustomer().getFullName());
             dto.setRating(review.getRating());
             dto.setComment(review.getComment());
             dto.setCustomerFullName(review.getCustomer().getFullName());
@@ -64,6 +66,7 @@ public class ReviewService {
         dto.setCustomerId(review.getCustomer().getCustomerId());
         dto.setRating(review.getRating());
         dto.setComment(review.getComment());
+        dto.setCustomerFullName(review.getCustomer().getFullName());
         // Map additional fields as necessary...
 
         return dto;

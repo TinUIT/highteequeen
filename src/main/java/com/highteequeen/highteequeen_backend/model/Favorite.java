@@ -43,11 +43,6 @@ public class Favorite {
         this.customer = customer;
     }
 
-//    public List<Product> getProducts() {
-//        return Products;
-//    }
-//
-//    public void setProducts(List<Product> products) {
-//        Products = products;
-//    }
+
+
 }
