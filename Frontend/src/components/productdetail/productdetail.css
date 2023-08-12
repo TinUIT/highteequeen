@@ -1,0 +1,152 @@
+.wrappperProductdetail{
+    background-color: #ffffff;
+    box-shadow: 3px 3px 3px 5px rgba(0, 0, 0, 0.25);
+    
+    
+}
+.Backgroud-Product-cpn{
+    background-image: "https://firebasestorage.googleapis.com/v0/b/highteequeen-c8dec.appspot.com/o/logo.png?alt=media&token=68cc7205-25aa-440d-832a-27dc5c836615https://firebasestorage.googleapis.com/v0/b/highteequeen-c8dec.appspot.com/o/logo.png?alt=media&token=68cc7205-25aa-440d-832a-27dc5c836615";
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    
+   
+  
+    /* box-shadow: 3px 3px 3px 5px rgba(0, 0, 0, 0.25); */
+    border-radius: 5px;
+    padding-top:255px;
+    cursor: pointer;
+    
+    margin-right: 5px;
+
+}
+.Link{
+    text-decoration: none;
+}
+.Background-ProducdetailtName{   
+  
+    width: 100%;
+   
+    background-color: rgba(0, 0, 0, 0.3);
+    border:rgba(0, 0, 0, 0.3) ;
+    align-items: center;
+    
+    
+    
+   
+    
+
+}
+.ProducdetailtName{
+    color: #ffffff;
+    font-size: 25px;
+    top:30%;
+    margin-left: 3%;
+    font-family: 'Nunito Sans', sans-serif;
+    height:150px;
+   
+    margin-right: 50px;
+}
+.Name-product{
+    max-width: 210px;
+    text-align: left;
+    font-size: 25px;
+    width: 100%;
+}
+.Price-product{
+    text-align: left;
+    font-size: 25px;
+    color: #FF3850;
+    width: 100%;
+
+
+    
+}
+.wrapper-button{
+    display: flex;
+   
+    
+    padding-right: 20px;
+    width: 120%;
+    
+}
+.wrapper-star{
+    margin-right: 20%;
+    display: flex;
+
+  
+
+}
+.StarIcon{
+    font-size: 20px;
+    
+}
+.wrapper-love{
+    height: 20%;
+    margin-bottom: 4%;
+    margin-top: -4%;
+    margin-left:2%;
+    display: flex;
+
+    
+    
+}
+.button{
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    padding-left: 0;
+    padding-right:0;
+    text-align: center;
+    position: relative;
+  
+   
+   
+}
+.fa-heart{
+    padding-top:0;
+}
+
+.love{
+    border-color: #FF3850;
+    background-color: #FF3850;
+    margin-right: 7px;
+
+}
+.cart{
+    border-color: #898989;
+    background-color: #898989;
+
+}
+
+.Buttondetail{
+    position: absolute;
+    top:6px;
+    left:4.5px;
+    color: #ffffff;
+    font-size: 16px;
+
+}
+.Priceof{
+    text-align: left;
+    font-size: 25px;
+ 
+    width: 100%;
+
+}
+.wrapper-Product-seller{
+    display: grid;
+    grid-template-columns: 35% 65%;
+    grid-column-gap: 0px;
+}
+.Price-old{
+    text-decoration-line:line-through;
+    /* color: #ffffff; */
+    text-decoration-color:#FF3850;
+       color: #858585;
+}
+.Price-seller{
+    color: #FF3850;
+
+}
+

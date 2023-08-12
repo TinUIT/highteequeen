@@ -1,0 +1,23 @@
+.avatar-user-admin{
+    width: 100%;
+}
+.Wrapper-avatar-user-admin{
+    width: 25%;
+}
+.In-Info-User{
+    width: 75%;
+}
+.Admin-Info-User{
+    display: flex;
+    
+}
+.wrapper-info-user{
+    font-family: 'Nunito Sans', sans-serif;
+    font-weight: 800;
+    font-size:1.4rem;
+    
+
+}
+.In-Info-User{
+    padding-top: 3.2%;
+}

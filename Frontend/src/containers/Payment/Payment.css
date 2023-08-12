@@ -1,0 +1,32 @@
+.container-payment {
+    padding-top: 200px;
+    padding-bottom: 20px;
+  }
+  
+  .wrap-paymenttop {
+    padding-inline: 20px;
+  }
+  
+  .payment-detail {
+    font-family: 'Nunito Sans', sans-serif;
+    font-style: normal;
+    font-weight: 700;
+    font-size: 30px;
+    border: 0.5px solid;
+    padding: 10px 20px;
+    border-radius: 5px;
+    color: #000000;
+    margin-bottom: 30px;
+  }
+  
+  .payment-detail p {
+    margin-bottom: 5px;
+  }
+  
+  .payment-detail p:nth-child(n + 2) {
+    color: #5f5b5b;
+  }
+  
+  .payment-detail p:last-child {
+    margin-bottom: 0;
+  }

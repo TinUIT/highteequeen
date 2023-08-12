@@ -1,0 +1,83 @@
+.cartpage-title {
+  text-align: center;
+  font-family: 'Nunito Sans', sans-serif;
+  font-style: normal;
+  font-weight: 700;
+  color: #000;
+  font-size: 40px;
+  margin-bottom: 20px;
+}
+
+.container-cartpage {
+  padding-top: 200px;
+}
+
+.wrap-listcard {
+  margin-bottom: 20px;
+}
+
+.cartpage-checkout {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  padding-inline: 20px;
+  font-family: 'Nunito Sans', sans-serif;
+}
+.Emty-CartPage{
+  width: 100%;
+  text-align: center;
+  padding-top: 100px;
+ 
+ 
+}
+.wrapper-gif-empty{
+  width: 100%;
+  height: 80%;
+  position: relative;
+ 
+
+}
+.gif-empty{
+  width: 70%;
+  height: 80%;
+ 
+  padding-left: 27%;
+}
+.Cart-empty{
+ 
+
+
+ 
+  font-family: 'Nunito Sans', sans-serif;
+  font-weight: 700;
+  font-size: 45px;
+}
+.HomePage-comeback{
+  margin-top: 50px;
+  padding:10px 20px;
+  background-color: white;
+  border-radius: 5px;
+  color:#B16E4B;
+  font-size: 30px;
+  border-color: #B16E4B;
+  margin-bottom: 30px;
+  font-family: 'Nunito Sans', sans-serif;
+
+}
+.HomePage-comeback:hover{
+  background-color: #B16E4B;
+
+  color:white;
+  
+}
+.HomePage-comeback:active{
+  background-color: #774c34;
+
+}
+.Content-empty-car-page{
+  width: 100%;
+  position: absolute;
+  top:65%;
+  
+
+}

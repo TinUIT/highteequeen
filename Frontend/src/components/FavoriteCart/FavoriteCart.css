@@ -1,0 +1,77 @@
+.container-cardcomplete-fa {
+    display: flex;
+    padding: 20px 40px 20px 20px;
+    border-top: 0.3px solid;
+    border-bottom: 0.3px solid;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+  }
+  
+  .cardcomplete-left-fa {
+    width: 60%;
+    display: flex;
+  }
+  
+  .productcard-image-fa {
+    width: 20%;
+    border: 0.3px solid #ff6079;
+    border-radius: 4px;
+    margin-right: 20px;
+    max-height: 100%;
+  }
+  
+  .productcomplete-content-fa {
+    font-family: 'Nunito Sans', sans-serif;
+    font-style: normal;
+    font-weight: 700;
+    font-size: 28px;
+    color: #000000;
+    margin: 0;
+  }
+  
+  .productcomplete-content-fa:nth-child(2) {
+    margin-bottom: 10px;
+  }
+  
+  .productcomplete-price-fa {
+    color: rgba(255, 109, 109, 0.7);
+  }
+  
+  .btn-delete-fa {
+    padding: 0;
+    width: 50px;
+    height: 50px;
+    outline: none;
+    border: none;
+    background: transparent;
+    position: absolute;
+    right: 20px;
+    top: 5px;
+  }
+  
+  .icon-delete-fa {
+    width: 50px;
+  }
+  
+
+  
+  @media screen and (max-width: 768px) {
+    .container-cardcomplete-fa {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  
+    .cardcomplete-left-fa {
+      width: 100%;
+      margin-bottom: 20px;
+    }
+  
+    .btn-delete-fa {
+      width: 30px;
+    }
+  
+    .icon-delete-fa {
+      width: 30px;
+    }
+  }

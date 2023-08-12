@@ -1,0 +1,35 @@
+.distribution-title {
+    margin-top: 10px;
+    margin-bottom: 20px;
+    font-family: "Lato";
+    font-style: normal;
+    font-weight: 700;
+    font-size: 45px;
+    text-align: center;
+  }
+  
+  .wrap-list-distribution-card {
+    display: grid;
+    grid-template-columns: auto auto auto;
+    grid-template-rows: auto auto;
+    grid-gap: 25px;
+    justify-items: center;
+  }
+  
+  .container-distribution {
+    padding-inline: 10px;
+    padding-top:200px;
+  }
+  
+  @media screen and (max-width: 992px) {
+    .wrap-list-distribution-card {
+      grid-template-columns: auto auto;
+    }
+  }
+  
+  @media screen and (max-width: 768px) {
+    .wrap-list-distribution-card {
+      grid-template-columns: auto;
+    }
+  }
+  

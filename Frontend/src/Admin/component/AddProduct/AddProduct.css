@@ -1,0 +1,88 @@
+
+.wrappper-Input-Product{
+    width: 100%;
+    border-color: burlywood;
+
+}
+.input-add-product{
+    display: flex;
+    width: 80%;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    
+.wrappper-Input-Product{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+
+}
+.add-produc-design-input{
+    width: 70%;
+    border: none;
+    outline-style: none;
+    background-color: bisque;
+    border-radius: 5px;
+    padding-bottom: 5px;
+    padding-top: 5px;
+}
+}
+.select{
+    width: 70%;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    background-color: bisque;
+    border: none;
+}
+.Title-Input{
+    font-weight:700;
+    font-family: 'Nunito Sans', sans-serif;
+}
+.Wrapper-Add-Admin-Add-Pd{
+    width: 80%;
+    text-align: right;
+    margin-bottom: 5%;
+}
+
+.Add-Admin-Add-Pd{
+    padding:1% 6%;
+    font-family: 'Nunito Sans', sans-serif;
+    background-color: rgba(177, 110, 75, 0.78) ;
+    font-size: 20px;
+    font-weight: 700;
+    border-radius: 5px;
+    border:none;
+
+}
+.Add-Admin-Add-Pd:active{
+    background-color: rgba(85, 56, 40, 0.78) ;
+
+}
+.Choose-image-admin{
+  padding: 0 40px;
+  border-radius: 5px;
+  font-weight: 700;
+  border-color:bisque;
+  background-color: bisque;
+  padding-top: 3px;
+  cursor: pointer;
+  color: brown;
+  
+  
+}
+.Choose-image-admin:hover{
+ 
+    background-color: brown;
+    color: bisque;
+    
+
+}
+.Choose-image-admin:active{
+    background-color: rgb(50, 8, 8);
+    color: bisque;
+
+}
+.wrapper-add-produc-design-input{
+    width: 70%;
+    display: flex;
+    justify-content: space-between;
+}

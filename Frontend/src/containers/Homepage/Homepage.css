@@ -1,0 +1,89 @@
+.wrappScroll{
+    width: 100%;
+    height: 100vh;
+    display: block;
+    
+    
+
+}
+.header-fix{
+    position: sticky;
+    top:0;
+    left: 0;
+    width: 100%;
+}
+.main{
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+
+}
+
+.Background1{
+    width: 100%;
+    height: 100%;
+}
+.Backgroud-Product
+{
+    background-image: url('../../assets/Second.png');
+    background-size: 100% 500px;
+    background-repeat: no-repeat;
+    width: 100%;
+   
+}
+.Wrapper-Product{
+    display: flex;   
+    justify-content: space-between;
+    margin-bottom: 3%;
+  
+    margin-left: 8.5%;
+    margin-right: 8%;
+    
+}
+.fix-high{
+    height: 80%;
+}
+.Banner{
+    padding-top:0.75%;
+    padding-bottom: 0.75%;
+    padding-left: 2%;
+    padding-right: 2%;
+    font-size: 1.5rem;
+    background-color: #EAEAEA;
+    display: flex;
+    justify-content: space-between;
+}
+.wrap-Sale-Product{
+    
+    margin-top: 5%;
+    margin-bottom: 5%;
+}
+.Sale-Product{
+    display: flex;
+    justify-content: space-around;
+    font-family: 'Nunito Sans', sans-serif;
+    width: 100%;
+    padding-left: 5%;
+    padding-right: 5%;
+    margin-bottom: 40px;
+    margin-top: 25px;
+
+}
+.SeeAll{
+    cursor: pointer;
+    text-decoration: none;
+    font-family: 'Nunito Sans', sans-serif;
+ 
+}
+.NewArrival{
+    padding-top: 1%;
+    padding-bottom: 1%;
+    font-weight: 500;
+    font-size: 2rem;
+    padding-left: 43.5%;
+    font-family: 'Nunito Sans', sans-serif;
+}
+

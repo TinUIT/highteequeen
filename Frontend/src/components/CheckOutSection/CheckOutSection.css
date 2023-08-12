@@ -1,0 +1,35 @@
+.checkout-content {
+  display: flex;
+  justify-content: space-between;
+}
+
+.checkout-content {
+  margin-bottom: 10px;
+}
+
+.checkout-desc {
+  font-family: 'Nunito Sans', sans-serif;
+  font-style: normal;
+  font-weight: 700;
+  color: #5f5b5b;
+  font-size: 30px;
+  margin-right: 5px;
+}
+
+.checkout-button {
+  width: 100%;
+  border: none;
+  outline: none;
+  padding: 10px;
+  background: rgba(177, 110, 75, 0.78);
+  border-radius: 5px;
+  color: #fff;
+  font-family: 'Nunito Sans', sans-serif;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 25px;
+}
+
+.list-checkout {
+  width: 60%;
+}

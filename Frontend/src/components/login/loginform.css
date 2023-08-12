@@ -1,0 +1,142 @@
+.wrap-loginform{
+   width: 400px;
+   height: 450px;
+   background-image: url('../../assets/Register.png');
+   background-size: 460px 460px;
+   background-repeat: no-repeat;
+   padding-right: -10px;
+   
+}
+.wrap-close{
+    width: 100%;
+    text-align: right;
+    
+}
+.close-button{
+    background: none;
+    border: none;
+    margin-top: 1%;
+    cursor: pointer;
+}
+.fa-times-circle{
+    font-size: 18px;
+
+}
+     
+.title{
+   
+    padding-top: 10%;
+    font-size: 30px;
+    font-family: Helvetica;
+    color: #B16E4B;
+    padding-left: 10%;
+    font-weight: 600;
+   
+}
+.container-input{
+    margin-top: 100px;
+    width: 90%;
+    margin-left: 10%;
+    margin-bottom: 0px;
+    margin-top: 15%;
+    
+   
+}
+.title-input{
+    color: #B16E4B;   
+    font-weight: 500;
+    margin-bottom: 2px;
+    margin-top: 5px;
+    border: 0px;
+    
+}
+.input{
+    width: 80%;
+    height: 30px;
+    border-radius: 3px;
+    border-color: #2F80ED;
+    outline-style: none;
+    
+}
+.forgot-pass{
+    
+    font-size: 15px;
+    margin-top: 5%;
+    text-decoration: none;
+    color: #5F5B5B;
+    font-weight: 500;
+
+}
+.wrap-fotgot{
+    text-align: right;
+    width: 80%;
+}
+.wrap-icon{
+    margin-left: 6%;
+   
+
+}
+.accout-button{
+   width: 40px;
+   height: 40px;
+   background-color: #FFFFFF;
+  
+  
+   border: none;
+  
+   
+    
+}
+.Icon{
+   font-size: 28px;
+   color: #B16E4B;
+   
+}
+.wrap-login{
+    display: flex;
+    justify-content:space-between;    
+    margin-left: 8%;
+    width: 80%;
+    margin-top: 3%;
+
+}
+.text-Resgiter{
+    font-size: 14px;
+}
+.login-button{
+    padding: 15px 30px;
+    margin-top: -20px;
+    color: #B16E4B;
+    border-radius: 10px;
+    border: 2px solid white;
+    font-size: 20px;
+    width: 50;
+    box-shadow: 1px 2px #5F5B5B;
+    cursor: pointer;
+}
+.login-button:hover{
+    padding: 15px 30px;
+    background-color: #FF8787;
+    margin-top: -20px;
+    color: #ffffff;
+    border-radius: 10px;
+    font-size: 20px;
+    width: 50;
+    border: 2px solid white;
+    box-shadow: 1px 2px #5F5B5B;
+    cursor: pointer;
+    border-color: #FFFFFF;
+    
+}
+.passwordShow{
+    background-color: #ffffff;
+    border: none;
+}
+.error-message{
+    color:red;
+    font-weight: 400;
+}
+.Modal-Error{
+    left:5%;
+}
+

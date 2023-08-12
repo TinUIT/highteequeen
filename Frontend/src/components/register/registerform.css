@@ -1,0 +1,141 @@
+.wrap-loginform{
+    width: 400px;
+    height: 500px;
+    background-image: url('../../assets/Register.png');
+    background-size: 460px 500px;
+    background-repeat: no-repeat;
+    padding-right: -10px;
+    padding-bottom: 0;
+    
+ }
+ .wrap-close{
+     width: 100%;
+     text-align: right;
+     
+ }
+ .close-button{
+     background: none;
+     border: none;
+     margin-top: 1%;
+     cursor: pointer;
+ }
+ .fa-times-circle{
+     font-size: 18px;
+ 
+ }
+      
+ .title{
+    
+   
+     font-size: 30px;
+     font-family: Helvetica;
+     color: #B16E4B;
+     padding-left: 10%;
+     font-weight: 600;
+    
+ }
+ .container-input{
+     width: 90%;
+     margin-left: 10%;
+     margin-bottom: 0px;
+     margin-top: 15%;
+    
+ }
+ .title-input{
+     color: #B16E4B;   
+     font-weight: 500;
+     margin-bottom: 2px;
+     margin-top: 5px;
+     border: 0px;
+     
+ }
+ .input{
+     width: 80%;
+     height: 20px;
+     border-radius: 3px;
+     border-color: #2F80ED;
+     
+ }
+ .log_in{
+     
+     font-size: 15px;
+     margin-top: 5%;
+     text-decoration: none;
+     color: #5F5B5B;
+     font-weight: 500;
+ 
+ }
+ .wrap-fotgot{
+     text-align: right;
+     width: 80%;
+ }
+ .wrap-icon{
+     margin-left: 6%;
+     margin-top: 2%;
+     margin-bottom: 0;
+    
+ 
+ }
+ .accout-button{
+    width: 40px;
+    height: 40px;
+    background-color: #FFFFFF;
+   
+   
+    border: none;
+   
+    
+     
+ }
+ .Icon{
+    font-size: 28px;
+    color: #B16E4B;
+    
+ }
+ .wrap-login{
+     display: flex;
+     justify-content:space-between;    
+     margin-left: 5%;
+     width: 80%;
+     margin-top: 1%;
+ 
+ }
+ .text-Resgiter{
+     font-size: 14px;
+ }
+ .register-button{
+     padding: 15px 30px;
+     margin-top: -25px;
+     color: #B16E4B;
+     border-radius: 10px;
+     border: 2px solid white;
+     font-size: 20px;
+     width: 50;
+     box-shadow: 1px 2px #5F5B5B;
+     cursor: pointer;
+ }
+ .register-button:hover{
+     padding: 15px 30px;
+     background-color: #FF8787;
+     margin-top: -20px;
+     color: #ffffff;
+     border-radius: 10px;
+     font-size: 20px;
+     width: 50;
+     border: 2px solid white;
+     box-shadow: 1px 2px #5F5B5B;
+     cursor: pointer;
+     border-color: #FFFFFF;
+     
+ }
+ .Register_OK{
+    width: 400px;
+    height: 500px;
+ }
+ .Img-Success-register{
+    width: 100%;
+    height: 100%;
+ }
+
+ 
+ 

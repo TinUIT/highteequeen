@@ -1,0 +1,124 @@
+.container-cardcomplete {
+  display: flex;
+  padding: 20px 40px 20px 20px;
+  border-top: 0.3px solid;
+  border-bottom: 0.3px solid;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+}
+
+.cardcomplete-left {
+  width: 60%;
+  display: flex;
+}
+
+.productcard-image {
+  width: 20%;
+  border: 0.3px solid #ff6079;
+  border-radius: 4px;
+  margin-right: 20px;
+  max-height: 100%;
+}
+
+.productcomplete-content {
+  font-family: 'Nunito Sans', sans-serif;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 28px;
+  color: #000000;
+  margin: 0;
+}
+
+.productcomplete-content:nth-child(2) {
+  margin-bottom: 10px;
+}
+
+.productcomplete-price {
+  color: rgba(255, 109, 109, 0.7);
+}
+
+.btn-delete {
+  padding: 0;
+  width: 50px;
+  height: 50px;
+  outline: none;
+  border: none;
+  background: transparent;
+  position: absolute;
+  right: 20px;
+  top: 5px;
+}
+
+.icon-delete {
+  width: 50px;
+}
+
+.wrap-number-product {
+  font-size: 40px;
+  font-family: 'Nunito Sans', sans-serif;
+  font-style: normal;
+  font-weight: 700;
+}
+.number-count{
+  width: 55px;
+}
+
+@media screen and (max-width: 768px) {
+  .container-cardcomplete {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .cardcomplete-left {
+    width: 100%;
+    margin-bottom: 20px;
+  }
+
+  .btn-delete {
+    width: 30px;
+  }
+
+  .icon-delete {
+    width: 30px;
+  }
+}
+.Number-Cardcomplete{
+  font-family: 'Nunito Sans', sans-serif;
+  font-weight: 700;
+  font-size: 40px;
+  margin-right: 50px;
+}
+.Cancel-Onpress{
+  font-family: 'Nunito Sans', sans-serif;
+  font-weight: 700;
+  color: red;
+
+  }
+ .btn-delete-onpress{
+  padding: 0;
+  width: 60px;
+  height: 50px;
+  outline: none;
+  border: none;
+  background: transparent;
+  position: absolute;
+  right: 20px;
+  top: 60px;
+  border-width: 2px;
+  border-style: solid;
+  border-color: red;
+  border-radius: 5px;
+  padding: 5px 5px;
+}
+
+  .btn-delete-onpress:hover{
+    border-color: red;
+    color:aliceblue;
+    background-color: red;
+
+  }
+  .Cancel-Onpress:hover{
+    color:aliceblue;
+
+  }
