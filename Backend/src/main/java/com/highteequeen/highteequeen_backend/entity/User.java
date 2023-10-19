@@ -1,51 +1,66 @@
 package com.highteequeen.highteequeen_backend.entity;
 
 import jakarta.persistence.*;
+import lombok.*;
 
-import java.util.Collection;
-import java.util.List;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import java.util.*;
+
+import jakarta.persistence.*;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-@Entity
-@Table(name = "_user")
-public class User implements UserDetails {
+import java.util.Date;
 
+@Entity
+@Table(name = "users")
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+public class User extends BaseEntity implements UserDetails {
     @Id
-    @GeneratedValue
-    private Integer id;
-    private String firstname;
-    private String lastname;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "email", length = 100, nullable = false)
     private String email;
+
+    @Column(name = "fullname", length = 100)
+    private String fullName;
+
+    @Column(name = "phone_number", length = 10)
+    private String phoneNumber;
+
+    @Column(name = "address", length = 200)
+    private String address;
+
+    @Column(name = "password", length = 200, nullable = false)
     private String password;
 
-    @Enumerated(EnumType.STRING)
-    private Role role;
+    @Column(name = "is_active")
+    private boolean active;
 
-    @OneToOne
-    @JoinColumn(name = "customer_id", referencedColumnName = "customer_id")
-    private Customer customer;
+    @Column(name = "date_of_birth")
+    private Date dateOfBirth;
 
-    @OneToMany(mappedBy = "user")
-    private List<Token> tokens;
+    @Column(name = "facebook_account_id")
+    private int facebookAccountId;
+
+    @Column(name = "google_account_id")
+    private int googleAccountId;
+
+    @ManyToOne
+    @JoinColumn(name = "role_id")
+    private com.highteequeen.highteequeen_backend.entity.Role role;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return role.getAuthorities();
-    }
-
-    @Override
-    public String getPassword() {
-        return password;
+        List<SimpleGrantedAuthority> authorityList = new ArrayList<>();
+        authorityList.add(new SimpleGrantedAuthority("ROLE_"+getRole().getName().toUpperCase()));
+        return authorityList;
     }
 
     @Override
@@ -73,3 +88,5 @@ public class User implements UserDetails {
         return true;
     }
 }
+
+
