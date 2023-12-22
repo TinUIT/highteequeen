@@ -7,8 +7,8 @@ import Form from 'react-bootstrap/Form';
 import React, { useState, useEffect, useContext } from 'react';
 import { Link } from "react-router-dom";
 
-import { getStorage, ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
-import { app, storage } from "../../firebase/firebase";
+// import { getStorage, ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
+// import { app, storage } from "../../firebase/firebase";
 import { UserContext } from "../../contexts/UserContext";
 import axios from 'axios';
 
@@ -46,36 +46,36 @@ const ProfileUser = () => {
 
   const handleFileChange = (event) => {
     const newFile = event.target.files[0];
-    if (newFile) {
-      setFile(newFile);
-      const storeRef = ref(storage, `Avartar-User/${newFile.name}`);
-      const uploadTask = uploadBytesResumable(storeRef, newFile);
+    // if (newFile) {
+    //   setFile(newFile);
+    //   const storeRef = ref(storage, `Avartar-User/${newFile.name}`);
+    //   const uploadTask = uploadBytesResumable(storeRef, newFile);
   
-      uploadTask.on('state_changed', 
-        (snapshot) => {},
-        (error) => console.log(error), 
-        () => {
-          getDownloadURL(uploadTask.snapshot.ref).then((downloadUrl) => {
-            console.log("Download URL: ", downloadUrl);
-            setUrl(downloadUrl);
-          });
-        }
-      );
+    //   uploadTask.on('state_changed', 
+    //     (snapshot) => {},
+    //     (error) => console.log(error), 
+    //     () => {
+    //       getDownloadURL(uploadTask.snapshot.ref).then((downloadUrl) => {
+    //         console.log("Download URL: ", downloadUrl);
+    //         setUrl(downloadUrl);
+    //       });
+    //     }
+    //   );
 
-    }
+    // }
     
   };
 
-  useEffect(() => {
-    if(userInfo.image) {
-      const storeRef = ref(storage, `Avartar-User/${userInfo.image}`);
-      getDownloadURL(storeRef).then((downloadUrl) => {
-        console.log("Download URL: ", downloadUrl);
-        setUrl(downloadUrl);
-      });
-    }
-    handleSave();
-  }, [file])
+  // useEffect(() => {
+  //   if(userInfo.image) {
+  //     const storeRef = ref(storage, `Avartar-User/${userInfo.image}`);
+  //     getDownloadURL(storeRef).then((downloadUrl) => {
+  //       console.log("Download URL: ", downloadUrl);
+  //       setUrl(downloadUrl);
+  //     });
+  //   }
+  //   handleSave();
+  // }, [file])
 
   useEffect(() => {
     const handleResize = () => {

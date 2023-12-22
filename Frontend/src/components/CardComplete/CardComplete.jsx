@@ -3,15 +3,15 @@ import { CartContext } from "../../contexts/CartContext";
 import Modal from "../Modal/Modal";
 import deleteIcon from "../../assets/delete-btn.png";
 import "./CardComplete.css";
-import { getStorage, ref, getDownloadURL } from "firebase/storage";
-import {app} from "../../firebase/firebase";
+// import { getStorage, ref, getDownloadURL } from "firebase/storage";
+// import {app} from "../../firebase/firebase";
 import axios from "axios";
 
 const CardComplete = ({ productId, nameProduct, price, imageUrl, quantity, onRemove, isChooseNumber, number=0, isClose, isCancel,isFirebase,Image,IDproduct }) => {
   const [countProduct, setCountProduct] = useState(quantity);
   const [openModal, setOpenModal] = useState(false);
   const [openModalCancel, setopenModalCancel] = useState(false);
-  const [imageUrlFirebase, setImageUrlFirebase] = useState(Image);
+  // const [imageUrlFirebase, setImageUrlFirebase] = useState(Image);
   console.log("CardComplete",Image)
   
 
@@ -28,23 +28,23 @@ const CardComplete = ({ productId, nameProduct, price, imageUrl, quantity, onRem
     setOpenModal(false);
     onRemove();
   };
-  useEffect(() => {
-    const storage = getStorage(app);
-    let storageRef = ref(storage, "white.jpg");
+  // useEffect(() => {
+  //   const storage = getStorage(app);
+  //   let storageRef = ref(storage, "white.jpg");
 
-    if (isFirebase && Image != null) {
-      storageRef = ref(storage, Image);
-    }
+  //   if (isFirebase && Image != null) {
+  //     storageRef = ref(storage, Image);
+  //   }
 
-    getDownloadURL(storageRef).then((url) => {
-      setImageUrlFirebase(url);
-    });
-  }, [isFirebase, Image]);
+  //   getDownloadURL(storageRef).then((url) => {
+  //     setImageUrlFirebase(url);
+  //   });
+  // }, [isFirebase, Image]);
 
   return (
     <div className="container-cardcomplete">
       <div className="cardcomplete-left">
-        <img className="productcard-image" src={isFirebase===true ? imageUrlFirebase : imageUrl } alt="product" />
+        <img className="productcard-image"  alt="product" />
         <div className="productcomplete-desc">
           <h6 className="productcomplete-content">{nameProduct}</h6>
           <p className="productcomplete-content productcomplete-price">${price}</p>

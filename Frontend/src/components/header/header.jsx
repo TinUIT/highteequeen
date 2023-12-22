@@ -17,8 +17,8 @@ import { CartContext } from '../../contexts/CartContext';
 import axios from 'axios';
 import Modal from "../../components/Modal/Modal"
 import { UserContext } from "../../contexts/UserContext";
-import { getStorage, ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
-import { app, storage } from "../../firebase/firebase";
+// import { getStorage, ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
+// import { app, storage } from "../../firebase/firebase";
 import { FavoriteContext } from "../../contexts/FavoriteContext";
 
 
@@ -108,13 +108,13 @@ function Header(props) {
     }
   }, [searchTerm]);
 
-  useEffect(() => {
-    const storeRef = ref(storage, `Avartar-User/${user.image}`);
-    getDownloadURL(storeRef).then((downloadUrl) => {
-      console.log("Download URL: ", downloadUrl);
-      setUrl(downloadUrl);
-    });
-  },[user])
+  // useEffect(() => {
+  //   const storeRef = ref(storage, `Avartar-User/${user.image}`);
+  //   getDownloadURL(storeRef).then((downloadUrl) => {
+  //     console.log("Download URL: ", downloadUrl);
+  //     setUrl(downloadUrl);
+  //   });
+  // },[user])
 
   return (
 

@@ -13,8 +13,8 @@ import { useEffect, useState } from "react";
 import AddProduct from "../AddProduct/AddProduct";
 import axios from "axios";
 import Logoweb from "../assets/Logoweb.png";
-import { getStorage, ref, getDownloadURL } from "firebase/storage";
-import { app } from "../../../firebase/firebase";
+// import { getStorage, ref, getDownloadURL } from "firebase/storage";
+// import { app } from "../../../firebase/firebase";
 import Modal from '../../../components/Modal/Modal';
 
 export default function ProductWarehouse() {
@@ -27,14 +27,14 @@ export default function ProductWarehouse() {
   const [openModal, setOpenModal] = useState(false);
 
 
-  useEffect(() => {
-    const storage = getStorage(app);
-    var storageRef = ref(storage, "white.jpg");
+  // useEffect(() => {
+  //   const storage = getStorage(app);
+  //   var storageRef = ref(storage, "white.jpg");
 
-    getDownloadURL(storageRef).then((url) => {
-      setImageUrl(url);
-    });
-  }, [products]);
+  //   getDownloadURL(storageRef).then((url) => {
+  //     setImageUrl(url);
+  //   });
+  // }, [products]);
   useEffect(() => {
     axios.get(`http://localhost:8080/api/products?page=${currentPage}&size=5`)
       .then(response => {

@@ -1,13 +1,13 @@
 import React, { useState, useContext } from "react";
 import axios from "axios";
 import "./AddProduct.css";
-import {
-  getStorage,
-  ref,
-  getDownloadURL,
-  uploadBytesResumable
-} from "firebase/storage";
-import { app, storage } from "../../../firebase/firebase";
+// import {
+//   getStorage,
+//   ref,
+//   getDownloadURL,
+//   uploadBytesResumable
+// } from "firebase/storage";
+// import { app, storage } from "../../../firebase/firebase";
 
 
 const Addproduct = (props) => {
@@ -38,25 +38,25 @@ const Addproduct = (props) => {
     } catch (error) {
       console.error(error);
     }
-    if (file) {
-      const storeRef = ref(storage, `${file.name}`);
-      const uploadTask = uploadBytesResumable(storeRef, file);
+    // if (file) {
+    //   const storeRef = ref(storage, `${file.name}`);
+    //   const uploadTask = uploadBytesResumable(storeRef, file);
 
-      uploadTask.on(
-        "state_changed",
-        (snapshot) => {},
-        (error) => {
-          // Xử lý lỗi (nếu có)
-          console.log(error);
-        },
-        () => {
-          // Hoàn thành tải lên thành công
-          uploadTask.snapshot.ref.getDownloadURL().then((downloadUrl) => {
-            setUrl(downloadUrl);
-          });
-        }
-      );
-    }
+    //   uploadTask.on(
+    //     "state_changed",
+    //     (snapshot) => {},
+    //     (error) => {
+    //       // Xử lý lỗi (nếu có)
+    //       console.log(error);
+    //     },
+    //     () => {
+    //       // Hoàn thành tải lên thành công
+    //       uploadTask.snapshot.ref.getDownloadURL().then((downloadUrl) => {
+    //         setUrl(downloadUrl);
+    //       });
+    //     }
+    //   );
+    // }
   };
 
   const handleAddProduct = () => {
@@ -79,21 +79,21 @@ const Addproduct = (props) => {
     } catch (error) {
       console.error(error);
     }
-    if (file) {
-      const storeRef = ref(storage, `${file.name}`);
-      const uploadTask = uploadBytesResumable(storeRef, file);
+    // if (file) {
+    //   const storeRef = ref(storage, `${file.name}`);
+    //   const uploadTask = uploadBytesResumable(storeRef, file);
 
-      uploadTask.on('state_changed', 
-        (snapshot) => {},
-        (error) => console.log(error), 
-        () => {
-          getDownloadURL(uploadTask.snapshot.ref).then((downloadUrl) => {
-            console.log("Download URL: ", downloadUrl);
-            setUrl(downloadUrl);
-          });
-        }
-      );
-    }
+    //   uploadTask.on('state_changed', 
+    //     (snapshot) => {},
+    //     (error) => console.log(error), 
+    //     () => {
+    //       getDownloadURL(uploadTask.snapshot.ref).then((downloadUrl) => {
+    //         console.log("Download URL: ", downloadUrl);
+    //         setUrl(downloadUrl);
+    //       });
+    //     }
+    //   );
+    // }
   };
 
   const handleUpdateProduct = () => {

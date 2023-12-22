@@ -7,8 +7,8 @@ import Form from 'react-bootstrap/Form';
 import React, { useState, useEffect} from 'react';
 import { Link, useH } from "react-router-dom";
 
-import { getStorage, ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
-import {app, storage} from "../../firebase/firebase";
+// import { getStorage, ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
+// import {app, storage} from "../../firebase/firebase";
 import ProfileUser from "../../components/Profile-User/ProfileUser";
 import Modal from "../../components/Modal/Modal"
 import axios from 'axios';
@@ -49,25 +49,25 @@ const ProfilePage = () => {
         if (file) {
             reader.readAsDataURL(file);
         }
-        const storeRef = ref(storage,`Avartar-User/${file.name}`);
-        const uploadTask = uploadBytesResumable(storeRef, file)
+        // const storeRef = ref(storage,`Avartar-User/${file.name}`);
+        // const uploadTask = uploadBytesResumable(storeRef, file)
 
-        uploadTask.on(
-        'state_changed',
-        (snapshot) => {
+    //     uploadTask.on(
+    //     'state_changed',
+    //     (snapshot) => {
           
-        },
-        (error) => {
-          // Xử lý lỗi (nếu có)
-          console.log(error);
-        },
-        () => {
-          // Hoàn thành tải lên thành công
-          uploadTask.snapshot.ref.getDownloadURL().then((downloadUrl) => {
-            setUrl(downloadUrl);
-          });
-        }
-      );
+    //     },
+    //     (error) => {
+    //       // Xử lý lỗi (nếu có)
+    //       console.log(error);
+    //     },
+    //     () => {
+    //       // Hoàn thành tải lên thành công
+    //       uploadTask.snapshot.ref.getDownloadURL().then((downloadUrl) => {
+    //         setUrl(downloadUrl);
+    //       });
+    //     }
+    //   );
     };
    
 

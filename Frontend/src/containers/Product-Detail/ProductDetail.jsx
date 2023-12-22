@@ -3,8 +3,8 @@ import Header from "../../components/header/header";
 import product from "../../assets/product.png";
 import product1 from "../../assets/product 1.png";
 import { useLocation } from 'react-router-dom';
-import { getStorage, ref, getDownloadURL } from "firebase/storage";
-import { app } from "../../firebase/firebase";
+// import { getStorage, ref, getDownloadURL } from "firebase/storage";
+// import { app } from "../../firebase/firebase";
 import React, { useState, useEffect, useContext } from 'react';
 import { CartContext } from '../../contexts/CartContext';
 import { UserContext } from "../../contexts/UserContext";
@@ -134,18 +134,18 @@ const ProductDetail = () => {
 
   }
 
-  useEffect(() => {
-    const storage = getStorage(app);
-    var storageRef = ref(storage, "white.jpg");
+  // useEffect(() => {
+  //   const storage = getStorage(app);
+  //   var storageRef = ref(storage, "white.jpg");
 
-    if (image != null) {
-      storageRef = ref(storage, image);
-    }
-    console.log(image);
-    getDownloadURL(storageRef).then((url) => {
-      setImageUrl(url);
-    });
-  }, [image]);
+  //   if (image != null) {
+  //     storageRef = ref(storage, image);
+  //   }
+  //   console.log(image);
+  //   getDownloadURL(storageRef).then((url) => {
+  //     setImageUrl(url);
+  //   });
+  // }, [image]);
 
   const { addToCart } = useContext(CartContext);
   const handleAddToCart = () => {
