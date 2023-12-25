@@ -11,13 +11,15 @@
     margin-bottom: 10px;
     
 .wrappper-Input-Product{
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 10px;
+    width: 100%;
+    border-color: burlywood;
 
 }
 .add-produc-design-input{
-    width: 70%;
+    width: 100%;
     border: none;
     outline-style: none;
     background-color: bisque;
@@ -82,7 +84,31 @@
 
 }
 .wrapper-add-produc-design-input{
-    width: 70%;
+    width: 100%;
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
+}
+
+.selected-image-container {
+    position: relative;
+    overflow: hidden;
+    border-radius: 5px;
+}
+
+.selected-image-container img {
+    width: 100%;
+    height: auto;
+}
+
+.remove-image {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    cursor: pointer;
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 5px;
+    border-radius: 5px;
+    font-size: 12px;
+    color: brown;
 }

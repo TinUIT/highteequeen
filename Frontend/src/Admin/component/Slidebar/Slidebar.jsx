@@ -26,7 +26,8 @@ function Slidebar() {
     window.location.href = "/";
   };
 
-  return user.role !== "ADMIN" ? <Navigate to="/" /> : (
+  // return user.role !== "ADMIN" ? <Navigate to="/" /> : (
+  return (
     <>
       <Tab.Container id="left-tabs-example" defaultActiveKey="first">
         <Row>

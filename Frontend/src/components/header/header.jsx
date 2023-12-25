@@ -20,7 +20,7 @@ import { UserContext } from "../../contexts/UserContext";
 // import { getStorage, ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
 // import { app, storage } from "../../firebase/firebase";
 import { FavoriteContext } from "../../contexts/FavoriteContext";
-
+import { NavDropdown } from "react-bootstrap";
 
 
 function Header(props) {
@@ -31,7 +31,7 @@ function Header(props) {
   const [navBackground, setNavBackground] = useState(false);
   const [selectedTab, setSelectedTab] = useState(1);
   const navRef = useRef();
-  const [openModal,setOpenModal]= useState(false);
+  const [openModal, setOpenModal] = useState(false);
   const { cart } = useContext(CartContext);
   const totalQuantity = cart ? cart.reduce((total, item) => total + item.quantity, 0) : 0;
   const { FavoriteCart } = useContext(FavoriteContext);
@@ -39,9 +39,11 @@ function Header(props) {
   // const totalfavoriteQuantity = FavoriteCart ? FavoriteCart.reduce((total, item) => total + item.quantity, 0) : 0;
   const { user, updateUserProfile } = useContext(UserContext);
   const customerId = user && user.customerId;
-  const [userInfo,setUserInfo] = useState(JSON.parse(localStorage.getItem('user-info')));  
-  const [url, setUrl] = useState(''); 
-
+  const [userInfo, setUserInfo] = useState(JSON.parse(localStorage.getItem('user-info')));
+  const [url, setUrl] = useState('');
+  const {TileProduct, setTitleProduct} = props;
+  const [product, setProduct] = useState(0);
+  const [expandedProduct, setExpandedProduct] = useState(null);
 
   const handleTabClick = (tabIndex) => {
     setSelectedTab(tabIndex); // Cập nhật trạng thái khi người dùng nhấp vào tab
@@ -53,7 +55,8 @@ function Header(props) {
     window.location.href = "/";
 
   };
-  const  handleProfileClick=()=>{  window.location.href = "/profile";
+  const handleProfileClick = () => {
+    window.location.href = "/profile";
 
   }
 
@@ -68,12 +71,20 @@ function Header(props) {
       </HLMenu.Item>
       <HLMenu.Item>
         <button className="dropdown-content header-logout" onClick={() => setOpenModal(true)}>
-         <i class="icon-p fas fa-sign-out"></i>Logout  
+          <i class="icon-p fas fa-sign-out"></i>Logout
         </button>
       </HLMenu.Item>
     </HLMenu>
   );
 
+  const [isHovered, setIsHovered] = useState(false);
+  const handleMouseEnter = () => {
+    setIsHovered(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+  };
   // const [name]=useAtom(textAtom);
 
   navRef.current = navBackground
@@ -89,10 +100,10 @@ function Header(props) {
       document.removeEventListener('scroll', handleScroll);
     };
   }, []);
-  
+
 
   useEffect(() => {
-    if(user.role=="ADMIN") {
+    if (user.role == "ADMIN") {
       console.log("testbug")
       window.location.href = "/admin";
 
@@ -107,6 +118,18 @@ function Header(props) {
       setSearchResults([]);
     }
   }, [searchTerm]);
+
+  const handleSelectProduct = (selectedIndexed, e) => {
+    setProduct(selectedIndexed);
+    setExpandedProduct(selectedIndexed);
+  };
+  const handleExpandProduct = (selectedIndexed) => {
+    if (expandedProduct === selectedIndexed) {
+      setExpandedProduct(null); // Collapse the expanded product if clicked again
+    } else {
+      setExpandedProduct(selectedIndexed); // Expand the clicked product
+    }
+  };
 
   // useEffect(() => {
   //   const storeRef = ref(storage, `Avartar-User/${user.image}`);
@@ -133,11 +156,11 @@ function Header(props) {
               <i class="icon fas fa-shopping-cart"></i>
               <span className="num-fav num-cart" >{totalQuantity}</span>
             </button></Link>
-          {user.fullName  ?
+          {user.fullName ?
             (<>
               <button
                 className="RegisterButton"
-                onClick={ handleProfileClick}
+                onClick={handleProfileClick}
               >
                 {user.fullName}
               </button>
@@ -181,11 +204,73 @@ function Header(props) {
                 {selectedTab === 1 && <hr className="tap-control" />}
               </NavLink>
             </div>
-            <div className={`Control-tab ${selectedTab === 2 ? 'active' : ''}`}>
-              <NavLink className="Control-tab" eventKey="2" to="/product" onClick={() => handleTabClick(2)}>
+            <div className="Control-tab" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+              <NavLink className={`Control-tab ${selectedTab === 2 ? 'active' : ''}`} eventKey="2" to="/product" onClick={() => handleTabClick(2)}>
                 PRODUCTS
                 {selectedTab === 2 && <hr className="tap-control" />}
               </NavLink>
+              {isHovered && (
+                <div className="product-menu">
+                  <Link to="/product"
+                    expanded={expandedProduct === 0}
+                    onClick={() => {
+                      handleExpandProduct(0);
+                      setTitleProduct("Blush");
+                    }}>
+                    Blush</Link>
+                  <Link to="/product"
+                    expanded={expandedProduct === 1}
+                    onClick={() => {
+                      handleExpandProduct(1);
+                      setTitleProduct("Cleanser");
+                    }}>
+                    Cleanser</Link>
+                  <Link to="/product"
+                    expanded={expandedProduct === 2}
+                    onClick={() => {
+                      handleExpandProduct(2);
+                      setTitleProduct("Eyeshadow");
+                    }}>
+                    Eyeshadow</Link>
+                  <Link to="/product"
+                    expanded={expandedProduct === 3}
+                    onClick={() => {
+                      handleExpandProduct(3);
+                      setTitleProduct("Toner");
+                    }}>
+                    Toner</Link>
+                  <Link to="/product"
+                    expanded={expandedProduct === 4}
+                    onClick={() => {
+                      handleExpandProduct(4);
+                      setTitleProduct("Lipstick");
+                    }}>
+                    Lipstick</Link>
+                  <Link to="/product"
+                    expanded={expandedProduct === 5}
+                    onClick={() => {
+                      handleExpandProduct(5);
+                      setTitleProduct("Powder");
+                    }}>
+                    Powder</Link>
+                  <Link to="/product"
+                    expanded={expandedProduct === 6}
+                    onClick={() => {
+                      handleExpandProduct(6);
+                      setTitleProduct("Eyeliner");
+                    }}>
+                    Eyeliner</Link>
+                  <Link to="/product"
+                    expanded={expandedProduct === 7}
+                    onClick={() => {
+                      handleExpandProduct(7);
+                      setTitleProduct("Primer");
+                    }}>
+                    Primer</Link>
+
+
+                </div>
+              )}
             </div>
             <div className={`Control-tab ${selectedTab === 3 ? 'active' : ''}`}>
               <NavLink className="Control-tab" eventKey="3" onClick={() => handleTabClick(3)} to="/distribution-channel-page">BRAND
@@ -210,7 +295,7 @@ function Header(props) {
                 <ul className="autocomple-search-product">
                   {searchResults.map(product => (
                     <li key={product.id} className="result-search-product">
-                      <Link state={{ nameProduct: product.name, price : product.price, image: product.image }} to="/product-detail">
+                      <Link state={{ nameProduct: product.name, price: product.price, image: product.image }} to="/product-detail">
                         {product.name}
                       </Link>
                     </li>
@@ -270,16 +355,16 @@ function Header(props) {
         onCancel={() => setOpenModal(false)}
         onYes={handleLogout}
       ></Modal>
-      
 
 
-    
-    
+
+
+
 
 
 
     </Navbar>
-    
+
 
 
   );

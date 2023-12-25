@@ -11,8 +11,8 @@ import "./AddProduct.css";
 
 
 const Addproduct = (props) => {
-  const [imagePath, setImagePath] = useState("");
-  const [id, setId] = useState(props.product ? props.product.id: "");
+  const [imagePaths, setImagePaths] = useState([]);
+  const [id, setId] = useState(props.product ? props.product.id : "");
   const [name, setName] = useState(props.product ? props.product.name : "");
   const [brand, setBrand] = useState(props.product ? props.product.brand : "");
   const [description, setDescription] = useState(props.product ? props.product.description : "");
@@ -25,19 +25,22 @@ const Addproduct = (props) => {
 
   const responseAddProduct = async () => {
     try {
-      const res = await axios.post("http://localhost:8080/api/products", {
-        name,
-        brand,
-        image: file && file.name ? file.name : file,
-        price,
-        description,
-        categoryName,
-        origin
-      });
-      console.log(res.data);
-    } catch (error) {
-      console.error(error);
-    }
+    const formData = new FormData();
+    formData.append("name", name);
+    formData.append("brand", brand);
+    imagePaths.forEach((image, index) => {
+      formData.append(`image${index}`, image.file);
+    });
+    formData.append("price", price);
+    formData.append("description", description);
+    formData.append("categoryName", categoryName);
+    formData.append("origin", origin);
+
+    const res = await axios.post("http://localhost:8080/api/products", formData);
+    console.log(res.data);
+  } catch (error) {
+    console.error(error);
+  }
     // if (file) {
     //   const storeRef = ref(storage, `${file.name}`);
     //   const uploadTask = uploadBytesResumable(storeRef, file);
@@ -101,25 +104,26 @@ const Addproduct = (props) => {
   };
 
   const [url, setUrl] = useState("");
-  
+
 
   // Xử lý sự kiện khi người dùng chọn tệp hình ảnh
   const handleFileChange = (event) => {
-    const file = event.target.files[0];
-    setFile(file);
-    const reader = new FileReader();
-  
-    reader.onload = (e) => {
-      if(file) {
-        setImagePath(e.target.result); // Lưu trữ đường dẫn hình ảnh vào state
-      }
-    };
-  
-    if (file) {
+    const selectedFiles = event.target.files;
+
+    const newImagePaths = Array.from(selectedFiles).map((file) => {
+      const reader = new FileReader();
       reader.readAsDataURL(file);
-    }
+      return { file, path: URL.createObjectURL(file) };
+    });
+
+    setImagePaths((prevImagePaths) => [...prevImagePaths, ...newImagePaths]);
   };
-  
+  //xóa hình
+  const handleRemoveImage = (index) => {
+    const updatedImagePaths = [...imagePaths];
+    updatedImagePaths.splice(index, 1);
+    setImagePaths(updatedImagePaths);
+  };
 
   return (
     <div className="AddProduct">
@@ -129,7 +133,7 @@ const Addproduct = (props) => {
           <input
             className="add-produc-design-input"
             type="text"
-            value = {name}
+            value={name}
             onChange={(e) => setName(e.target.value)}
           />
         </div>
@@ -145,6 +149,14 @@ const Addproduct = (props) => {
         <div className="input-add-product">
           <div className="Title-Input">IMAGE</div>
           <div className="wrapper-add-produc-design-input">
+            {imagePaths.map((image, index) => (
+              <div key={index} className="selected-image-container">
+                <img src={image.path} alt={`Selected ${index}`} />
+                <span className="remove-image" onClick={() => handleRemoveImage(index)}>
+                  Remove
+                </span>
+              </div>
+            ))}
             <input
               className="add-produc-design-input imageProduct"
               type="text"
@@ -161,6 +173,7 @@ const Addproduct = (props) => {
             <label htmlFor="fileInput" className="Choose-image-admin">
               Choose file
             </label>
+
           </div>
         </div>
 
@@ -169,7 +182,7 @@ const Addproduct = (props) => {
           <select
             className="select"
             onChange={(e) => setCategoryName(e.target.value)}
-            value={categoryName ? categoryName: null}
+            value={categoryName ? categoryName : null}
           >
             <option disabled selected hidden value="">
               Select Category
@@ -189,7 +202,7 @@ const Addproduct = (props) => {
           <select
             className="select"
             onChange={(e) => setBrand(e.target.value)}
-            value={brand ? brand: null}
+            value={brand ? brand : null}
           >
             <option disabled selected hidden value="">
               Select Brand
@@ -207,7 +220,7 @@ const Addproduct = (props) => {
           <select
             className="select"
             onChange={(e) => setOrigin(e.target.value)}
-            value={origin ? origin: null} 
+            value={origin ? origin : null}
           >
             <option disabled selected hidden value="">
               Select Origin
@@ -222,7 +235,7 @@ const Addproduct = (props) => {
           <input
             className="add-produc-design-input"
             type="text"
-            value = {description}
+            value={description}
             onChange={(e) => setDescription(e.target.value)}
           />
         </div>
@@ -231,7 +244,7 @@ const Addproduct = (props) => {
         <button
           className="Add-Admin-Add-Pd"
           onClick={props.type === "Add" ? handleAddProduct : handleUpdateProduct}
-          // disabled={!name || !brand || !file.name || !price || !description || !categoryName || !origin}
+        // disabled={!name || !brand || !file.name || !price || !description || !categoryName || !origin}
         >
           {props.type}
         </button>

@@ -95,7 +95,7 @@ const ProductPage = () => {
 
     return (
         <>
-            <Header />
+            <Header setTitleProduct={setTitleProduct} />
             <div className="Wrapper-HeaderProduct-ProductPage">
                 <Carousel activeIndex={product} onSelect={handleSelectProduct} >
                    
