@@ -25,22 +25,22 @@ const Addproduct = (props) => {
 
   const responseAddProduct = async () => {
     try {
-    const formData = new FormData();
-    formData.append("name", name);
-    formData.append("brand", brand);
-    imagePaths.forEach((image, index) => {
-      formData.append(`image${index}`, image.file);
-    });
-    formData.append("price", price);
-    formData.append("description", description);
-    formData.append("categoryName", categoryName);
-    formData.append("origin", origin);
+      const formData = new FormData();
+      formData.append("name", name);
+      formData.append("brand", brand);
+      imagePaths.forEach((image, index) => {
+        formData.append(`image${index}`, image.file);
+      });
+      formData.append("price", price);
+      formData.append("description", description);
+      formData.append("categoryName", categoryName);
+      formData.append("origin", origin);
 
-    const res = await axios.post("http://localhost:8080/api/products", formData);
-    console.log(res.data);
-  } catch (error) {
-    console.error(error);
-  }
+      const res = await axios.post("http://localhost:8080/api/products", formData);
+      console.log(res.data);
+    } catch (error) {
+      console.error(error);
+    }
     // if (file) {
     //   const storeRef = ref(storage, `${file.name}`);
     //   const uploadTask = uploadBytesResumable(storeRef, file);
@@ -149,30 +149,36 @@ const Addproduct = (props) => {
         <div className="input-add-product">
           <div className="Title-Input">IMAGE</div>
           <div className="wrapper-add-produc-design-input">
-            {imagePaths.map((image, index) => (
-              <div key={index} className="selected-image-container">
-                <img src={image.path} alt={`Selected ${index}`} />
-                <span className="remove-image" onClick={() => handleRemoveImage(index)}>
-                  Remove
-                </span>
-              </div>
-            ))}
-            <input
+            <div className="wrapper-add-product-image">
+              {imagePaths.map((image, index) => (
+                <div key={index} className="selected-image-container">
+                  <img src={image.path} alt={`Selected ${index}`} />
+                  <span className="remove-image" onClick={() => handleRemoveImage(index)}>
+                    Remove
+                  </span>
+                </div>
+              ))}
+            </div>
+
+            {/* <input
               className="add-produc-design-input imageProduct"
               type="text"
               value={file && file.name ? file.name : file}
               readOnly
-            />
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleFileChange}
-              style={{ display: "none" }}
-              id="fileInput"
-            />
-            <label htmlFor="fileInput" className="Choose-image-admin">
-              Choose file
-            </label>
+            /> */}
+            <div>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleFileChange}
+                style={{ display: "none" }}
+                id="fileInput"
+              />
+              <label htmlFor="fileInput" className="Choose-image-admin">
+                Choose file
+              </label>
+            </div>
+
 
           </div>
         </div>

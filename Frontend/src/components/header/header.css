@@ -50,8 +50,10 @@
     font-size: 15px;
     font-family: Helvetica;
     cursor: pointer;
-    
-    
+}
+
+.RegisterButton:hover{
+  color: #e95d69;
 
 }
 .LoginButton{
@@ -119,7 +121,7 @@
   position: relative;
 }
 .input-search{
-    background-color: rgb(217, 210, 210);
+    background-color: #f2d8bd;
     border-radius: 5px 0px 0px 5px;
     border-style: hidden;
     height: 30px;
@@ -131,9 +133,9 @@
 
 
 .searchButton{
-    background-color: #FDCF76;
+    background-color: #e79a48;
     border-radius: 0px 5px 5px 0px; ;
-    border: #FDCF76;
+    border: #e79a48;
     height: 30px;
     cursor: pointer;
 }
@@ -146,6 +148,7 @@
     
 .Wrap-control{
  justify-content: space-between;
+ align-items: center;
 }
 
 
@@ -260,15 +263,16 @@
 }
 
 .product-menu a {
-  padding: 10px;
   color: #333;
   text-decoration: none;
   transition: background-color 0.3s ease;
-  padding: 5px 50px;
+  padding: 5px 2px;
+  text-align: center;
 }
 
 .product-menu a:hover {
   background-color: #e1e1e1;
+  color: #e95d69;
 
 }
 /* 
@@ -277,5 +281,5 @@
 } */
 
 .Control-tab:hover{
-  color:#33adff;
+  color:#e95d69;
 }
