@@ -1,4 +1,4 @@
-package com.highteequeen.highteequeen_backend.services;
+package com.highteequeen.highteequeen_backend.services.impl;
 
 import com.highteequeen.highteequeen_backend.components.JwtTokenUtil;
 import com.highteequeen.highteequeen_backend.components.LocalizationUtils;
@@ -7,9 +7,11 @@ import com.highteequeen.highteequeen_backend.dtos.UserDTO;
 import com.highteequeen.highteequeen_backend.entity.Role;
 import com.highteequeen.highteequeen_backend.entity.User;
 import com.highteequeen.highteequeen_backend.exeptions.DataNotFoundException;
+import com.highteequeen.highteequeen_backend.exeptions.InvalidPasswordException;
 import com.highteequeen.highteequeen_backend.exeptions.PermissionDenyException;
 import com.highteequeen.highteequeen_backend.repositories.RoleRepository;
 import com.highteequeen.highteequeen_backend.repositories.UserRepository;
+import com.highteequeen.highteequeen_backend.services.IUserService;
 import com.highteequeen.highteequeen_backend.utils.MessageKeys;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,14 +23,17 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
-public class UserService implements IUserService{
+public class UserService implements IUserService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
+    private final TokenRepository tokenRepository;
     private final JwtTokenUtil jwtTokenUtil;
     private final AuthenticationManager authenticationManager;
     private final LocalizationUtils localizationUtils;
@@ -39,11 +44,9 @@ public class UserService implements IUserService{
         if(userRepository.existsByEmail(email)) {
             throw new DataIntegrityViolationException("Email already exists");
         }
-        Role role =roleRepository.findById(userDTO.getRoleId())
+        Role role =roleRepository.findById(1L)
                 .orElseThrow(() -> new DataNotFoundException("Role not found"));
-        if(role.getName().toUpperCase().equals(Role.ADMIN)) {
-            throw new PermissionDenyException("You cannot register an admin account");
-        }
+        Timestamp now = Timestamp.valueOf(LocalDateTime.now());
         User newUser = User.builder()
                 .email(userDTO.getEmail())
                 .fullName(userDTO.getFullName())
@@ -53,6 +56,7 @@ public class UserService implements IUserService{
                 .dateOfBirth(userDTO.getDateOfBirth())
                 .facebookAccountId(userDTO.getFacebookAccountId())
                 .googleAccountId(userDTO.getGoogleAccountId())
+                .create_at(now)
                 .build();
         newUser.setRole(role);
         if (userDTO.getFacebookAccountId() == 0 && userDTO.getGoogleAccountId() == 0) {
@@ -146,6 +150,31 @@ public class UserService implements IUserService{
         }
 
         return userRepository.save(existingUser);
+    }
+
+    @Override
+    @Transactional
+    public void resetPassword(Long userId, String newPassword)
+            throws InvalidPasswordException, DataNotFoundException {
+        User existingUser = userRepository.findById(userId)
+                .orElseThrow(() -> new DataNotFoundException("User not found"));
+        String encodedPassword = passwordEncoder.encode(newPassword);
+        existingUser.setPassword(encodedPassword);
+        userRepository.save(existingUser);
+        //reset password => clear token
+        List<Token> tokens = tokenRepository.findByUser(existingUser);
+        for (Token token : tokens) {
+            tokenRepository.delete(token);
+        }
+    }
+
+    @Override
+    @Transactional
+    public void blockOrEnable(Long userId, Boolean active) throws DataNotFoundException {
+        User existingUser = userRepository.findById(userId)
+                .orElseThrow(() -> new DataNotFoundException("User not found"));
+        existingUser.setActive(active);
+        userRepository.save(existingUser);
     }
 
 }

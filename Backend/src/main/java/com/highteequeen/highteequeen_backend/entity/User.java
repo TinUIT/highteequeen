@@ -3,6 +3,7 @@ package com.highteequeen.highteequeen_backend.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.sql.Timestamp;
 import java.util.*;
 
 import jakarta.persistence.*;
@@ -51,6 +52,13 @@ public class User extends BaseEntity implements UserDetails {
 
     @Column(name = "google_account_id")
     private int googleAccountId;
+
+    @Column(nullable = false)
+    private Timestamp create_at;
+
+    private Timestamp update_at;
+
+    private Timestamp delete_at;
 
     @ManyToOne
     @JoinColumn(name = "role_id")

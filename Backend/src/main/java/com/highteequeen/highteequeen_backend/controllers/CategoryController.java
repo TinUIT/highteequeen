@@ -5,7 +5,7 @@ import com.highteequeen.highteequeen_backend.dtos.CategoryDTO;
 import com.highteequeen.highteequeen_backend.entity.Category;
 import com.highteequeen.highteequeen_backend.responses.CategoryResponse;
 import com.highteequeen.highteequeen_backend.responses.UpdateCategoryResponse;
-import com.highteequeen.highteequeen_backend.services.CategoryService;
+import com.highteequeen.highteequeen_backend.services.impl.CategoryService;
 import com.highteequeen.highteequeen_backend.utils.MessageKeys;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

@@ -5,7 +5,7 @@ import com.highteequeen.highteequeen_backend.dtos.OrderDetailDTO;
 import com.highteequeen.highteequeen_backend.entity.OrderDetail;
 import com.highteequeen.highteequeen_backend.exeptions.DataNotFoundException;
 import com.highteequeen.highteequeen_backend.responses.OrderDetailResponse;
-import com.highteequeen.highteequeen_backend.services.OrderDetailService;
+import com.highteequeen.highteequeen_backend.services.impl.OrderDetailService;
 import com.highteequeen.highteequeen_backend.utils.MessageKeys;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

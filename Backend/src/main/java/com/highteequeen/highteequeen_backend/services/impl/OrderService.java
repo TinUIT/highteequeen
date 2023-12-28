@@ -1,4 +1,4 @@
-package com.highteequeen.highteequeen_backend.services;
+package com.highteequeen.highteequeen_backend.services.impl;
 
 import com.highteequeen.highteequeen_backend.dtos.CartItemDTO;
 import com.highteequeen.highteequeen_backend.dtos.OrderDTO;
@@ -8,6 +8,7 @@ import com.highteequeen.highteequeen_backend.repositories.OrderDetailRepository;
 import com.highteequeen.highteequeen_backend.repositories.OrderRepository;
 import com.highteequeen.highteequeen_backend.repositories.ProductRepository;
 import com.highteequeen.highteequeen_backend.repositories.UserRepository;
+import com.highteequeen.highteequeen_backend.services.IOrderService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -22,7 +23,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class OrderService implements IOrderService{
+public class OrderService implements IOrderService {
     private final UserRepository userRepository;
     private final OrderRepository orderRepository;
     private final ProductRepository productRepository;

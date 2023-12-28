@@ -1,4 +1,4 @@
-package com.highteequeen.highteequeen_backend.services;
+package com.highteequeen.highteequeen_backend.services.impl;
 
 import com.highteequeen.highteequeen_backend.dtos.ProductDTO;
 import com.highteequeen.highteequeen_backend.dtos.ProductImageDTO;
@@ -11,6 +11,7 @@ import com.highteequeen.highteequeen_backend.repositories.CategoryRepository;
 import com.highteequeen.highteequeen_backend.repositories.ProductImageRepository;
 import com.highteequeen.highteequeen_backend.repositories.ProductRepository;
 import com.highteequeen.highteequeen_backend.responses.ProductResponse;
+import com.highteequeen.highteequeen_backend.services.IProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -22,7 +23,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class ProductService implements IProductService{
+public class ProductService implements IProductService {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
     private final ProductImageRepository productImageRepository;

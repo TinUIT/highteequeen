@@ -5,20 +5,29 @@ import com.highteequeen.highteequeen_backend.dtos.UpdateUserDTO;
 import com.highteequeen.highteequeen_backend.dtos.UserDTO;
 import com.highteequeen.highteequeen_backend.dtos.UserLoginDTO;
 import com.highteequeen.highteequeen_backend.entity.User;
+import com.highteequeen.highteequeen_backend.exeptions.DataNotFoundException;
+import com.highteequeen.highteequeen_backend.helper.MailInfo;
+import com.highteequeen.highteequeen_backend.repositories.UserRepository;
 import com.highteequeen.highteequeen_backend.responses.LoginResponse;
 import com.highteequeen.highteequeen_backend.responses.RegisterResponse;
+import com.highteequeen.highteequeen_backend.responses.ResponseObject;
 import com.highteequeen.highteequeen_backend.responses.UserResponse;
+import com.highteequeen.highteequeen_backend.services.IMailService;
 import com.highteequeen.highteequeen_backend.services.IUserService;
+import com.highteequeen.highteequeen_backend.services.impl.AuthenticationService;
 import com.highteequeen.highteequeen_backend.utils.MessageKeys;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("${api.prefix}/users")
@@ -26,9 +35,13 @@ import java.util.List;
 public class UserController {
     private final IUserService userService;
     private final LocalizationUtils localizationUtils;
+    private final IMailService mailer;
+    private final UserRepository userRepository;
+    private final AuthenticationService authenticationService;
     @PostMapping("/register")
     public ResponseEntity<RegisterResponse> createUser(
             @Valid @RequestBody UserDTO userDTO,
+            HttpServletRequest request,
             BindingResult result
     ) {
         RegisterResponse registerResponse = new RegisterResponse();
@@ -52,6 +65,13 @@ public class UserController {
             User user = userService.createUser(userDTO);
             registerResponse.setMessage(localizationUtils.getLocalizedMessage(MessageKeys.REGISTER_SUCCESSFULLY));
             registerResponse.setUser(user);
+            String from = "ptt102002@gmail.com";
+            String to = userDTO.getEmail();
+            String subject = "Welcome!";
+            String url = request.getRequestURL().toString().replace("register", "activate/" + user.getId());
+            String body = "Highteequeen xin chào! Vui lòng nhấn vào <a href='" + url + "'>Activate</a> để kích hoạt tài khoản.";
+            MailInfo mail = new MailInfo(from, to, subject, body);
+            mailer.send(mail);
             return ResponseEntity.ok(registerResponse);
         } catch (Exception e) {
             registerResponse.setMessage(e.getMessage());
@@ -109,6 +129,58 @@ public class UserController {
             return ResponseEntity.ok(UserResponse.fromUser(updatedUser));
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @GetMapping("/activate/{userId}")
+    public ResponseEntity<?> activateAccount(@PathVariable Long userId) {
+        try {
+            User foundUser = userRepository.findById(userId).orElseThrow();
+            boolean result =authenticationService.activateUser(userId);
+            if(result==true){
+                return ResponseEntity.status(HttpStatus.OK).body(
+                        new ResponseObject(HttpStatus.OK.value(), "User "+ foundUser.getUsername() + " activated successfully!",  null));
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                        new ResponseObject(HttpStatus.BAD_REQUEST.value(), "Unable to activate user account",  null));
+            }
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                    new ResponseObject(HttpStatus.BAD_REQUEST.value(), "Error activating account", e.getMessage()));
+        }
+    }
+
+    @PutMapping("/reset-password/{userId}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<?> resetPassword(@Valid @PathVariable long userId){
+        try {
+            String newPassword = UUID.randomUUID().toString().substring(0, 5);
+            userService.resetPassword(userId, newPassword);
+            return ResponseEntity.ok(newPassword);
+        } catch (InvalidPasswordException e) {
+            return ResponseEntity.badRequest().body("Invalid password");
+        } catch (DataNotFoundException e) {
+            return ResponseEntity.badRequest().body("User not found");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PutMapping("/block/{userId}/{active}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<String> blockOrEnable(
+            @Valid @PathVariable long userId,
+            @Valid @PathVariable int active
+    ) {
+        try {
+            userService.blockOrEnable(userId, active > 0);
+            String message = active > 0 ? "Successfully enabled the user." : "Successfully blocked the user.";
+            return ResponseEntity.ok().body(message);
+        } catch (DataNotFoundException e) {
+            return ResponseEntity.badRequest().body("User not found.");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 }

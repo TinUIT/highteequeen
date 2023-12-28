@@ -1,4 +1,4 @@
-package com.highteequeen.highteequeen_backend.services;
+package com.highteequeen.highteequeen_backend.services.impl;
 
 import com.highteequeen.highteequeen_backend.dtos.OrderDetailDTO;
 import com.highteequeen.highteequeen_backend.entity.Order;
@@ -8,6 +8,7 @@ import com.highteequeen.highteequeen_backend.exeptions.DataNotFoundException;
 import com.highteequeen.highteequeen_backend.repositories.OrderDetailRepository;
 import com.highteequeen.highteequeen_backend.repositories.OrderRepository;
 import com.highteequeen.highteequeen_backend.repositories.ProductRepository;
+import com.highteequeen.highteequeen_backend.services.IOrderDetailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,7 +18,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @Service
-public class OrderDetailService implements IOrderDetailService{
+public class OrderDetailService implements IOrderDetailService {
     private final OrderRepository orderRepository;
     private final OrderDetailRepository orderDetailRepository;
     private final ProductRepository productRepository;

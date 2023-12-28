@@ -1,8 +1,9 @@
-package com.highteequeen.highteequeen_backend.services;
+package com.highteequeen.highteequeen_backend.services.impl;
 
 import com.highteequeen.highteequeen_backend.dtos.CategoryDTO;
 import com.highteequeen.highteequeen_backend.entity.Category;
 import com.highteequeen.highteequeen_backend.repositories.CategoryRepository;
+import com.highteequeen.highteequeen_backend.services.ICategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

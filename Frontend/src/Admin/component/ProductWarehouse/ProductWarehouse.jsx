@@ -76,7 +76,7 @@ export default function ProductWarehouse() {
 
   const handleDelete = (id) => {
    
-    axios.delete(`http://localhost:8080/api/products/delete/${id}`)
+    axios.delete(`http://localhost:8080/api/products/${id}`)
       .then(response => {
         return axios.get(`http://localhost:8080/api/products?page=${currentPage}&size=5`)
 
