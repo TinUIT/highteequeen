@@ -5,7 +5,7 @@ import "./ProductManage.css";
 const ProductManage = () => {
   return (
     <div className="ProductManage">
-      <h1 className="tile-admin">Bill List</h1>
+      <h1 className="tile-admin">Orders List</h1>
      
       <Table />
     </div>

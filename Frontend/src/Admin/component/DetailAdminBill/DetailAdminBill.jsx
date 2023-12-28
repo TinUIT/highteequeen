@@ -17,45 +17,41 @@ import axios from "axios";
 
 
 
-function createData(
-    ID,
-  Name,
-  Price,
-  Quantity,
-  Total,
-  
-) { 
-
+function createData(productId, productName, price, quantity, Subtotal,trackingId) {
   return {
-    ID,
-    Name,
-    Price,
-    Quantity,
-    Total,
+    productId,
+    productName,
+    price,
+    quantity,
+    Subtotal,
+    trackingId,
   };
 }
 const dataExample = [
   {
-    ID: "#123",
-    Name: "Half n Half Water Glow Season 1 ",    
-    Price: "$150",
-    Quantity: 1,
-    Total:25,
+    productId: "#123",
+    productName: "Half n Half Water Glow Season 1 ",    
+    price: "$150",
+    quantity: 1,
+    Subtotal:25,
+    trackingId:18908424,
     
   },
   {
-    ID: "#123",
-    Name: "Half n Half Water Glow Season 1 ",    
-    Price: "$150",
-    Quantity: 2,
-    Total:30,
+    productId: "#123",
+    productName: "Half n Half Water Glow Season 1 ",    
+    price: "$150",
+    quantity: 2,
+    Subtotal:30,
+    trackingId:18908422,
   },
   {
-    ID: "#123",
-    Name: "Half n Half Water Glow Season 1 ",    
-    Price: "$150",
-    Quantity: 3,
-    Total:50,
+    productId: "#123",
+    productName: "Half n Half Water Glow Season 1 ",    
+    price: "$150",
+    quantity: 3,
+    Subtotal:50,
+    trackingId:18908424,
   },
   
 ];
@@ -68,72 +64,91 @@ const Userexample = [
             
     },]
 
-export default function DetailAdminBill(props) {
+// export default function DetailAdminBill(props) {
+  export default function DetailAdminBill({ product, onClose, ID }) {
   const [isAddingProduct, setIsAddingProduct] = React.useState(false);
   const [posts, setPosts] = useState([]);
-  const  [ContentBill,setContentBill]=useState([]);
-  const [DetailContentBill,setDetailContentBill]=useState([]);
+  // const  [ContentBill,setContentBill]=useState([]);
+  // const [DetailContentBill,setDetailContentBill]=useState([]);
+  const [ContentBill, setContentBill] = useState([product]);
+  const [DetailContentBill, setDetailContentBill] = useState(dataExample);
 
-  useEffect(()=>setPosts(dataExample),[])
-  useEffect(() => {
-    axios.get("http://localhost:8080/api/orders?page=0&size=5")
-        .then(response => {
-            setContentBill(response.data.content)
-            console.log("TestProduct",response.data.content[props.ID]);
-            const OrderDetailBill=response.data.content[props.ID].orderDetails;
-          
-           
-            // const Detail = (OrderDetailBill).map((bill) => {
-            //   {
-            //    return bill.orderDetails;
-              
-            //  }
-          
-            // })
-        
-            
-            setDetailContentBill(OrderDetailBill);
-          
-     
-            
-             
 
-        })
+  // useEffect(()=>setPosts(dataExample),[])
+//   useEffect(() => {
+//     axios.get("http://localhost:8080/api/orders?page=0&size=5")
+//         .then(response => {
+//             setContentBill(response.data.content)
+//             console.log("TestProduct",response.data.content[props.ID]);
+//             const OrderDetailBill=response.data.content[props.ID].orderDetails;
+            
+//             setDetailContentBill(OrderDetailBill);
+//         })
        
-        .catch(error => {
-            console.error('There was an error!', error);
-        });
-}, []);
+//         .catch(error => {
+//             console.error('There was an error!', error);
+//         });
+// }, []);
+  useEffect(() => {
+    // Simulating data from API
+    // Replace this with your actual API call
+    setContentBill(Userexample);
+
+
+  }, [ID]);
 console.log("TestProductBill",DetailContentBill)
-  
-
- 
-  
 
 
-  
+
+
+
+// const combinedData = Userexample.map((user, index) => ({
+//   ...user,
+//   orderDetails: DetailContentBill[index],
+// }));
+
+
+
+
   return (
     <div className="Table">
+       <div class="my-div">
+          <div class="line1"></div>
+          <div class="BestSeller"> 
+            <h2>Detail order</h2>
+          </div>
+          <div class="line2"></div>
+
+        </div>
         <div className="Admin-Info-User">
             <div className="Wrapper-avatar-user-admin">
             <img className="avatar-user-admin"src={LogoWeb}></img></div>
             <div className="In-Info-User">
-                <hr></hr>
-                {ContentBill.map((info, index)=>(<>
+                {/* <hr></hr> */}
+                {/* {ContentBill.map((info, index)=>(<>
                   {index === 0 && (
-      <React.Fragment key={info.recipientName}>
-        <div className="wrapper-info-user">Name: {info.recipientName}</div>
-        <div className="wrapper-info-user">Email: {info.email}</div>
-        <div className="wrapper-info-user">Phone: {info.recipientPhone}</div>
-        <div className="wrapper-info-user">Address: {info.shippingAddress}</div>
-        <hr />
-      </React.Fragment>
-    )}
+                  <React.Fragment key={info.recipientName}>
+                    <div className="wrapper-info-user">Name: {info.recipientName}</div>
+                    <div className="wrapper-info-user">Email: {info.email}</div>
+                    <div className="wrapper-info-user">Phone: {info.recipientPhone}</div>
+                    <div className="wrapper-info-user">Address: {info.shippingAddress}</div>
+                    <hr />
+                  </React.Fragment>
+                )}
                 </>
                 
  
                 ))
-                }
+                } */}
+                 {ContentBill.map((info, index) => (
+            <React.Fragment key={index}>
+              <div className="wrapper-info-user">Name: {info.NameUser}</div>
+              <div className="wrapper-info-user">Email: {info.Email}</div>
+              <div className="wrapper-info-user">Phone: {info.Phone}</div>
+              <div className="wrapper-info-user">Address: {info.Address}</div>
+              <hr />
+            </React.Fragment>
+          ))}
             </div>
 
         </div>
@@ -167,9 +182,11 @@ console.log("TestProductBill",DetailContentBill)
                 <TableCell align="left">{item.subtotal}</TableCell>
               
               
-              
               </TableRow>
             ))}
+
+
+
           </TableBody>
         </Table>
       </TableContainer>

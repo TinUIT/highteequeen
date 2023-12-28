@@ -10,6 +10,8 @@ import "./Table.css";
 import DetailAdminBill from "../DetailAdminBill/DetailAdminBill";
 import TickAccept from "../assets/TickAccept.gif";
 import axios from "axios";
+import NavbarOrders from "./NavbarOrders";
+import ReactPaginate from "react-paginate";
 
 function createData(name, trackingId, date, status) {
   return { name, trackingId, date, status };
@@ -19,7 +21,12 @@ const rows = [
   createData("Lasania Chiken Fri", 18908424, "2 March 2022", "Approved"),
   createData("Big Baza Bang ", 18908424, "2 March 2022", "Pending"),
   createData("Mouth Freshner", 18908424, "2 March 2022", "Approved"),
+  createData("Cupcaka", 18908421, "2 March 2022", "Delivered"),
+  createData("Cupcakb", 18908421, "2 March 2022", "Delivered"),
+  createData("Cupcakc", 18908421, "2 March 2022", "Delivered"),
+  createData("Cupcakd", 18908421, "2 March 2022", "Delivered"),
   createData("Cupcake", 18908421, "2 March 2022", "Delivered"),
+  createData("Cupcakf", 18908421, "2 March 2022", "Delivered"),
 ];
 
 const makeStyle = (status) => {
@@ -41,13 +48,16 @@ const makeStyle = (status) => {
   }
 };
 
+
+
 export default function BasicTable() {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [isAccept, setisAccept] = useState(false);
   const [isAccepted, setIsAccepted] = useState(Array(rows.length).fill(false));
   const [isCancel, setIsCancel] = useState(Array(rows.length).fill(false));
   const [Bill, setBill] = useState([]);
-  const [ContentBill, setContentBill] = useState([]);
+  // const [ContentBill, setContentBill] = useState([]);
+  const [ContentBill, setContentBill] = useState(rows);
   const [ID, setID] = useState();
 
   const handleDetailBill = (product, index) => {
@@ -71,6 +81,7 @@ export default function BasicTable() {
     });
   };
 
+
   const handleCancel = (index) => {
     axios.get(`http://localhost:8080/api/orders/${index}/deny`).then(() => {
       const newIsCancel = [...isCancel];
@@ -79,6 +90,24 @@ export default function BasicTable() {
    
     });
   };
+
+  const handlePageClick = ({ selected }) => {
+    setCurrentPage(selected);
+  };
+  
+
+  const [currentPage, setCurrentPage] = useState(0);
+  const itemsPerPage = 5; // Update this value based on your requirements
+  const pageCount = Math.ceil(Bill.length / itemsPerPage);
+
+  const startIndex = currentPage * itemsPerPage;
+const endIndex = startIndex + itemsPerPage;
+const displayedItems = ContentBill.slice(startIndex, endIndex);
+
+
+
+
+
 
   useEffect(() => {
     axios
@@ -94,7 +123,8 @@ export default function BasicTable() {
 
   return (
     <div className="Table">
-      <h3>Recent Orders</h3>
+      {/* <h3>Recent Orders</h3> */}
+      <NavbarOrders/>
       <TableContainer
         component={Paper}
         style={{ boxShadow: "0px 13px 20px 0px #80808029" }}
@@ -115,8 +145,10 @@ export default function BasicTable() {
                 key={row.name}
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
               >
-                <TableCell align="left">{row.orderId}</TableCell>
-                <TableCell align="left">{row.orderDate}</TableCell>
+                {/* <TableCell align="left">{row.orderId}</TableCell>
+                <TableCell align="left">{row.orderDate}</TableCell> */}
+                <TableCell align="left">{row.trackingId}</TableCell>
+                <TableCell align="left">{row.date}</TableCell>
                 <TableCell align="left">
                   <span className="status" style={makeStyle(row.status)}>
                     {row.status}
@@ -191,8 +223,22 @@ export default function BasicTable() {
               </TableRow>
             ))}
           </TableBody>
+       
+
         </Table>
+      
       </TableContainer>
+     
+      {/* <ReactPaginate
+          breakLabel="..."
+          nextLabel="next >"
+          onPageChange={handlePageClick}
+          pageRangeDisplayed={5}
+          pageCount={pageCount}
+          previousLabel="< previous"
+          renderOnZeroPageCount={null}
+          /> */}
+      
       {selectedProduct && (
         <DetailAdminBill product={selectedProduct} onClose={handleCloseDetail} ID={ID} />
       )}

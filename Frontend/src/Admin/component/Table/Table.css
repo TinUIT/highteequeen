@@ -6,10 +6,10 @@
     font-weight: bold !important;
   }
   
-  .Table td,
+  /* .Table td,
   th {
     border: none !important;
-  }
+  } */
   
   .Table:first-child {
     border-radius: 0.7rem !important;
@@ -104,3 +104,5 @@
     border-color: #129e08;
     border-style: solid;
   }
+
+

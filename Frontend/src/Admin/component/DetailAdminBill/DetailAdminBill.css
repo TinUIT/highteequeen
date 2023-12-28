@@ -3,6 +3,7 @@
 }
 .Wrapper-avatar-user-admin{
     width: 25%;
+    margin-left: -4%;
 }
 .In-Info-User{
     width: 75%;
@@ -20,4 +21,36 @@
 }
 .In-Info-User{
     padding-top: 3.2%;
+}
+
+
+
+
+
+/* ========================================== */
+  /* ===================================== */
+  .my-div {
+    width: 100%;
+    height: 80px;
+    display: flex;
+    justify-content: center;
+    margin-top: 5%;
+}
+.my-div .line1 {
+  margin-top: 3%;
+  /* margin-left: 21%; */
+  width: 25%;
+  height: 5px;
+  background-color: #FCD8D4;
+}
+.BestSeller {
+  text-decoration: none;
+  color: #8F3C02;
+}
+
+.line2 {
+  margin-top: 3%;
+  width: 25%;
+  height: 5px;
+  background-color: #FCD8D4;
 }
