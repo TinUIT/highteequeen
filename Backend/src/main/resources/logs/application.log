@@ -8661,3 +8661,44 @@ Security filter chain: [
 2023-12-26 15:29:34.681 [SpringApplicationShutdownHook] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
 2023-12-26 15:29:34.712 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
 2023-12-26 15:29:34.743 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2023-12-28 14:38:56.023 [background-preinit] INFO  o.h.validator.internal.util.Version - HV000001: Hibernate Validator 8.0.1.Final
+2023-12-28 14:38:56.112 [main] INFO  c.h.h.HighteequeenBackendApplication - Starting HighteequeenBackendApplication using Java 19.0.2 with PID 11900 (E:\Nam 4\Web\highteequeen\Backend\target\classes started by win in E:\Nam 4\Web\highteequeen\Backend)
+2023-12-28 14:38:56.115 [main] INFO  c.h.h.HighteequeenBackendApplication - No active profile set, falling back to 1 default profile: "default"
+2023-12-28 14:38:59.962 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2023-12-28 14:39:00.241 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 254 ms. Found 9 JPA repository interfaces.
+2023-12-28 14:39:03.696 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8080 (http)
+2023-12-28 14:39:03.714 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2023-12-28 14:39:03.715 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2023-12-28 14:39:03.715 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.11]
+2023-12-28 14:39:03.889 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2023-12-28 14:39:03.894 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 7592 ms
+2023-12-28 14:39:04.189 [main] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2023-12-28 14:39:04.411 [main] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.2.6.Final
+2023-12-28 14:39:04.419 [main] INFO  org.hibernate.cfg.Environment - HHH000406: Using bytecode reflection optimizer
+2023-12-28 14:39:04.771 [main] INFO  o.h.b.i.BytecodeProviderInitiator - HHH000021: Bytecode provider name : bytebuddy
+2023-12-28 14:39:05.109 [main] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2023-12-28 14:39:05.139 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2023-12-28 14:39:05.704 [main] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@e886caf
+2023-12-28 14:39:05.712 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2023-12-28 14:39:05.959 [main] WARN  org.hibernate.orm.deprecation - HHH90000026: MySQL8Dialect has been deprecated; use org.hibernate.dialect.MySQLDialect instead
+2023-12-28 14:39:07.768 [main] INFO  o.h.b.i.BytecodeProviderInitiator - HHH000021: Bytecode provider name : bytebuddy
+2023-12-28 14:39:09.502 [main] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2023-12-28 14:39:11.102 [main] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2023-12-28 14:39:12.150 [main] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2023-12-28 14:39:12.450 [main] INFO  o.s.d.j.r.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+2023-12-28 14:39:15.415 [main] INFO  o.s.s.web.DefaultSecurityFilterChain - Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@23ba044f, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@736b8ed4, org.springframework.security.web.context.SecurityContextHolderFilter@7a61020a, org.springframework.security.web.header.HeaderWriterFilter@3d61b36a, org.springframework.security.web.authentication.logout.LogoutFilter@2f074818, com.highteequeen.highteequeen_backend.filters.JwtTokenFilter@2f006edf, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@1b35f06a, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@7fd4d278, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@7c556af2, org.springframework.security.web.access.ExceptionTranslationFilter@30aeb2b3, org.springframework.security.web.access.intercept.AuthorizationFilter@3a0773]
+2023-12-28 14:39:15.425 [main] WARN  o.s.s.c.a.web.builders.WebSecurity - 
+
+********************************************************************
+**********        Security debugging is enabled.       *************
+**********    This may include sensitive information.  *************
+**********      Do not use in a production system!     *************
+********************************************************************
+
+
+2023-12-28 14:39:16.117 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2023-12-28 14:39:16.154 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port(s): 8080 (http) with context path ''
+2023-12-28 14:39:16.167 [main] INFO  c.h.h.HighteequeenBackendApplication - Started HighteequeenBackendApplication in 21.133 seconds (process running for 26.218)
+2023-12-28 14:39:34.745 [SpringApplicationShutdownHook] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2023-12-28 14:39:34.749 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2023-12-28 14:39:34.938 [SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.

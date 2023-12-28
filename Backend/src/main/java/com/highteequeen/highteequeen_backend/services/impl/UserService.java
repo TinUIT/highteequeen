@@ -5,11 +5,13 @@ import com.highteequeen.highteequeen_backend.components.LocalizationUtils;
 import com.highteequeen.highteequeen_backend.dtos.UpdateUserDTO;
 import com.highteequeen.highteequeen_backend.dtos.UserDTO;
 import com.highteequeen.highteequeen_backend.entity.Role;
+import com.highteequeen.highteequeen_backend.entity.Token;
 import com.highteequeen.highteequeen_backend.entity.User;
 import com.highteequeen.highteequeen_backend.exeptions.DataNotFoundException;
 import com.highteequeen.highteequeen_backend.exeptions.InvalidPasswordException;
 import com.highteequeen.highteequeen_backend.exeptions.PermissionDenyException;
 import com.highteequeen.highteequeen_backend.repositories.RoleRepository;
+import com.highteequeen.highteequeen_backend.repositories.TokenRepository;
 import com.highteequeen.highteequeen_backend.repositories.UserRepository;
 import com.highteequeen.highteequeen_backend.services.IUserService;
 import com.highteequeen.highteequeen_backend.utils.MessageKeys;
@@ -25,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor

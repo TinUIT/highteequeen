@@ -6,6 +6,7 @@ import com.highteequeen.highteequeen_backend.dtos.UserDTO;
 import com.highteequeen.highteequeen_backend.dtos.UserLoginDTO;
 import com.highteequeen.highteequeen_backend.entity.User;
 import com.highteequeen.highteequeen_backend.exeptions.DataNotFoundException;
+import com.highteequeen.highteequeen_backend.exeptions.InvalidPasswordException;
 import com.highteequeen.highteequeen_backend.helper.MailInfo;
 import com.highteequeen.highteequeen_backend.repositories.UserRepository;
 import com.highteequeen.highteequeen_backend.responses.LoginResponse;

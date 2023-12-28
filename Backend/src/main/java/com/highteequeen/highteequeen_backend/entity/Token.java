@@ -1,8 +1,9 @@
 package com.highteequeen.highteequeen_backend.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
+import jakarta.persistence.*;
+import lombok.*;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "tokens")
