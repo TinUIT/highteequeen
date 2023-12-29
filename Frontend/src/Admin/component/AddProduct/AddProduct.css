@@ -92,8 +92,7 @@
 }
 
 .wrapper-add-produc-design-input {
-    width: 70%;
-    /* display: flex; */
+    width: 61%;
     flex-wrap: wrap;
     justify-content: space-between;
 }
@@ -102,7 +101,7 @@
     position: relative;
     overflow: hidden;
     border-radius: 5px;
-    width: 80%;
+    width: 95%;
     margin-bottom: 10px;
 }
 
@@ -126,6 +125,8 @@
 .wrapper-add-product-image {
     /* display: flex; */
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 10px;
+    /* grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); */
+    grid-template-columns: 33% 33% 33%;
+    /* grid-column-gap: ; */
+    /* gap: 10px; */
 }
