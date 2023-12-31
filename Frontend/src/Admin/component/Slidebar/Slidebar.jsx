@@ -8,6 +8,7 @@ import Logo from "../assets/Logoweb.png";
 import ProductManage from '../ProductManage/ProductManage';
 import Addproduct from '../AddProduct/AddProduct';
 import ProductWarehouse from '../ProductWarehouse/ProductWarehouse';
+import User from '../User/User';
 import React, { useState, useEffect, useContext } from 'react';
 import Modal from '../../../components/Modal/Modal';
 import { Navigate, useNavigate } from 'react-router-dom';
@@ -44,7 +45,10 @@ function Slidebar() {
                 <Nav.Link className="menuItem" eventKey="third"><i class="fas fa-warehouse"></i>Product </Nav.Link>
               </Nav.Item>
               <Nav.Item>
-                <Nav.Link className="menuItem" eventKey="four" onClick={()=>setOpenModal(true)}> <i class=" fas fa-sign-out"></i>Log out</Nav.Link>
+                <Nav.Link className="menuItem" eventKey="fourth"><i class="fas fa-warehouse"></i>User </Nav.Link>
+              </Nav.Item>
+              <Nav.Item>
+                <Nav.Link className="menuItem" eventKey="fifth" onClick={()=>setOpenModal(true)}> <i class=" fas fa-sign-out"></i>Log out</Nav.Link>
               </Nav.Item>
             </Nav>
           </Col>
@@ -53,6 +57,7 @@ function Slidebar() {
               <Tab.Pane eventKey="first"><MainDash/></Tab.Pane>
               <Tab.Pane eventKey="second"><ProductManage/></Tab.Pane>
               <Tab.Pane eventKey="third"><ProductWarehouse/></Tab.Pane>
+              <Tab.Pane eventKey="fourth"><User/></Tab.Pane>
             </Tab.Content>
           </Col>
         </Row>
