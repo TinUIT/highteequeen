@@ -20,6 +20,7 @@ const Addproduct = (props) => {
   const [origin, setOrigin] = useState(props.product ? props.product.origin : "");
   const [categoryName, setCategoryName] = useState(props.product ? props.product.categoryName : "");
   const [file, setFile] = useState(props.product ? props.product.image : null);
+  const [quantity, setQuantity] = useState(props.product ? props.product.quantity : 0);
 
   console.log(id);
 
@@ -35,8 +36,9 @@ const Addproduct = (props) => {
       formData.append("description", description);
       formData.append("categoryName", categoryName);
       formData.append("origin", origin);
+      formData.append("quantity", quantity);
 
-      const res = await axios.post("http://localhost:8080/api/products", formData);
+      const res = await axios.post("http://localhost:8080/api/v1/products", formData);
       console.log(res.data);
     } catch (error) {
       console.error(error);
@@ -68,7 +70,7 @@ const Addproduct = (props) => {
 
   const responseUpdateProduct = async () => {
     try {
-      const res = await axios.put(`http://localhost:8080/api/products/${id}`, {
+      const res = await axios.put(`http://localhost:8080/api/v1/products/${id}`, {
         id,
         name,
         brand,
@@ -76,7 +78,8 @@ const Addproduct = (props) => {
         price,
         description,
         categoryName,
-        origin
+        origin,
+        quantity
       });
       console.log(res.data);
     } catch (error) {
@@ -243,6 +246,15 @@ const Addproduct = (props) => {
             type="text"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
+          />
+        </div>
+        <div className="input-add-product">
+          <div className="Title-Input">QUANTITY</div>
+          <input
+            className="add-produc-design-input"
+            type="text"
+            value={quantity}
+            onChange={(e) => setQuantity(e.target.value)}
           />
         </div>
       </div>
