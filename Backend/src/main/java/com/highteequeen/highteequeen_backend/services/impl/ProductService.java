@@ -13,11 +13,19 @@ import com.highteequeen.highteequeen_backend.repositories.ProductRepository;
 import com.highteequeen.highteequeen_backend.responses.ProductResponse;
 import com.highteequeen.highteequeen_backend.services.IProductService;
 import lombok.RequiredArgsConstructor;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -125,6 +133,42 @@ public class ProductService implements IProductService {
     @Override
     public List<Product> findProductsByIds(List<Long> productIds) {
         return productRepository.findProductsByIds(productIds);
+    }
+
+
+
+    @Override
+    @Transactional
+    public List<Product> createProductsFromExcel(MultipartFile file) throws IOException, DataNotFoundException {
+        InputStream inputStream = file.getInputStream();
+        Workbook workbook = new XSSFWorkbook(inputStream);
+
+        Sheet sheet = workbook.getSheetAt(0);
+
+        List<Product> products = new ArrayList<>();
+
+        for (Row row : sheet) {
+            // Bỏ qua hàng đầu tiên (tiêu đề)
+            if (row.getRowNum() == 0) {
+                continue;
+            }
+
+            ProductDTO productDTO = new ProductDTO();
+            productDTO.setName(row.getCell(0).toString()); // Giả định rằng tên sản phẩm ở cột đầu tiên
+            productDTO.setCategoryId((long) row.getCell(1).getNumericCellValue());
+            productDTO.setPrice((float) row.getCell(2).getNumericCellValue()); // Giả định rằng giá ở cột thứ hai
+            productDTO.setDescription(row.getCell(3).toString());
+            productDTO.setThumbnail(row.getCell(4).toString());
+
+            // Sử dụng phương thức hiện tại để tạo một sản phẩm
+            Product newProduct = createProduct(productDTO);
+            products.add(newProduct);
+        }
+
+        workbook.close();
+        inputStream.close();
+
+        return products;
     }
 }
 

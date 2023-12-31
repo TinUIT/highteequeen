@@ -6,6 +6,7 @@ import com.highteequeen.highteequeen_backend.dtos.ProductDTO;
 import com.highteequeen.highteequeen_backend.dtos.ProductImageDTO;
 import com.highteequeen.highteequeen_backend.entity.Product;
 import com.highteequeen.highteequeen_backend.entity.ProductImage;
+import com.highteequeen.highteequeen_backend.exeptions.DataNotFoundException;
 import com.highteequeen.highteequeen_backend.responses.ProductListResponse;
 import com.highteequeen.highteequeen_backend.responses.ProductResponse;
 import com.highteequeen.highteequeen_backend.services.IProductService;
@@ -21,18 +22,26 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.*;
 import java.util.stream.Collectors;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
+
+
 
 @RestController
 @RequestMapping("${api.prefix}/products")
@@ -234,5 +243,33 @@ public class ProductController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
+    private String getStringCellValue(Cell cell) {
+        if (cell != null) {
+            return cell.getStringCellValue();
+        }
+        return null;
+    }
+
+    @PostMapping("/upload-excel")
+    @ResponseBody
+    public ResponseEntity<?> handleFileUpload(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
+        if (file.isEmpty()) {
+            redirectAttributes.addFlashAttribute("message", "Vui lòng chọn một tệp để tải lên.");
+            return ResponseEntity.badRequest().body("Vui lòng chọn một tệp để tải lên.");
+        }
+
+        try {
+            List<Product> products = productService.createProductsFromExcel(file);
+
+            // Tuỳ chọn, bạn có thể trả về danh sách sản phẩm đã tạo trong phản hồi
+            return ResponseEntity.ok(products);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body("Lỗi khi xử lý tệp Excel: " + e.getMessage());
+        }
+    }
+
+
+
 
 }
