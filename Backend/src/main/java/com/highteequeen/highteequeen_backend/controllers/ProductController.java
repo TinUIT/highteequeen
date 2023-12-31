@@ -281,6 +281,7 @@ public class ProductController {
     }
 
     @PostMapping("/upload-excel")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @ResponseBody
     public ResponseEntity<?> handleFileUpload(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
         if (file.isEmpty()) {
