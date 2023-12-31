@@ -1,6 +1,6 @@
 package com.highteequeen.highteequeen_backend.services.impl;
 
-import com.highteequeen.highteequeen_backend.components.JwtTokenUtil;
+import com.highteequeen.highteequeen_backend.components.JwtTokenUtils;
 import com.highteequeen.highteequeen_backend.components.LocalizationUtils;
 import com.highteequeen.highteequeen_backend.dtos.UpdateUserDTO;
 import com.highteequeen.highteequeen_backend.dtos.UserDTO;
@@ -8,6 +8,7 @@ import com.highteequeen.highteequeen_backend.entity.Role;
 import com.highteequeen.highteequeen_backend.entity.Token;
 import com.highteequeen.highteequeen_backend.entity.User;
 import com.highteequeen.highteequeen_backend.exeptions.DataNotFoundException;
+import com.highteequeen.highteequeen_backend.exeptions.ExpiredTokenException;
 import com.highteequeen.highteequeen_backend.exeptions.InvalidPasswordException;
 import com.highteequeen.highteequeen_backend.exeptions.PermissionDenyException;
 import com.highteequeen.highteequeen_backend.repositories.RoleRepository;
@@ -37,7 +38,7 @@ public class UserService implements IUserService {
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
     private final TokenRepository tokenRepository;
-    private final JwtTokenUtil jwtTokenUtil;
+    private final JwtTokenUtils jwtTokenUtil;
     private final AuthenticationManager authenticationManager;
     private final LocalizationUtils localizationUtils;
     @Override
@@ -111,6 +112,12 @@ public class UserService implements IUserService {
         }
     }
 
+    @Override
+    public User getUserDetailsFromRefreshToken(String refreshToken) throws Exception {
+        Token existingToken = tokenRepository.findByRefreshToken(refreshToken);
+        return getUserDetailsFromToken(existingToken.getToken());
+    }
+
     @Transactional
     @Override
     public User updateUser(Long userId, UpdateUserDTO updatedUserDTO) throws Exception {
@@ -164,7 +171,6 @@ public class UserService implements IUserService {
         String encodedPassword = passwordEncoder.encode(newPassword);
         existingUser.setPassword(encodedPassword);
         userRepository.save(existingUser);
-        //reset password => clear token
         List<Token> tokens = tokenRepository.findByUser(existingUser);
         for (Token token : tokens) {
             tokenRepository.delete(token);

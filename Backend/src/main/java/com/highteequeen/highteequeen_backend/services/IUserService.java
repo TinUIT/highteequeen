@@ -10,6 +10,7 @@ public interface IUserService {
     User createUser(UserDTO userDTO) throws Exception;
     String login(String phoneNumber, String password) throws Exception;
     User getUserDetailsFromToken(String token) throws Exception;
+    User getUserDetailsFromRefreshToken(String token) throws Exception;
     User updateUser(Long userId, UpdateUserDTO updatedUserDTO) throws Exception;
     void resetPassword(Long userId, String newPassword)
             throws InvalidPasswordException, DataNotFoundException ;
