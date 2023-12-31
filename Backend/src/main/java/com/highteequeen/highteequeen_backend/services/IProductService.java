@@ -30,8 +30,4 @@ public interface IProductService {
 
     @Transactional
     List<Product> createProductsFromExcel(MultipartFile file) throws IOException, DataNotFoundException;
-
-    void deleteFile(String filename) throws IOException;
-
-    String storeFile(MultipartFile file)  throws IOException;
 }

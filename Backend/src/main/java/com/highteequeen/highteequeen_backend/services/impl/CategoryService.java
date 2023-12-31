@@ -18,7 +18,6 @@ public class CategoryService implements ICategoryService {
         Category newCategory = Category
                 .builder()
                 .name(categoryDTO.getName())
-                .image("")
                 .build();
         return categoryRepository.save(newCategory);
     }

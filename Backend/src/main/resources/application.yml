@@ -43,5 +43,4 @@ springdoc:
 
 jwt:
     expiration: 2592000
-    expiration-refresh-token: 5184000
     secretKey: TaqlmGv1iEDMRiFp/pHuID1+T84IABfuA0xXh4GhiUI=

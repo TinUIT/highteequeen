@@ -16,7 +16,11 @@ import Logoweb from "../assets/Logoweb.png";
 // import { getStorage, ref, getDownloadURL } from "firebase/storage";
 // import { app } from "../../../firebase/firebase";
 import Modal from '../../../components/Modal/Modal';
-
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import DialogActions from "@mui/material/DialogActions";
+import TextField from "@mui/material/TextField";
 export default function ProductWarehouse() {
 
   const [products, setProducts] = useState([]);
@@ -36,10 +40,11 @@ export default function ProductWarehouse() {
   //   });
   // }, [products]);
   useEffect(() => {
-    axios.get(`http://localhost:8080/api/products?page=${currentPage}&size=5`)
+    axios.get(`http://localhost:8080/api/v1/products?page=${currentPage}&size=5`)
       .then(response => {
-        setProducts(response.data.content);
+        setProducts(response.data.products);
         setTotalPages(response.data.totalPages);
+        console.log(response.data.products);
       })
       .catch(error => {
         console.error('There was an error!', error);
@@ -47,6 +52,7 @@ export default function ProductWarehouse() {
   }, [currentPage]);
   const [isAddingProduct, setIsAddingProduct] = React.useState(false);
   const [isUpdateProduct, setIsUpdateProduct] = React.useState(false);
+  const [openUpdateProduct, setOpenUpdateProduct] = useState(false);
   const [posts, setPosts] = useState([]);
   useEffect(() => {
     setPosts(products);
@@ -72,26 +78,28 @@ export default function ProductWarehouse() {
       id, name, price, image, brand, origin, description, categoryName
     }
     setProduct(item);
+    setOpenUpdateProduct(true);
   };
 
+
   const handleDelete = (id) => {
-   
-    axios.delete(`http://localhost:8080/api/products/${id}`)
+
+    axios.delete(`http://localhost:8080/api/v1/products/${id}`)
       .then(response => {
-        return axios.get(`http://localhost:8080/api/products?page=${currentPage}&size=5`)
+        return axios.get(`http://localhost:8080/api/v1/products?page=${currentPage}&size=5`)
 
       })
       .then(response => {
         setProducts(response.data.content);
         setTotalPages(response.data.totalPages);
-       
+
 
       })
       .catch(error => {
         console.error('There was an error!', error);
       });
-      setOpenModal(false);
-      
+    setOpenModal(false);
+
 
   };
 
@@ -168,7 +176,7 @@ export default function ProductWarehouse() {
 
                     variant="outlined"
                     color="error"
-                    onClick={() => handleUpdateProduct(item.id, item.name, item.price, item.image, item.brand, item.origin, item.description, item.categoryName)}
+                    onClick={() => setOpenUpdateProduct(true)}
                   >
                     <i class="fas fa-edit"></i>
                   </Button>
@@ -181,6 +189,27 @@ export default function ProductWarehouse() {
                   onYes={() => handleDelete(item.id)}
                   style={{ left: "0px", backgroundColor: "transparent", color: "black" }}
                 ></Modal>
+                <Dialog open={openUpdateProduct}
+                  onClose={() => setOpenUpdateProduct(false)}
+                  classes={{ paper: 'customDialog' }}>
+                  <DialogTitle style={{fontWeight: ""}}>
+                    Edit Product
+                    <Button
+                      onClick={() => setOpenUpdateProduct(false)}
+                      style={{ position: "absolute", right: 8, top: 15, color: "red", fontSize: 25 }}
+                    >
+                      <i class="fas fa-times"></i>
+                    </Button>
+                  <hr />
+                  </DialogTitle>
+                  <DialogContent>
+                    <AddProduct product={product} type={"Update"} />
+                  </DialogContent>
+                  {/* <DialogActions>
+                    <Button onClick={() => setOpenUpdateProduct(false)}>Cancel</Button>
+                  </DialogActions> */}
+                </Dialog>
+
               </TableRow>
             ))}
           </TableBody>
@@ -216,7 +245,7 @@ export default function ProductWarehouse() {
         </button>
       </div>
       {isAddingProduct ? <AddProduct product={null} type={"Add"} /> : null}
-      {isUpdateProduct ? <AddProduct product={product} type={"Update"} /> : null}
+
 
 
     </div>

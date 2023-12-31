@@ -87,3 +87,33 @@
 .delete-button {
   padding: 16px;
 }
+
+
+
+.customDialog {
+  width: 540px;
+}
+
+.customDialog .input-add-product .add-produc-design-input{
+  width: 100%;
+}
+
+.customDialog .select {
+  width: 100%;
+}
+
+.customDialog .Title-Input{
+  width: 30%;
+}
+
+.customDialog .input-add-product{
+  width: 100%;
+}
+
+.customDialog .Wrapper-Add-Admin-Add-Pd{
+  width: 100%;
+}
+
+.customDialog .wrapper-add-produc-design-input {
+  width: 100%;
+}

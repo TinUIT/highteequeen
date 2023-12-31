@@ -30,5 +30,6 @@ public class OrderDetailDTO {
     @JsonProperty("total_money")
     private Float totalMoney;
 
+    private String color;
 }
 
