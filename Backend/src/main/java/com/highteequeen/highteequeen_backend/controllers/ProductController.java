@@ -82,22 +82,31 @@ public class ProductController {
             }
 
             ProductDTO productDTO = convertToProductDTO(productRequest);
+            Product newProduct = productService.createProduct(productDTO);
 
-            if (productRequest.getThumbnail() != null && !productRequest.getThumbnail().isEmpty()) {
-                if (productRequest.getThumbnail().getSize() > 10 * 1024 * 1024) {
-                    return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE)
-                            .body(localizationUtils.getLocalizedMessage(MessageKeys.UPLOAD_IMAGES_FILE_LARGE));
+            for (MultipartFile file : productRequest.getImages()) {
+                if(file.getSize() == 0) {
+                    continue;
                 }
-                String contentType = productRequest.getThumbnail().getContentType();
-                if (contentType == null || !contentType.startsWith("image/")) {
+                if(file.getSize() > 10 * 1024 * 1024) {
+                    return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE)
+                            .body(localizationUtils
+                                    .getLocalizedMessage(MessageKeys.UPLOAD_IMAGES_FILE_LARGE));
+                }
+                String contentType = file.getContentType();
+                if(contentType == null || !contentType.startsWith("image/")) {
                     return ResponseEntity.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE)
                             .body(localizationUtils.getLocalizedMessage(MessageKeys.UPLOAD_IMAGES_FILE_MUST_BE_IMAGE));
                 }
-                String filename = productService.storeFile(productRequest.getThumbnail());
-                productDTO.setThumbnail(filename);
+                String filename = productService.storeFile(file);
+                ProductImage productImage = productService.createProductImage(
+                        newProduct.getId(),
+                        ProductImageDTO.builder()
+                                .imageUrl(filename)
+                                .build()
+                );
             }
 
-            Product newProduct = productService.createProduct(productDTO);
             return ResponseEntity.ok(newProduct);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -108,6 +117,7 @@ public class ProductController {
         return ProductDTO.builder()
                 .name(productRequest.getName())
                 .price(productRequest.getPrice())
+                .inStock(productRequest.getInStock())
                 .description(productRequest.getDescription())
                 .categoryId(productRequest.getCategoryId())
                 .build();
