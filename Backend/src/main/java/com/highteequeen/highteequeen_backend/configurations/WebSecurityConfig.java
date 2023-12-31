@@ -52,13 +52,12 @@ public class WebSecurityConfig {
                                     "/swagger-ui/**",
                                     "/swagger-ui.html",
                                     "/webjars/swagger-ui/**",
-                                    "/swagger-ui/index.html",
-                                    "/**"
+                                    "/swagger-ui/index.html"
                             )
                             .permitAll()
 
                             .requestMatchers(GET,
-                                    String.format("%s/categories**", apiPrefix)).permitAll()
+                                    String.format("%s/categories/**", apiPrefix)).permitAll()
 
                             .requestMatchers(GET,
                                     String.format("%s/categories/**", apiPrefix)).permitAll()

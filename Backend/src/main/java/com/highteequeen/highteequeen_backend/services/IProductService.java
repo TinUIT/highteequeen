@@ -8,6 +8,7 @@ import com.highteequeen.highteequeen_backend.exeptions.DataNotFoundException;
 import com.highteequeen.highteequeen_backend.responses.ProductResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -27,5 +28,10 @@ public interface IProductService {
 
     List<Product> findProductsByIds(List<Long> productIds);
 
+    @Transactional
     List<Product> createProductsFromExcel(MultipartFile file) throws IOException, DataNotFoundException;
+
+    void deleteFile(String filename) throws IOException;
+
+    String storeFile(MultipartFile file)  throws IOException;
 }

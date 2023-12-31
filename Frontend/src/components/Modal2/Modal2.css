@@ -1,0 +1,71 @@
+.container-modal {
+    background-color: rgba(0, 0, 0, 0.65);
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    justify-content: center;
+    overflow-y: hidden;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 400;
+    align-items: center;
+  }
+  
+  .wrap-modal {
+    max-width: 500px;
+    background-color: #ffff;
+    background: #ffffff;
+    box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.25);
+    min-height: 250px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 35px;
+    position: relative;
+    margin: 0 20px;
+  }
+  
+  .modal-btn {
+    background-color: transparent;
+    border: none;
+    position: absolute;
+    top: 10px;
+    right: 20px;
+  }
+  
+  .fa-close {
+    font-size: 35px;
+  }
+  
+  .modal-desc {
+    font-size: 30px;
+    font-family: "Nunito Sans", sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .modal-diff-btn {
+    display: flex;
+    justify-content: flex-end;
+    font-size: 25px;
+    font-family: "Nunito Sans", sans-serif;
+    font-style: normal;
+  }
+  
+  .btn-action {
+    border: none;
+    padding: 15px 20px;
+    min-width: 130px;
+    box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.25);
+    border-radius: 5px;
+    color: #ffff;
+  }
+  
+  .btn-action.cancel {
+    background: #8b8b8b;
+  }
+  

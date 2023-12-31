@@ -1,14 +1,20 @@
 
 .NavbarOrders {
-    
+  width: 250px;
     margin-left: 0%;
     height: auto;
     /* background-color: #F6CBDC; */
     background-color: #F8E2CF;
     font-weight: bold !important;
+   
+    margin-bottom: 20px;
+}
+.NavbarOrders Select{
+  position: absolute;
+  background-color: #F5C6AA;
 }
 .NavbarOrders .List {
-    display: flex;
+    /* display: flex; */
 }
 .NavbarOrders .List .row{
     width: 100%;

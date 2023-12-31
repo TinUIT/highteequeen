@@ -239,6 +239,7 @@ const displayedItems = ContentBill.slice(startIndex, endIndex);
           renderOnZeroPageCount={null}
           /> */}
       
+      
       {selectedProduct && (
         <DetailAdminBill product={selectedProduct} onClose={handleCloseDetail} ID={ID} />
       )}

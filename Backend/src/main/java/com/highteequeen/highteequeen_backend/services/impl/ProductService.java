@@ -26,8 +26,16 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import org.springframework.util.StringUtils;
+
+import java.io.FileNotFoundException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -35,6 +43,7 @@ public class ProductService implements IProductService {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
     private final ProductImageRepository productImageRepository;
+    private static String UPLOADS_FOLDER = "uploads";
     @Override
     @Transactional
     public Product createProduct(ProductDTO productDTO) throws DataNotFoundException {
@@ -49,6 +58,7 @@ public class ProductService implements IProductService {
                 .price(productDTO.getPrice())
                 .thumbnail(productDTO.getThumbnail())
                 .description(productDTO.getDescription())
+                .inStock(productDTO.getInStock())
                 .category(existingCategory)
                 .build();
         return productRepository.save(newProduct);
@@ -85,15 +95,25 @@ public class ProductService implements IProductService {
                     .orElseThrow(() ->
                             new DataNotFoundException(
                                     "Cannot find category with id: "+productDTO.getCategoryId()));
-            existingProduct.setName(productDTO.getName());
+            if(productDTO.getName() != null && !productDTO.getName().isEmpty()) {
+                existingProduct.setName(productDTO.getName());
+            }
+
             existingProduct.setCategory(existingCategory);
-            existingProduct.setPrice(productDTO.getPrice());
-            existingProduct.setDescription(productDTO.getDescription());
-            existingProduct.setThumbnail(productDTO.getThumbnail());
+            if(productDTO.getPrice() >= 0) {
+                existingProduct.setPrice(productDTO.getPrice());
+            }
+            if(productDTO.getDescription() != null &&
+                    !productDTO.getDescription().isEmpty()) {
+                existingProduct.setDescription(productDTO.getDescription());
+            }
+            if(productDTO.getThumbnail() != null &&
+                    !productDTO.getThumbnail().isEmpty()) {
+                existingProduct.setThumbnail(productDTO.getThumbnail());
+            }
             return productRepository.save(existingProduct);
         }
         return null;
-
     }
 
     @Override
@@ -107,7 +127,6 @@ public class ProductService implements IProductService {
     public boolean existsByName(String name) {
         return productRepository.existsByName(name);
     }
-    @Override
     @Transactional
     public ProductImage createProductImage(
             Long productId,
@@ -125,8 +144,12 @@ public class ProductService implements IProductService {
         if(size >= ProductImage.MAXIMUM_IMAGES_PER_PRODUCT) {
             throw new InvalidParamException(
                     "Number of images must be <= "
-                            + ProductImage.MAXIMUM_IMAGES_PER_PRODUCT);
+                            +ProductImage.MAXIMUM_IMAGES_PER_PRODUCT);
         }
+        if (existingProduct.getThumbnail() == null ) {
+            existingProduct.setThumbnail(newProductImage.getImageUrl());
+        }
+        productRepository.save(existingProduct);
         return productImageRepository.save(newProductImage);
     }
 
@@ -134,7 +157,6 @@ public class ProductService implements IProductService {
     public List<Product> findProductsByIds(List<Long> productIds) {
         return productRepository.findProductsByIds(productIds);
     }
-
 
 
     @Override
@@ -169,6 +191,37 @@ public class ProductService implements IProductService {
         inputStream.close();
 
         return products;
+    }
+    @Override
+    public void deleteFile(String filename) throws IOException {
+            java.nio.file.Path uploadDir = Paths.get(UPLOADS_FOLDER);
+            java.nio.file.Path filePath = uploadDir.resolve(filename);
+
+        if (Files.exists(filePath)) {
+            Files.delete(filePath);
+        } else {
+            throw new FileNotFoundException("File not found: " + filename);
+        }
+    }
+    private boolean isImageFile(MultipartFile file) {
+        String contentType = file.getContentType();
+        return contentType != null && contentType.startsWith("image/");
+    }
+
+    @Override
+    public String storeFile(MultipartFile file) throws IOException {
+        if (!isImageFile(file) || file.getOriginalFilename() == null) {
+            throw new IOException("Invalid image format");
+        }
+        String filename = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
+        String uniqueFilename = UUID.randomUUID().toString() + "_" + filename;
+        java.nio.file.Path uploadDir = Paths.get(UPLOADS_FOLDER);
+        if (!Files.exists(uploadDir)) {
+            Files.createDirectories(uploadDir);
+        }
+        java.nio.file.Path destination = Paths.get(uploadDir.toString(), uniqueFilename);
+        Files.copy(file.getInputStream(), destination, StandardCopyOption.REPLACE_EXISTING);
+        return uniqueFilename;
     }
 }
 
