@@ -29,7 +29,8 @@
   }
   
   .AppGlass {
-    display: grid;
+    /* display: grid; */
+    display: flex;
     height: 97%;
     width: 97%;
     background: var(--glass);
@@ -39,6 +40,12 @@
     overflow: hidden;
     padding-right: 3rem;
   
+  }
+  .Sidebar_div{
+    flex: 30%;
+  }
+  .MainDash_div{
+    flex: 70%;
   }
   
   @media screen and (max-width: 1200px) {
@@ -53,3 +60,4 @@
       grid-template-columns: 1fr;
     } 
   }
+  

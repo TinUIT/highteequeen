@@ -13,6 +13,8 @@
   
   .Table:first-child {
     border-radius: 0.7rem !important;
+    margin-left: 20%;
+    margin-right: -18%;
   }
   .status {
     padding: 8px;

@@ -111,6 +111,9 @@
   }
   .Tab-Sidebar{
     padding-top: 1%;
+    position: fixed;
+    /* position: absolute; */
+    z-index: 2;
   }
   .nav-pills .nav-link.active, .nav-pills .show>.nav-link {
     background-color: peru;

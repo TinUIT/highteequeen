@@ -1,8 +1,13 @@
+
 .MainDash{
     /* padding-top: 1rem; */
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
+    margin-right: -18%;
+    margin-left: 20%;
+
+    
 }
 .tile-admin{
     background-image: url("../assets/header-admin.png") ;
