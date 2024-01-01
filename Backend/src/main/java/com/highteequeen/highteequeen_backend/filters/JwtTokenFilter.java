@@ -1,6 +1,6 @@
 package com.highteequeen.highteequeen_backend.filters;
 
-import com.highteequeen.highteequeen_backend.components.JwtTokenUtil;
+import com.highteequeen.highteequeen_backend.components.JwtTokenUtils;
 import com.highteequeen.highteequeen_backend.entity.User;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -27,7 +27,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
     @Value("${api.prefix}")
     private String apiPrefix;
     private final UserDetailsService userDetailsService;
-    private final JwtTokenUtil jwtTokenUtil;
+    private final JwtTokenUtils jwtTokenUtil;
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request,
                                     @NonNull HttpServletResponse response,

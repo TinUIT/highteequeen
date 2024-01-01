@@ -27,6 +27,8 @@ public interface IProductService {
             ProductImageDTO productImageDTO) throws Exception;
 
     List<Product> findProductsByIds(List<Long> productIds);
+    String storeFile(MultipartFile file) throws IOException;
+    void deleteFile(String filename) throws IOException;
 
     @Transactional
     List<Product> createProductsFromExcel(MultipartFile file) throws IOException, DataNotFoundException;

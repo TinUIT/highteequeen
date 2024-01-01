@@ -22,7 +22,7 @@ import java.util.function.Function;
 
 @Component
 @RequiredArgsConstructor
-public class JwtTokenUtil {
+public class JwtTokenUtils {
     @Value("${jwt.expiration}")
     private int expiration;
     @Value("${jwt.secretKey}")

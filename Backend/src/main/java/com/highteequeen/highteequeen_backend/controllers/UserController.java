@@ -1,9 +1,11 @@
 package com.highteequeen.highteequeen_backend.controllers;
 
 import com.highteequeen.highteequeen_backend.components.LocalizationUtils;
+import com.highteequeen.highteequeen_backend.dtos.RefreshTokenDTO;
 import com.highteequeen.highteequeen_backend.dtos.UpdateUserDTO;
 import com.highteequeen.highteequeen_backend.dtos.UserDTO;
 import com.highteequeen.highteequeen_backend.dtos.UserLoginDTO;
+import com.highteequeen.highteequeen_backend.entity.Token;
 import com.highteequeen.highteequeen_backend.entity.User;
 import com.highteequeen.highteequeen_backend.exeptions.DataNotFoundException;
 import com.highteequeen.highteequeen_backend.exeptions.InvalidPasswordException;
@@ -14,6 +16,7 @@ import com.highteequeen.highteequeen_backend.responses.RegisterResponse;
 import com.highteequeen.highteequeen_backend.responses.ResponseObject;
 import com.highteequeen.highteequeen_backend.responses.UserResponse;
 import com.highteequeen.highteequeen_backend.services.IMailService;
+import com.highteequeen.highteequeen_backend.services.ITokenService;
 import com.highteequeen.highteequeen_backend.services.IUserService;
 import com.highteequeen.highteequeen_backend.services.impl.AuthenticationService;
 import com.highteequeen.highteequeen_backend.utils.MessageKeys;
@@ -39,6 +42,7 @@ public class UserController {
     private final IMailService mailer;
     private final UserRepository userRepository;
     private final AuthenticationService authenticationService;
+    private final ITokenService tokenService;
     @PostMapping("/register")
     public ResponseEntity<RegisterResponse> createUser(
             @Valid @RequestBody UserDTO userDTO,
@@ -81,16 +85,54 @@ public class UserController {
     }
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(
-            @Valid @RequestBody UserLoginDTO userLoginDTO
+            @Valid @RequestBody UserLoginDTO userLoginDTO,
+            HttpServletRequest request
     ) {
         try {
             String token = userService.login(
                     userLoginDTO.getEmail(),
                     userLoginDTO.getPassword()
             );
+            String userAgent = request.getHeader("User-Agent");
+            User userDetail = userService.getUserDetailsFromToken(token);
+            Token jwtToken = tokenService.addToken(userDetail, token, isMobileDevice(userAgent));
+
             return ResponseEntity.ok(LoginResponse.builder()
                     .message(localizationUtils.getLocalizedMessage(MessageKeys.LOGIN_SUCCESSFULLY))
-                    .token(token)
+                    .token(jwtToken.getToken())
+                    .tokenType(jwtToken.getTokenType())
+                    .refreshToken(jwtToken.getRefreshToken())
+                    .username(userDetail.getUsername())
+                    .roles(userDetail.getAuthorities().stream().map(item -> item.getAuthority()).toList())
+                    .id(userDetail.getId())
+                    .build());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(
+                    LoginResponse.builder()
+                            .message(localizationUtils.getLocalizedMessage(MessageKeys.LOGIN_FAILED, e.getMessage()))
+                            .build()
+            );
+        }
+    }
+    private boolean isMobileDevice(String userAgent) {
+        return userAgent.toLowerCase().contains("mobile");
+    }
+
+    @PostMapping("/refreshToken")
+    public ResponseEntity<LoginResponse> refreshToken(
+            @Valid @RequestBody RefreshTokenDTO refreshTokenDTO
+    ) {
+        try {
+            User userDetail = userService.getUserDetailsFromRefreshToken(refreshTokenDTO.getRefreshToken());
+            Token jwtToken = tokenService.refreshToken(refreshTokenDTO.getRefreshToken(), userDetail);
+            return ResponseEntity.ok(LoginResponse.builder()
+                    .message("Refresh token successfully")
+                    .token(jwtToken.getToken())
+                    .tokenType(jwtToken.getTokenType())
+                    .refreshToken(jwtToken.getRefreshToken())
+                    .username(userDetail.getUsername())
+                    .roles(userDetail.getAuthorities().stream().map(item -> item.getAuthority()).toList())
+                    .id(userDetail.getId())
                     .build());
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(
