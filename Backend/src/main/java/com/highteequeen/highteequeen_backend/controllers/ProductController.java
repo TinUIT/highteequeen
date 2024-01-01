@@ -191,20 +191,20 @@ public class ProductController {
                 .build());
     }
 
-    @GetMapping("/best-sellers")
-    public ResponseEntity<Page<ProductResponse>> getBestSellingProducts(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int limit
-    ) {
-        int totalPages = 0;
-        PageRequest pageRequest = PageRequest.of(
-                page, limit,
-                Sort.by("salesCount").descending()
-        );
-        Page<Product> bestSellers = productService.getBestSellingProducts(pageable);
-        // convert to DTOs and return
-        return ResponseEntity.ok(convertToDTOs(bestSellers));
-    }
+//    @GetMapping("/best-sellers")
+//    public ResponseEntity<Page<ProductResponse>> getBestSellingProducts(
+//            @RequestParam(defaultValue = "0") int page,
+//            @RequestParam(defaultValue = "10") int limit
+//    ) {
+//        int totalPages = 0;
+//        PageRequest pageRequest = PageRequest.of(
+//                page, limit,
+//                Sort.by("salesCount").descending()
+//        );
+//        Page<Product> bestSellers = productService.getBestSellingProducts(pageable);
+//        // convert to DTOs and return
+//        return ResponseEntity.ok(convertToDTOs(bestSellers));
+//    }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getProductById(
