@@ -91,7 +91,6 @@ public class ProductController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
-
     private ProductDTO convertToProductDTO(ProductRequest productRequest) {
         return ProductDTO.builder()
                 .name(productRequest.getName())
@@ -101,8 +100,6 @@ public class ProductController {
                 .categoryId(productRequest.getCategoryId())
                 .build();
     }
-
-
     @PostMapping(value = "uploads/{id}",
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -141,7 +138,6 @@ public class ProductController {
                 );
                 productImages.add(productImage);
             }
-
             return ResponseEntity.ok().body(productImages);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -166,7 +162,6 @@ public class ProductController {
             return ResponseEntity.notFound().build();
         }
     }
-
     @GetMapping("")
     public ResponseEntity<ProductListResponse> getProducts(
             @RequestParam(defaultValue = "") String keyword,
@@ -189,13 +184,28 @@ public class ProductController {
         for (ProductResponse product : productResponses) {
             product.setTotalPages(totalPages);
         }
-
         return ResponseEntity.ok(ProductListResponse
                 .builder()
                 .products(productResponses)
                 .totalPages(totalPages)
                 .build());
     }
+
+    @GetMapping("/best-sellers")
+    public ResponseEntity<Page<ProductResponse>> getBestSellingProducts(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int limit
+    ) {
+        int totalPages = 0;
+        PageRequest pageRequest = PageRequest.of(
+                page, limit,
+                Sort.by("salesCount").descending()
+        );
+        Page<Product> bestSellers = productService.getBestSellingProducts(pageable);
+        // convert to DTOs and return
+        return ResponseEntity.ok(convertToDTOs(bestSellers));
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<?> getProductById(
             @PathVariable("id") Long productId
@@ -221,7 +231,6 @@ public class ProductController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
-
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
 
@@ -232,28 +241,6 @@ public class ProductController {
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
-    }
-    //@PostMapping("/generateFakeProducts")
-    private ResponseEntity<String> generateFakeProducts() {
-        Faker faker = new Faker();
-        for (int i = 0; i < 1_000_000; i++) {
-            String productName = faker.commerce().productName();
-            if(productService.existsByName(productName)) {
-                continue;
-            }
-            ProductDTO productDTO = ProductDTO.builder()
-                    .name(productName)
-                    .price((float)faker.number().numberBetween(10, 90_000_000))
-                    .description(faker.lorem().sentence())
-                    .categoryId((long)faker.number().numberBetween(2, 5))
-                    .build();
-            try {
-                productService.createProduct(productDTO);
-            } catch (Exception e) {
-                return ResponseEntity.badRequest().body(e.getMessage());
-            }
-        }
-        return ResponseEntity.ok("Fake Products created successfully");
     }
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -268,8 +255,6 @@ public class ProductController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
-
-
     @PostMapping("/upload-excel")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @ResponseBody
@@ -281,8 +266,6 @@ public class ProductController {
 
         try {
             List<Product> products = productService.createProductsFromExcel(file);
-
-            // Tuỳ chọn, bạn có thể trả về danh sách sản phẩm đã tạo trong phản hồi
             return ResponseEntity.ok(products);
         } catch (Exception e) {
             e.printStackTrace();

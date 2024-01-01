@@ -29,6 +29,7 @@ public interface IProductService {
     List<Product> findProductsByIds(List<Long> productIds);
     String storeFile(MultipartFile file) throws IOException;
     void deleteFile(String filename) throws IOException;
+    Page<Product> getBestSellingProducts(PageRequest pageRequest);
 
     @Transactional
     List<Product> createProductsFromExcel(MultipartFile file) throws IOException, DataNotFoundException;

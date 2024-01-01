@@ -32,6 +32,8 @@ public class Product extends BaseEntity{
 
     @Column(name = "in_stock")
     private int inStock;
+    @Column(name = "sales_count")
+    private Long salesCount;
 
     @ManyToOne
     @JoinColumn(name = "category_id")
