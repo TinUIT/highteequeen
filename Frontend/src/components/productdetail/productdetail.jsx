@@ -1,8 +1,7 @@
 import './productdetail.css'
 import logoName from '../../assets/SonA12.png';
 import { Link } from 'react-router-dom';
-// import { getStorage, ref, getDownloadURL } from "firebase/storage";
-// import {app} from "../../firebase/firebase"
+
 import { useState, useEffect ,useContext} from 'react';
 import Login from "../../components/login/loginform";
 import { Dialog } from "@material-ui/core";
@@ -22,6 +21,7 @@ function Productdetail  (props) {
   const { price } =  props;
   const { productId } = props;
   const {sales}=props;
+  const {image}=props;
 
   const [countProduct, setCountProduct] = useState(1);
   const { addToFavoriteCart } = useContext( FavoriteContext);
@@ -45,31 +45,13 @@ function Productdetail  (props) {
     addToCart(product);} 
     else {setOpenPopupLogin(true)}
   };
-  
 
-  // useEffect(() => {
-  //   const storage = getStorage(app);
-  //   var storageRef = ref(storage, "white.jpg"); 
-  //   const calculatedSeller = price - (price *( sales/100));
-  //   var roundedSeller = Math.round(calculatedSeller);
-  //   console.log("giá trị",sales);
-  //   setSalePro(roundedSeller);
-    
-  //   if(props.image != null) {
-  //     storageRef = ref(storage, props.image);
-  //   }
-  //   console.log(props.productId);
-  //   getDownloadURL(storageRef).then((url) => {
-  //     setImageUrl(url);      
-
-  //   });
-  // }, [props.image]);
   return(
     
     <div className="wrappperProductdetail" >
        <Link state={{ nameProduct: props.nameProduct, price : props.price, image: props.image, description:props.description, productId: props.productId }} to="/product-detail">
     
-      <div className="Backgroud-Product-cpn" style={{ backgroundImage: `url(${imageUrl})` }}>
+      <div className="Backgroud-Product-cpn" style={{ backgroundImage: `url(${image})` }}>
 
       </div>
       </Link>

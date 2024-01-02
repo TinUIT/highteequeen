@@ -62,11 +62,17 @@ public class OrderService implements IOrderService {
 
             Product product = productRepository.findById(productId)
                     .orElseThrow(() -> new DataNotFoundException("Product not found with id: " + productId));
+            product.setSalesCount(product.getSalesCount() + cartItemDTO.getQuantity());
+            if (product.getInStock() == 0 || (product.getInStock() - cartItemDTO.getQuantity()) < 0) {
+                throw new DataNotFoundException("Product is out of stock !");
+            }
+            product.setInStock(product.getInStock() - cartItemDTO.getQuantity());
+            productRepository.save(product);
 
             orderDetail.setProduct(product);
             orderDetail.setNumberOfProducts(quantity);
             orderDetail.setPrice(product.getPrice());
-
+            orderDetail.setTotalMoney(quantity * product.getPrice());
             orderDetails.add(orderDetail);
         }
 

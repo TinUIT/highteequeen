@@ -21,6 +21,7 @@ public class ProductResponse extends BaseResponse {
     private String description;
     private int inStock;
     private int totalPages;
+    private long salesCount;
 
     @JsonProperty("product_images")
     private List<ProductImage> productImages = new ArrayList<>();
@@ -35,6 +36,7 @@ public class ProductResponse extends BaseResponse {
                 .thumbnail(product.getThumbnail())
                 .description(product.getDescription())
                 .inStock(product.getInStock())
+                .salesCount(product.getSalesCount() == null ? 0 : product.getSalesCount())
                 .categoryId(product.getCategory().getId())
                 .productImages(product.getProductImages())
                 .build();

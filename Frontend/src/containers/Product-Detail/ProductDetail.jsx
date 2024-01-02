@@ -25,7 +25,7 @@ const ProductDetail = () => {
   const [imageUrl, setImageUrl] = useState(null);
   const [countProduct, setCountProduct] = useState(1);
   const [products, setProducts] = useState([]);
-  const [apiEndpoint, setApiEndpoint] = useState("http://localhost:8080/api/products");
+  const [apiEndpoint, setApiEndpoint] = useState("http://localhost:8080/api/v1/products");
   const [totalPages, setTotalPages] = useState(0);
   const [currentPage, setCurrentPage] = useState(0);
   const userInfo = JSON.parse(localStorage.getItem('user-info'));
@@ -187,14 +187,14 @@ const ProductDetail = () => {
               <div className="product-left">
                 <img
                   className="img-product"
-                  src={imageUrl}
+                  src={image}
                   alt="image product"
                 ></img>
                 <ul className="producttail-listsuggest">
                   <li className="wrap-product-suggest-img" onClick={() => setImageUrl(product)}>
                     <img
                       className="product-suggest-img"
-                      src={imageUrl}
+                      src={image}
                       alt="immage product suggest"
 
                     ></img>

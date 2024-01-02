@@ -51,6 +51,7 @@ public class ProductService implements IProductService {
         Product newProduct = Product.builder()
                 .name(productDTO.getName())
                 .price(productDTO.getPrice())
+                .salesCount(0L)
                 .thumbnail(productDTO.getThumbnail())
                 .description(productDTO.getDescription())
                 .inStock(productDTO.getInStock())
@@ -164,6 +165,14 @@ public class ProductService implements IProductService {
             throw new FileNotFoundException("File not found: " + filename);
         }
     }
+
+    @Override
+    public Page<ProductResponse> getBestSellingProducts(PageRequest pageRequest) {
+        Page<Product> productsPage;
+        productsPage = productRepository.searchBestSellingProducts(pageRequest);
+        return productsPage.map(ProductResponse::fromProduct);
+    }
+
     private boolean isImageFile(MultipartFile file) {
         String contentType = file.getContentType();
         return contentType != null && contentType.startsWith("image/");

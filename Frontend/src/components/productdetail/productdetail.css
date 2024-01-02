@@ -4,21 +4,17 @@
     
     
 }
-.Backgroud-Product-cpn{
-    background-image: "https://firebasestorage.googleapis.com/v0/b/highteequeen-c8dec.appspot.com/o/logo.png?alt=media&token=68cc7205-25aa-440d-832a-27dc5c836615https://firebasestorage.googleapis.com/v0/b/highteequeen-c8dec.appspot.com/o/logo.png?alt=media&token=68cc7205-25aa-440d-832a-27dc5c836615";
-    background-size: 100% 100%;
+.Backgroud-Product-cpn {
+    background-size: cover;
     background-repeat: no-repeat;
-    
-   
-  
-    /* box-shadow: 3px 3px 3px 5px rgba(0, 0, 0, 0.25); */
+    background-position: center; 
     border-radius: 5px;
-    padding-top:255px;
+    padding-top: 255px;
     cursor: pointer;
-    
     margin-right: 5px;
-
 }
+
+
 .Link{
     text-decoration: none;
 }

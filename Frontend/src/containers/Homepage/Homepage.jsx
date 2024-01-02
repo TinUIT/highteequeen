@@ -67,6 +67,11 @@ function Homepage() {
     const [BestBrandrproduct, setBestBrandproduct] = useState(0);
     const [isselectsee, setisSelectSee] = useState(null);
 
+    const getImageUrl = (imageName) => {
+        console.log(`http://localhost:8080/api/v1/products/images/${imageName}`)
+        return `http://localhost:8080/api/v1/products/images/${imageName}`;
+    };
+
 
     const handleSelect = (selectedIndex, e) => {
         setIndex(selectedIndex);
@@ -99,11 +104,10 @@ function Homepage() {
     }, []);
 
     useEffect(() => {
-        axios.get("http://localhost:8080/api/products/best-sellers/top4")
+        axios.get("http://localhost:8080/api/v1/products/best-sellers?page=0&limit=4")
             .then(response => {
-                setBestSeller(response.data);
+                setBestSeller(response.data.products);
                 console.log("test", response.data);
-
             })
             .catch(error => {
                 console.error('There was an error!', error);
@@ -236,17 +240,17 @@ function Homepage() {
             </div>
             <div className="wrap-Sale-Product">
                 <Carousel activeIndex={BestSellerproduct} onSelect={handleBestSellerproduct}>
-                    <Carousel.Item >
+                <Carousel.Item>
                         <div className='Sale-Product'>
                             {bestSeller.slice(0, 4).map(product => (
-                                <Productdetail nameProduct={product.name} description={product.description} price={product.price} image={product.image} productId={product.id} sales={product.sales} />
-                            ))}
-                        </div>
-                    </Carousel.Item>
-                    <Carousel.Item >
-                        <div className='Sale-Product'>
-                            {bestSeller.slice(4, 8).map(product => (
-                                <Productdetail nameProduct={product.name} description={product.description} price={product.price} image={product.image} productId={product.id} sales={product.sales} />
+                                <Productdetail 
+                                    nameProduct={product.name} 
+                                    description={product.description} 
+                                    price={product.price} 
+                                    image={getImageUrl(product.product_images[0]?.image_url || product.thumbnail)} 
+                                    productId={product.id} 
+                                    sales={product.salesCount} 
+                                />
                             ))}
                         </div>
                     </Carousel.Item>
