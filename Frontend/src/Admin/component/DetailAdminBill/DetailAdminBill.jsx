@@ -146,50 +146,54 @@ console.log("TestProductBill",DetailContentBill)
               <div className="wrapper-info-user">Email: {info.Email}</div>
               <div className="wrapper-info-user">Phone: {info.Phone}</div>
               <div className="wrapper-info-user">Address: {info.Address}</div>
-              <hr />
+           
             </React.Fragment>
           ))}
             </div>
 
         </div>
-     
-      <TableContainer
-        component={Paper}
-        style={{ boxShadow: "0px 13px 20px 0px #80808029" }}
-      >
-        <Table sx={{ minWidth: 650 }} aria-label="simple table">
-          <TableHead>
-            <TableRow>
-              
-              <TableCell align="left">ID</TableCell>
-              <TableCell align="left">Name</TableCell>
-              <TableCell align="left">Price</TableCell>
-              <TableCell align="left">Quantity</TableCell>
-              <TableCell align="left">Total</TableCell>
-             
-            </TableRow>
-          </TableHead>
-          <TableBody style={{ color: "white" }}>
-            {DetailContentBill.map((item) => (
-              <TableRow
-                key={item.productId}               
-              >
+        <div className="Product_Order">
+          <TableContainer
+            component={Paper}
+            style={{ boxShadow: "0px 13px 20px 0px #80808029" }}
+          >
+            <Table sx={{ minWidth: 650 }} aria-label="simple table">
+              <TableHead>
+                <TableRow>
+                  
+                  <TableCell align="left">ID</TableCell>
+                  <TableCell align="left">Name</TableCell>
+                  <TableCell align="left">Price</TableCell>
+                  <TableCell align="left">Quantity</TableCell>
+                  <TableCell align="left">Total</TableCell>
                 
-                <TableCell align="left">{item.productId}</TableCell>
-                <TableCell align="left">{item.productName}</TableCell>
-                <TableCell align="left">{item.price}</TableCell>
-                <TableCell align="left">{item.quantity}</TableCell>
-                <TableCell align="left">{item.subtotal}</TableCell>
-              
-              
-              </TableRow>
-            ))}
+                </TableRow>
+              </TableHead>
+              <TableBody style={{ color: "white" }}>
+                {DetailContentBill.map((item) => (
+                  <TableRow
+                    key={item.productId}               
+                  >
+                    
+                    <TableCell align="left">{item.productId}</TableCell>
+                    <TableCell align="left">{item.productName}</TableCell>
+                    <TableCell align="left">{item.price}</TableCell>
+                    <TableCell align="left">{item.quantity}</TableCell>
+                    <TableCell align="left">{item.subtotal}</TableCell>
+                  
+                  
+                  </TableRow>
+                ))}
 
 
 
-          </TableBody>
-        </Table>
-      </TableContainer>
+              </TableBody>
+            </Table>
+          </TableContainer>
+
+        </div>
+     
+      
       
       
     </div>
