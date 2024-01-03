@@ -94,9 +94,9 @@ function Homepage() {
     const [bestBrand, setBestBrand] = useState([]);
 
     useEffect(() => {
-        axios.get("http://localhost:8080/api/products/sales/top8")
+        axios.get("http://localhost:8080/api/v1/products/discounted?page=0&limit=8")
             .then(response => {
-                setProducts(response.data);
+                setProducts(response.data.products);
             })
             .catch(error => {
                 console.error('There was an error!', error);
@@ -104,7 +104,7 @@ function Homepage() {
     }, []);
 
     useEffect(() => {
-        axios.get("http://localhost:8080/api/v1/products/best-sellers?page=0&limit=4")
+        axios.get("http://localhost:8080/api/v1/products/best-sellers?page=0&limit=8")
             .then(response => {
                 setBestSeller(response.data.products);
                 console.log("test", response.data);
@@ -211,17 +211,28 @@ function Homepage() {
                     <Carousel.Item >
                         <div className='Sale-Product'>
                             {products.slice(0, 4).map(product => (
-                                <Productdetail nameProduct={product.name} description={product.description} price={product.price} image={product.image} productId={product.id} sales={product.sales} />
-
-
+                                <Productdetail 
+                                nameProduct={product.name} 
+                                description={product.description} 
+                                price={product.price} 
+                                image={getImageUrl(product.product_images[0]?.image_url || product.thumbnail)} 
+                                productId={product.id} 
+                                sales={product.salesCount} 
+                            />
                             ))}
                         </div>
                     </Carousel.Item>
                     <Carousel.Item >
                         <div className='Sale-Product'>
                             {products.slice(4, 8).map(product => (
-                                <Productdetail nameProduct={product.name} description={product.description} price={product.price} image={product.image} productId={product.id} sales={product.sales} />
-
+                                <Productdetail 
+                                nameProduct={product.name} 
+                                description={product.description} 
+                                price={product.price} 
+                                image={getImageUrl(product.product_images[0]?.image_url || product.thumbnail)} 
+                                productId={product.id} 
+                                sales={product.salesCount} 
+                            />
                             ))}
                         </div>
                     </Carousel.Item>

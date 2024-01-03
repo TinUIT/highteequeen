@@ -1,7 +1,6 @@
 package com.highteequeen.highteequeen_backend.controllers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.github.javafaker.Faker;
 import com.highteequeen.highteequeen_backend.components.LocalizationUtils;
 import com.highteequeen.highteequeen_backend.dtos.ProductDTO;
 import com.highteequeen.highteequeen_backend.dtos.ProductImageDTO;
@@ -25,16 +24,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -59,10 +53,8 @@ public class ProductController {
                         .toList();
                 return ResponseEntity.badRequest().body(errorMessages);
             }
-
             ProductDTO productDTO = convertToProductDTO(productRequest);
             Product newProduct = productService.createProduct(productDTO);
-
             for (MultipartFile file : productRequest.getImages()) {
                 if(file.getSize() == 0) {
                     continue;
@@ -148,7 +140,6 @@ public class ProductController {
         try {
             java.nio.file.Path imagePath = Paths.get("uploads/"+imageName);
             UrlResource resource = new UrlResource(imagePath.toUri());
-
             if (resource.exists()) {
                 return ResponseEntity.ok()
                         .contentType(MediaType.IMAGE_JPEG)
@@ -190,7 +181,6 @@ public class ProductController {
                 .totalPages(totalPages)
                 .build());
     }
-
     @GetMapping("/best-sellers")
     public ResponseEntity<ProductListResponse> getBestSellingProducts(
             @RequestParam(defaultValue = "0") int page,
@@ -214,7 +204,23 @@ public class ProductController {
                 .totalPages(totalPages)
                 .build());
     }
-
+    @GetMapping("/discounted")
+    public ResponseEntity<ProductListResponse> getDiscountedProducts(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int limit
+    ) {
+        PageRequest pageRequest = PageRequest.of(page, limit, Sort.by("discountPercent").descending());
+        Page<ProductResponse> productPage = productService.findProductsByDiscountPercentDesc(pageRequest);
+        int totalPages = productPage.getTotalPages();
+        List<ProductResponse> productResponses = productPage.getContent();
+        for (ProductResponse product : productResponses) {
+            product.setTotalPages(totalPages);
+        }
+        return ResponseEntity.ok(ProductListResponse.builder()
+                .products(productResponses)
+                .totalPages(totalPages)
+                .build());
+    }
     @GetMapping("/{id}")
     public ResponseEntity<?> getProductById(
             @PathVariable("id") Long productId
@@ -229,7 +235,6 @@ public class ProductController {
     }
     @GetMapping("/by-ids")
     public ResponseEntity<?> getProductsByIds(@RequestParam("ids") String ids) {
-        //eg: 1,3,5,7
         try {
             List<Long> productIds = Arrays.stream(ids.split(","))
                     .map(Long::parseLong)
@@ -253,7 +258,6 @@ public class ProductController {
     }
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-
     public ResponseEntity<?> updateProduct(
             @PathVariable long id,
             @RequestBody ProductDTO productDTO) {
@@ -272,7 +276,6 @@ public class ProductController {
             redirectAttributes.addFlashAttribute("message", "Vui lòng chọn một tệp để tải lên.");
             return ResponseEntity.badRequest().body("Vui lòng chọn một tệp để tải lên.");
         }
-
         try {
             List<Product> products = productService.createProductsFromExcel(file);
             return ResponseEntity.ok(products);
@@ -281,5 +284,4 @@ public class ProductController {
             return ResponseEntity.badRequest().body("Lỗi khi xử lý tệp Excel: " + e.getMessage());
         }
     }
-
 }
