@@ -1,108 +1,115 @@
 .MuiTableRow-root > * {
-    padding: 10px;
-  }
-  
-  .MuiTableRow-root.MuiTableRow-head > * {
-    font-weight: bold !important;
-  }
-  
-  /* .Table td,
-  th {
-    border: none !important;
-  } */
-  
-  .Table:first-child {
-    border-radius: 0.7rem !important;
-  }
-  .status {
-    padding: 8px;
-    border-radius: 9px;
-  }
-  
-  .Details {
-    color: #00b5ff !important;
-  }
-  
-  @media screen and (max-width: 1200px) {
-    .Table {
-      width: 170%;
-      margin-top: 2rem;
-    }
-  }
-  
-  
-  @media screen and (max-width: 768px) {
-    .Table{
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      width: 23rem;
-    }
-  }
-  .Bt-Admin-Details{
-    border-radius: 5px;
-    border-color: blue;
-    background-color: white;
-    color: blue;
-  }
-  .Bt-Admin-Details:hover{
-    background-color: blue;
-    color: white;
-  }
-  .Bt-Admin-Close{
-    padding: 0px 10px;
-    border-radius: 5px;
-    border-color: white;
-    background-color: rgb(126, 69, 34);
-    color: white;
-  }
-  .Bt-Admin-Close:hover{
-    border-radius: 5px;
-    border-color: rgb(126, 69, 34);
-    background-color: white;
-    color: rgb(126, 69, 34);
+  padding: 10px;
+}
 
-  }
-  .ButtonActive{
-    width: 70px;
-    height: 40px;
-    margin-right: 5px;
-    border-radius: 5px;
-  }
-  .Accept{
-    border-color: #129e08 ;
-    background-color: rgb(145 254 159 / 30%);
-    color: #14580f;
+.MuiTableRow-root.MuiTableRow-head > * {
+  font-weight: bold !important;
+}
 
+/* .Table td,
+th {
+  border: none !important;
+} */
+
+
+.Table:first-child {
+  border-radius: 0.7rem !important;
+  /* margin-left: 10px;
+  margin-right: 10px; */
+  margin-bottom: 20px;
+  background-color: #F8E2CF;
+  margin-left: 20%;
+  margin-right: -18%;
+}
+.status {
+  padding: 8px;
+  border-radius: 9px;
+}
+
+.Details {
+  color: #00b5ff !important;
+}
+
+@media screen and (max-width: 1200px) {
+  .Table {
+    width: 170%;
+    margin-top: 2rem;
   }
-  .Deny{
-   
-      border-color: red ;
-      background-color: rgba(186, 54, 42, 0.3);
-      color: red;
+}
+
+
+@media screen and (max-width: 768px) {
+  .Table{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 23rem;
+  }
+}
+.Bt-Admin-Details{
+  border-radius: 5px;
+  border-color: blue;
+  background-color: white;
+  color: blue;
+}
+.Bt-Admin-Details:hover{
+  background-color: blue;
+  color: white;
+}
+.Bt-Admin-Close{
+  padding: 0px 10px;
+  border-radius: 5px;
+  border-color: white;
+  background-color: rgb(126, 69, 34);
+  color: white;
+}
+.Bt-Admin-Close:hover{
+  border-radius: 5px;
+  border-color: rgb(126, 69, 34);
+  background-color: white;
+  color: rgb(126, 69, 34);
+
+}
+.ButtonActive{
+  width: 70px;
+  height: 40px;
+  margin-right: 5px;
+  border-radius: 5px;
+}
+.Accept{
+  border-color: #129e08 ;
+  background-color: rgb(145 254 159 / 30%);
+  color: #14580f;
+
+}
+.Deny{
+ 
+    border-color: red ;
+    background-color: rgba(186, 54, 42, 0.3);
+    color: red;
+
   
-    
-  }
+}
 
-  .IMG-Tick-Accept{
-    width: 100%;
-    height: 100%;
-    
-  }
-  .Wrap-button-active{
-    display: grid;
-    grid-template-columns: 30% 30%;
-    padding:3px 3px;
-  }
-  .Wrap-img-tick-accept{
-    width: 70px;
-    height: 40px;
-    border-radius: 5px;
-    border-width: 2px;
-   
-    border-color: #129e08;
-    border-style: solid;
-  }
+.IMG-Tick-Accept{
+  width: 100%;
+  height: 100%;
+  
+}
+.Wrap-button-active{
+  display: grid;
+  grid-template-columns: 30% 30%;
+  padding:3px 3px;
+}
+.Wrap-img-tick-accept{
+  width: 70px;
+  height: 40px;
+  border-radius: 5px;
+  border-width: 2px;
+ 
+  border-color: #129e08;
+  border-style: solid;
+}
 
 

@@ -13,21 +13,21 @@ import axios from "axios";
 import NavbarOrders from "./NavbarOrders";
 import ReactPaginate from "react-paginate";
 
-function createData(name, trackingId, date, status) {
-  return { name, trackingId, date, status };
-}
+// function createData(name, trackingId, date, status) {
+//   return { name, trackingId, date, status };
+// }
 
-const rows = [
-  createData("Lasania Chiken Fri", 18908424, "2 March 2022", "Approved"),
-  createData("Big Baza Bang ", 18908424, "2 March 2022", "Pending"),
-  createData("Mouth Freshner", 18908424, "2 March 2022", "Approved"),
-  createData("Cupcaka", 18908421, "2 March 2022", "Delivered"),
-  createData("Cupcakb", 18908421, "2 March 2022", "Delivered"),
-  createData("Cupcakc", 18908421, "2 March 2022", "Delivered"),
-  createData("Cupcakd", 18908421, "2 March 2022", "Delivered"),
-  createData("Cupcake", 18908421, "2 March 2022", "Delivered"),
-  createData("Cupcakf", 18908421, "2 March 2022", "Delivered"),
-];
+// const rows = [
+//   createData("Lasania Chiken Fri", 18908424, "2 March 2022", "Approved"),
+//   createData("Big Baza Bang ", 18908424, "2 March 2022", "Pending"),
+//   createData("Mouth Freshner", 18908424, "2 March 2022", "Approved"),
+//   createData("Cupcaka", 18908421, "2 March 2022", "Delivered"),
+//   createData("Cupcakb", 18908421, "2 March 2022", "Delivered"),
+//   createData("Cupcakc", 18908421, "2 March 2022", "Delivered"),
+//   createData("Cupcakd", 18908421, "2 March 2022", "Delivered"),
+//   createData("Cupcake", 18908421, "2 March 2022", "Delivered"),
+//   createData("Cupcakf", 18908421, "2 March 2022", "Delivered"),
+// ];
 
 const makeStyle = (status) => {
   if (status === "Approved") {
@@ -53,11 +53,13 @@ const makeStyle = (status) => {
 export default function BasicTable() {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [isAccept, setisAccept] = useState(false);
-  const [isAccepted, setIsAccepted] = useState(Array(rows.length).fill(false));
-  const [isCancel, setIsCancel] = useState(Array(rows.length).fill(false));
+  // const [isAccepted, setIsAccepted] = useState(Array(rows.length).fill(false));
+  // const [isCancel, setIsCancel] = useState(Array(rows.length).fill(false));
+  const [isAccepted, setIsAccepted] = useState(Array(0).fill(false));
+  const [isCancel, setIsCancel] = useState(Array(0).fill(false));
   const [Bill, setBill] = useState([]);
-  // const [ContentBill, setContentBill] = useState([]);
-  const [ContentBill, setContentBill] = useState(rows);
+  
+  const [listOrder, setListOrder] = useState([]);
   const [ID, setID] = useState();
 
   const handleDetailBill = (product, index) => {
@@ -102,24 +104,49 @@ export default function BasicTable() {
 
   const startIndex = currentPage * itemsPerPage;
 const endIndex = startIndex + itemsPerPage;
-const displayedItems = ContentBill.slice(startIndex, endIndex);
+const displayedItems = listOrder.slice(startIndex, endIndex);
 
 
 
 
 
 
+  // useEffect(() => {
+  //   axios
+  //     .get("http://localhost:8080/api/orders?page=0&size=5")
+  //     .then((response) => {
+  //       setBill(response.data);
+  //       setContentBill(response.data.content);
+  //     })
+  //     .catch((error) => {
+  //       console.error("There was an error!", error);
+  //     });
+  // }, [ isAccepted,isCancel]);
   useEffect(() => {
-    axios
-      .get("http://localhost:8080/api/orders?page=0&size=5")
-      .then((response) => {
-        setBill(response.data);
-        setContentBill(response.data.content);
-      })
-      .catch((error) => {
-        console.error("There was an error!", error);
-      });
-  }, [ isAccepted,isCancel]);
+  const fetchData = async () => {
+    try {
+      const response = await axios.get(
+        'http://localhost:8080/api/v1/orders/get-orders-by-keyword?page=0&limit=10',
+        {
+          headers: {
+            accept: '*',
+            Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjIsImVtYWlsIjoiMjA1MjE4MThAZ20udWl0LmVkdS52biIsInN1YiI6IjIwNTIxODE4QGdtLnVpdC5lZHUudm4iLCJleHAiOjE3MDY4MDQ4ODl9.jIPkeYVkTn87aqXUSERq6HYjgbqdbxq5bGDJfUzT4ho',
+          },
+        }
+      );
+      setBill(response.data.orders);
+      setListOrder(response.data.orders);
+      setIsAccepted(Array(response.data.orders.length).fill(false));
+      setIsCancel(Array(response.data.orders.length).fill(false));
+    } catch (error) {
+      console.error('There was an error!', error);
+    }
+  };
+
+  fetchData();
+// }, [isAccepted, isCancel]);
+}, []);
+
 
   return (
     <div className="Table">
@@ -132,7 +159,7 @@ const displayedItems = ContentBill.slice(startIndex, endIndex);
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
             <TableRow>
-              <TableCell align="left">Tracking ID</TableCell>
+              <TableCell align="left">Order ID</TableCell>
               <TableCell align="left">Date</TableCell>
               <TableCell align="left">Status</TableCell>
               <TableCell align="left"></TableCell>
@@ -140,15 +167,17 @@ const displayedItems = ContentBill.slice(startIndex, endIndex);
             </TableRow>
           </TableHead>
           <TableBody style={{ color: "white" }}>
-            {ContentBill.map((row, index) => (
+            {listOrder.map((row, index) => (
+               <React.Fragment key={row.id}>
               <TableRow
-                key={row.name}
+                key={row.id}
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+
               >
                 {/* <TableCell align="left">{row.orderId}</TableCell>
                 <TableCell align="left">{row.orderDate}</TableCell> */}
-                <TableCell align="left">{row.trackingId}</TableCell>
-                <TableCell align="left">{row.date}</TableCell>
+                <TableCell align="left">{row.id}</TableCell>
+                <TableCell align="left">{`${row.order_date[2]} / ${row.order_date[1]} / ${row.order_date[0]}`}</TableCell>
                 <TableCell align="left">
                   <span className="status" style={makeStyle(row.status)}>
                     {row.status}
@@ -221,7 +250,21 @@ const displayedItems = ContentBill.slice(startIndex, endIndex);
                   </div>
                 </TableCell>
               </TableRow>
+              {selectedProduct === row && (
+                  <TableRow>
+                    <TableCell align="left" colSpan={5}>
+                      <DetailAdminBill
+                        product={selectedProduct}
+                        onClose={handleCloseDetail}
+                        ID={row.id}
+                      />
+                    </TableCell>
+                  </TableRow>
+                )}
+
+              </React.Fragment>
             ))}
+            
           </TableBody>
        
 
@@ -240,9 +283,9 @@ const displayedItems = ContentBill.slice(startIndex, endIndex);
           /> */}
       
       
-      {selectedProduct && (
+      {/* {selectedProduct && (
         <DetailAdminBill product={selectedProduct} onClose={handleCloseDetail} ID={ID} />
-      )}
+      )} */}
     </div>
   );
 }
