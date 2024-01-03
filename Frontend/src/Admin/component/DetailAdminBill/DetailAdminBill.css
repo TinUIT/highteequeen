@@ -35,7 +35,14 @@
 }
 
 
-
+.DetailAdminBill{
+  border-radius: 0.7rem !important;
+  margin-left: 10px;
+ margin-right: 10px;
+   margin-bottom: 20px;
+   background-color: #F8E2CF;
+ 
+}
 
 
 /* ========================================== */

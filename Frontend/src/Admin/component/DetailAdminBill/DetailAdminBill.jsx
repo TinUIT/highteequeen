@@ -72,33 +72,46 @@ const Userexample = [
   // const [DetailContentBill,setDetailContentBill]=useState([]);
   const [ContentBill, setContentBill] = useState([product]);
   const [DetailContentBill, setDetailContentBill] = useState(dataExample);
+  const [userInfo, setUserInfo] = useState({});
+  const [orderDetails, setOrderDetails] = useState([]);
 
 
-  // useEffect(()=>setPosts(dataExample),[])
 //   useEffect(() => {
-//     axios.get("http://localhost:8080/api/orders?page=0&size=5")
-//         .then(response => {
-//             setContentBill(response.data.content)
-//             console.log("TestProduct",response.data.content[props.ID]);
-//             const OrderDetailBill=response.data.content[props.ID].orderDetails;
-            
-//             setDetailContentBill(OrderDetailBill);
-//         })
-       
-//         .catch(error => {
-//             console.error('There was an error!', error);
-//         });
-// }, []);
-  useEffect(() => {
-    // Simulating data from API
-    // Replace this with your actual API call
-    setContentBill(Userexample);
+//     // Simulating data from API
+//     // Replace this with your actual API call
+//     setContentBill(Userexample);
 
 
-  }, [ID]);
-console.log("TestProductBill",DetailContentBill)
+//   }, [ID]);
+// console.log("TestProductBill",DetailContentBill)
 
+useEffect(() => {
+  const fetchData = async () => {
+    try {
+      // Fetch user info
+    
+      // Fetch order details
+      const orderDetailsResponse = await axios.get(
+      
+        `http://localhost:8080/api/v1/order_details/order/${ID}`,
+        {
+          headers: {
+            accept: '*',
+            Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjIsImVtYWlsIjoiMjA1MjE4MThAZ20udWl0LmVkdS52biIsInN1YiI6IjIwNTIxODE4QGdtLnVpdC5lZHUudm4iLCJleHAiOjE3MDY3NzgzNTh9.QRIuxIocF8UBxcByrSV4s5Slz33IkgOYHJH8cX3v0TA',
+          },
+        }
+      );
+      setOrderDetails([orderDetailsResponse.data]);
+      console.log('Order Details Response:', orderDetailsResponse.data);
+    } catch (error) {
+      console.error('Error:', error.message);
+      console.error('Response Status:', error.response?.status);
+      console.error('Response Data:', error.response?.data);
+    }
+  };
 
+  fetchData();
+}, [ID]);
 
 
 
@@ -111,7 +124,7 @@ console.log("TestProductBill",DetailContentBill)
 
 
   return (
-    <div className="Table">
+    <div className="DetailAdminBill">
        <div class="my-div">
           <div class="line1"></div>
           <div class="BestSeller"> 
@@ -140,12 +153,12 @@ console.log("TestProductBill",DetailContentBill)
  
                 ))
                 } */}
-                 {ContentBill.map((info, index) => (
+          {ContentBill.map((info, index) => (
             <React.Fragment key={index}>
-              <div className="wrapper-info-user">Name: {info.NameUser}</div>
-              <div className="wrapper-info-user">Email: {info.Email}</div>
-              <div className="wrapper-info-user">Phone: {info.Phone}</div>
-              <div className="wrapper-info-user">Address: {info.Address}</div>
+      <div className="wrapper-info-user">Name: {userInfo.NameUser}</div>
+      <div className="wrapper-info-user">Email: {userInfo.Email}</div>
+      <div className="wrapper-info-user">Phone: {userInfo.Phone}</div>
+      <div className="wrapper-info-user">Address: {userInfo.Address}</div>
            
             </React.Fragment>
           ))}
@@ -170,22 +183,15 @@ console.log("TestProductBill",DetailContentBill)
                 </TableRow>
               </TableHead>
               <TableBody style={{ color: "white" }}>
-                {DetailContentBill.map((item) => (
-                  <TableRow
-                    key={item.productId}               
-                  >
-                    
-                    <TableCell align="left">{item.productId}</TableCell>
-                    <TableCell align="left">{item.productName}</TableCell>
-                    <TableCell align="left">{item.price}</TableCell>
-                    <TableCell align="left">{item.quantity}</TableCell>
-                    <TableCell align="left">{item.subtotal}</TableCell>
-                  
-                  
-                  </TableRow>
-                ))}
-
-
+              {orderDetails.map((item, index) => (
+                <TableRow key={index}>
+                  <TableCell align="left">{item.id}</TableCell>
+                  <TableCell align="left">{/* Use the correct property name for product name */}</TableCell>
+                  <TableCell align="left">{item.price}</TableCell>
+                  <TableCell align="left">{item.number_of_products}</TableCell>
+                  <TableCell align="left">{item.total_money}</TableCell>
+                </TableRow>
+              ))}
 
               </TableBody>
             </Table>

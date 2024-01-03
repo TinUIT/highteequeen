@@ -10,13 +10,14 @@
   th {
     border: none !important;
   } */
-  
-  .Table:first-child {
+  .Wrapper-Pagniation{
+ 
     border-radius: 0.7rem !important;
-    margin-left: 10px;
-    margin-right: 10px;
+   margin-left: 10px;
+  margin-right: 10px;
     margin-bottom: 20px;
     background-color: #F8E2CF;
+  
   }
   .status {
     padding: 8px;

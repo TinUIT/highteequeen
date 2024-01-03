@@ -59,7 +59,7 @@ export default function BasicTable() {
   const [isCancel, setIsCancel] = useState(Array(0).fill(false));
   const [Bill, setBill] = useState([]);
   
-  const [ContentBill, setContentBill] = useState([]);
+  const [listOrder, setListOrder] = useState([]);
   const [ID, setID] = useState();
 
   const handleDetailBill = (product, index) => {
@@ -104,7 +104,7 @@ export default function BasicTable() {
 
   const startIndex = currentPage * itemsPerPage;
 const endIndex = startIndex + itemsPerPage;
-const displayedItems = ContentBill.slice(startIndex, endIndex);
+const displayedItems = listOrder.slice(startIndex, endIndex);
 
 
 
@@ -130,12 +130,12 @@ const displayedItems = ContentBill.slice(startIndex, endIndex);
         {
           headers: {
             accept: '*',
-            Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjIsImVtYWlsIjoiMjA1MjE4MThAZ20udWl0LmVkdS52biIsInN1YiI6IjIwNTIxODE4QGdtLnVpdC5lZHUudm4iLCJleHAiOjE3MDY3ODEyODB9.PnqrwRETvgzxYcA4AWIv357ZqF2LECvXkbhlgua145I',
+            Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjIsImVtYWlsIjoiMjA1MjE4MThAZ20udWl0LmVkdS52biIsInN1YiI6IjIwNTIxODE4QGdtLnVpdC5lZHUudm4iLCJleHAiOjE3MDY4MDQ4ODl9.jIPkeYVkTn87aqXUSERq6HYjgbqdbxq5bGDJfUzT4ho',
           },
         }
       );
       setBill(response.data.orders);
-      setContentBill(response.data.orders);
+      setListOrder(response.data.orders);
       setIsAccepted(Array(response.data.orders.length).fill(false));
       setIsCancel(Array(response.data.orders.length).fill(false));
     } catch (error) {
@@ -167,11 +167,12 @@ const displayedItems = ContentBill.slice(startIndex, endIndex);
             </TableRow>
           </TableHead>
           <TableBody style={{ color: "white" }}>
-            {ContentBill.map((row, index) => (
+            {listOrder.map((row, index) => (
                <React.Fragment key={row.id}>
               <TableRow
                 key={row.id}
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+
               >
                 {/* <TableCell align="left">{row.orderId}</TableCell>
                 <TableCell align="left">{row.orderDate}</TableCell> */}
@@ -255,7 +256,7 @@ const displayedItems = ContentBill.slice(startIndex, endIndex);
                       <DetailAdminBill
                         product={selectedProduct}
                         onClose={handleCloseDetail}
-                        ID={ID}
+                        ID={row.id}
                       />
                     </TableCell>
                   </TableRow>
