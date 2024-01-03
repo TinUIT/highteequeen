@@ -18,4 +18,6 @@ public interface IUserService {
             throws InvalidPasswordException, DataNotFoundException ;
     public void blockOrEnable(Long userId, Boolean active) throws DataNotFoundException;
     Page<User> findAll(String keyword, Pageable pageable) throws Exception;
+
+    void addProductToFavorites(Long userId, Long productId) throws DataNotFoundException;
 }

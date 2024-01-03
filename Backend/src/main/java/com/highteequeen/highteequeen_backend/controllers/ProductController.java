@@ -7,9 +7,11 @@ import com.highteequeen.highteequeen_backend.dtos.ProductImageDTO;
 import com.highteequeen.highteequeen_backend.dtos.request.ProductRequest;
 import com.highteequeen.highteequeen_backend.entity.Product;
 import com.highteequeen.highteequeen_backend.entity.ProductImage;
+import com.highteequeen.highteequeen_backend.exeptions.DataNotFoundException;
 import com.highteequeen.highteequeen_backend.responses.ProductListResponse;
 import com.highteequeen.highteequeen_backend.responses.ProductResponse;
 import com.highteequeen.highteequeen_backend.services.IProductService;
+import com.highteequeen.highteequeen_backend.services.IUserService;
 import com.highteequeen.highteequeen_backend.utils.MessageKeys;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import jakarta.validation.Valid;
@@ -38,6 +40,7 @@ import java.util.stream.Collectors;
 public class ProductController {
     private static final Logger logger = LoggerFactory.getLogger(ProductController.class);
     private final IProductService productService;
+    private final IUserService userService;
     private final LocalizationUtils localizationUtils;
     @PostMapping(value = "", consumes = {"multipart/form-data"})
     @PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -283,5 +286,11 @@ public class ProductController {
             e.printStackTrace();
             return ResponseEntity.badRequest().body("Lỗi khi xử lý tệp Excel: " + e.getMessage());
         }
+    }
+
+    @PutMapping("/favorites/add")
+    public ResponseEntity<String> addFavorite(@RequestParam Long userId, @RequestParam Long productId) throws DataNotFoundException {
+        userService.addProductToFavorites(userId, productId);
+        return ResponseEntity.ok("Product added to favorites");
     }
 }
