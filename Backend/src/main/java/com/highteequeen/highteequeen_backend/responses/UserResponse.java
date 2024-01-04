@@ -1,11 +1,13 @@
 package com.highteequeen.highteequeen_backend.responses;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.highteequeen.highteequeen_backend.entity.Product;
 import com.highteequeen.highteequeen_backend.entity.Role;
 import com.highteequeen.highteequeen_backend.entity.User;
 import lombok.*;
 
 import java.util.Date;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -42,6 +44,8 @@ public class UserResponse {
 
     @JsonProperty("role")
     private Role role;
+
+    private Set<Product> favoriteProducts;
     public static UserResponse fromUser(User user) {
         return UserResponse.builder()
                 .id(user.getId())
@@ -53,6 +57,7 @@ public class UserResponse {
                 .facebookAccountId(user.getFacebookAccountId())
                 .googleAccountId(user.getGoogleAccountId())
                 .role(user.getRole())
+                .favoriteProducts(user.getFavoriteProducts())
                 .build();
     }
 }

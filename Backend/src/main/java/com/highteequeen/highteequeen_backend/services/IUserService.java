@@ -5,6 +5,8 @@ import com.highteequeen.highteequeen_backend.dtos.UserDTO;
 import com.highteequeen.highteequeen_backend.entity.User;
 import com.highteequeen.highteequeen_backend.exeptions.DataNotFoundException;
 import com.highteequeen.highteequeen_backend.exeptions.InvalidPasswordException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface IUserService {
     User createUser(UserDTO userDTO) throws Exception;
@@ -15,4 +17,7 @@ public interface IUserService {
     void resetPassword(Long userId, String newPassword)
             throws InvalidPasswordException, DataNotFoundException ;
     public void blockOrEnable(Long userId, Boolean active) throws DataNotFoundException;
+    Page<User> findAll(String keyword, Pageable pageable) throws Exception;
+
+    void addProductToFavorites(Long userId, Long productId) throws DataNotFoundException;
 }

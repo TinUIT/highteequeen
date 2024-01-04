@@ -53,6 +53,14 @@ public class User extends BaseEntity implements UserDetails {
     @Column(name = "google_account_id")
     private int googleAccountId;
 
+    @ManyToMany
+    @JoinTable(
+            name = "user_favorites",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "product_id")
+    )
+    private Set<Product> favoriteProducts = new HashSet<>();
+
     @Column(nullable = false)
     private Timestamp create_at;
 

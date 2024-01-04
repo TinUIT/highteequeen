@@ -173,6 +173,18 @@ public class ProductService implements IProductService {
         return productsPage.map(ProductResponse::fromProduct);
     }
 
+    @Override
+    public Page<ProductResponse> findProductsByDiscountPercentDesc(PageRequest pageRequest) {
+        Page<Product> productsPage;
+        productsPage = productRepository.findAllByOrderByDiscountPercentDesc(pageRequest);
+        return productsPage.map(ProductResponse::fromProduct);
+    }
+    public Page<ProductResponse> findMostFavoritedProducts(PageRequest pageRequest) {
+        Page<Product> productsPage;
+        productsPage = productRepository.findProductsByMostFavorited(pageRequest);
+        return productsPage.map(ProductResponse::fromProduct);
+    }
+
     private boolean isImageFile(MultipartFile file) {
         String contentType = file.getContentType();
         return contentType != null && contentType.startsWith("image/");
@@ -228,4 +240,3 @@ public class ProductService implements IProductService {
         return products;
     }
 }
-

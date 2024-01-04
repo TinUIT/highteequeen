@@ -8,6 +8,7 @@ import com.highteequeen.highteequeen_backend.exeptions.DataNotFoundException;
 import com.highteequeen.highteequeen_backend.responses.ProductResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -30,6 +31,7 @@ public interface IProductService {
     String storeFile(MultipartFile file) throws IOException;
     void deleteFile(String filename) throws IOException;
     Page<ProductResponse> getBestSellingProducts(PageRequest pageRequest);
+    Page<ProductResponse> findProductsByDiscountPercentDesc(PageRequest pageRequest);
 
     @Transactional
     List<Product> createProductsFromExcel(MultipartFile file) throws IOException, DataNotFoundException;

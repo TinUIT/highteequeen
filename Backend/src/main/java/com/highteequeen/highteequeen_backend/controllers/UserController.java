@@ -11,10 +11,7 @@ import com.highteequeen.highteequeen_backend.exeptions.DataNotFoundException;
 import com.highteequeen.highteequeen_backend.exeptions.InvalidPasswordException;
 import com.highteequeen.highteequeen_backend.helper.MailInfo;
 import com.highteequeen.highteequeen_backend.repositories.UserRepository;
-import com.highteequeen.highteequeen_backend.responses.LoginResponse;
-import com.highteequeen.highteequeen_backend.responses.RegisterResponse;
-import com.highteequeen.highteequeen_backend.responses.ResponseObject;
-import com.highteequeen.highteequeen_backend.responses.UserResponse;
+import com.highteequeen.highteequeen_backend.responses.*;
 import com.highteequeen.highteequeen_backend.services.IMailService;
 import com.highteequeen.highteequeen_backend.services.ITokenService;
 import com.highteequeen.highteequeen_backend.services.IUserService;
@@ -23,6 +20,9 @@ import com.highteequeen.highteequeen_backend.utils.MessageKeys;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -43,6 +43,33 @@ public class UserController {
     private final UserRepository userRepository;
     private final AuthenticationService authenticationService;
     private final ITokenService tokenService;
+
+    @GetMapping("")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<?> getAllUser(
+            @RequestParam(defaultValue = "", required = false) String keyword,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int limit
+    ){
+        try {
+            PageRequest pageRequest = PageRequest.of(
+                    page, limit,
+                    //Sort.by("createdAt").descending()
+                    Sort.by("id").ascending()
+            );
+            Page<UserResponse> userPage = userService.findAll(keyword, pageRequest)
+                    .map(UserResponse::fromUser);
+            int totalPages = userPage.getTotalPages();
+            List<UserResponse> userResponses = userPage.getContent();
+            return ResponseEntity.ok(UserListResponse
+                    .builder()
+                    .users(userResponses)
+                    .totalPages(totalPages)
+                    .build());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
     @PostMapping("/register")
     public ResponseEntity<RegisterResponse> createUser(
             @Valid @RequestBody UserDTO userDTO,
