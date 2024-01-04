@@ -224,6 +224,24 @@ public class ProductController {
                 .totalPages(totalPages)
                 .build());
     }
+
+    @GetMapping("/most-favorite")
+    public ResponseEntity<ProductListResponse> getMostFavoritedProducts(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int limit
+    ) {
+        PageRequest pageRequest = PageRequest.of(page, limit);
+        Page<ProductResponse> productPage = productService.findMostFavoritedProducts(pageRequest);
+        int totalPages = productPage.getTotalPages();
+        List<ProductResponse> productResponses = productPage.getContent();
+        for (ProductResponse product : productResponses) {
+            product.setTotalPages(totalPages);
+        }
+        return ResponseEntity.ok(ProductListResponse.builder()
+                .products(productResponses)
+                .totalPages(totalPages)
+                .build());
+    }
     @GetMapping("/{id}")
     public ResponseEntity<?> getProductById(
             @PathVariable("id") Long productId
@@ -289,6 +307,7 @@ public class ProductController {
     }
 
     @PutMapping("/favorites/add")
+    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<String> addFavorite(@RequestParam Long userId, @RequestParam Long productId) throws DataNotFoundException {
         userService.addProductToFavorites(userId, productId);
         return ResponseEntity.ok("Product added to favorites");

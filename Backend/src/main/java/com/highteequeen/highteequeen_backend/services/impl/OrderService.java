@@ -2,6 +2,8 @@ package com.highteequeen.highteequeen_backend.services.impl;
 
 import com.highteequeen.highteequeen_backend.dtos.CartItemDTO;
 import com.highteequeen.highteequeen_backend.dtos.OrderDTO;
+import com.highteequeen.highteequeen_backend.dtos.OrderDetailDTO;
+import com.highteequeen.highteequeen_backend.dtos.OrderWithDetailsDTO;
 import com.highteequeen.highteequeen_backend.entity.*;
 import com.highteequeen.highteequeen_backend.exeptions.DataNotFoundException;
 import com.highteequeen.highteequeen_backend.repositories.OrderDetailRepository;
@@ -63,7 +65,7 @@ public class OrderService implements IOrderService {
             Product product = productRepository.findById(productId)
                     .orElseThrow(() -> new DataNotFoundException("Product not found with id: " + productId));
             product.setSalesCount(product.getSalesCount() + cartItemDTO.getQuantity());
-            if (product.getInStock() == 0 || (product.getInStock() - cartItemDTO.getQuantity()) < 0) {
+            if (product.getInStock() < cartItemDTO.getQuantity()) {
                 throw new DataNotFoundException("Product is out of stock !");
             }
             product.setInStock(product.getInStock() - cartItemDTO.getQuantity());
@@ -81,26 +83,75 @@ public class OrderService implements IOrderService {
         return order;
     }
 
+    @Transactional
+    public Order updateOrderWithDetails(OrderWithDetailsDTO orderWithDetailsDTO) {
+        modelMapper.typeMap(OrderWithDetailsDTO.class, Order.class)
+                .addMappings(mapper -> mapper.skip(Order::setId));
+        Order order = new Order();
+        modelMapper.map(orderWithDetailsDTO, order);
+        Order savedOrder = orderRepository.save(order);
+
+        for (OrderDetailDTO orderDetailDTO : orderWithDetailsDTO.getOrderDetailDTOS()) {
+            //orderDetail.setOrder(OrderDetail);
+        }
+        List<OrderDetail> savedOrderDetails = orderDetailRepository.saveAll(order.getOrderDetails());
+
+        savedOrder.setOrderDetails(savedOrderDetails);
+
+        return savedOrder;
+    }
+
     @Override
     public Order getOrder(Long id) {
-        return orderRepository.findById(id).orElse(null);
+        Order selectedOrder = orderRepository.findById(id).orElse(null);
+        return selectedOrder;
     }
 
     @Override
     @Transactional
-    public Order updateOrder(Long id, OrderDTO orderDTO)
-            throws DataNotFoundException {
-        Order order = orderRepository.findById(id).orElseThrow(() ->
-                new DataNotFoundException("Cannot find order with id: " + id));
-        User existingUser = userRepository.findById(
-                orderDTO.getUserId()).orElseThrow(() ->
-                new DataNotFoundException("Cannot find user with id: " + id));
+    public Order updateOrder(Long id, OrderDTO orderDTO) throws DataNotFoundException {
+        Order order = orderRepository.findById(id)
+                .orElseThrow(() -> new DataNotFoundException("Cannot find order with id: " + id));
+
+        User user = userRepository.findById(orderDTO.getUserId())
+                .orElseThrow(() -> new DataNotFoundException("Cannot find user with id: " + orderDTO.getUserId()));
+        order.setUser(user);
+
+        LocalDate shippingDate = orderDTO.getShippingDate() == null ? LocalDate.now() : orderDTO.getShippingDate();
+        if (shippingDate.isBefore(LocalDate.now())) {
+            throw new DataNotFoundException("Shipping date must be at least today or later.");
+        }
+        order.setShippingDate(shippingDate);
+
         modelMapper.typeMap(OrderDTO.class, Order.class)
                 .addMappings(mapper -> mapper.skip(Order::setId));
         modelMapper.map(orderDTO, order);
-        order.setUser(existingUser);
+        orderDetailRepository.deleteAllByOrderId(order.getId());
+
+        List<OrderDetail> updatedOrderDetails = new ArrayList<>();
+        for (CartItemDTO cartItemDTO : orderDTO.getCartItems()) {
+            Product product = productRepository.findById(cartItemDTO.getProductId())
+                    .orElseThrow(() -> new DataNotFoundException("Product not found with id: " + cartItemDTO.getProductId()));
+
+            if (product.getInStock() < cartItemDTO.getQuantity()) {
+                throw new DataNotFoundException("Product is out of stock or insufficient stock available.");
+            }
+            product.setInStock(product.getInStock() - cartItemDTO.getQuantity());
+            product.setSalesCount(product.getSalesCount() + cartItemDTO.getQuantity());
+            productRepository.save(product);
+
+            OrderDetail orderDetail = new OrderDetail();
+            orderDetail.setOrder(order);
+            orderDetail.setProduct(product);
+            orderDetail.setNumberOfProducts(cartItemDTO.getQuantity());
+            orderDetail.setPrice(product.getPrice());
+            orderDetail.setTotalMoney(cartItemDTO.getQuantity() * product.getPrice());
+            updatedOrderDetails.add(orderDetail);
+        }
+        orderDetailRepository.saveAll(updatedOrderDetails);
         return orderRepository.save(order);
     }
+
 
     @Override
     @Transactional

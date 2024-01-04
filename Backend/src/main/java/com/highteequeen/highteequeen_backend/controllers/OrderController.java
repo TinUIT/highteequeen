@@ -27,6 +27,7 @@ public class OrderController {
     private final LocalizationUtils localizationUtils;
     private final IOrderService orderService;
     @PostMapping("")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
     public ResponseEntity<?> createOrder(
             @Valid @RequestBody OrderDTO orderDTO,
             BindingResult result
@@ -49,8 +50,13 @@ public class OrderController {
     @GetMapping("/user/{user_id}")
     public ResponseEntity<?> getOrders(@Valid @PathVariable("user_id") Long userId) {
         try {
-            List<Order> orders = orderService.findByUserId(userId);
-            return ResponseEntity.ok(orders);
+            int totalPages = 0;
+            List<OrderResponse> orderResponses = orderService.findByUserId(userId).stream().map(OrderResponse::fromOrder).toList();
+            return ResponseEntity.ok(OrderListResponse
+                    .builder()
+                    .orders(orderResponses)
+                    .totalPages(totalPages)
+                    .build());
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

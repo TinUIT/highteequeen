@@ -35,4 +35,6 @@ public interface IProductService {
 
     @Transactional
     List<Product> createProductsFromExcel(MultipartFile file) throws IOException, DataNotFoundException;
+
+    Page<ProductResponse> findMostFavoritedProducts(PageRequest pageRequest);
 }

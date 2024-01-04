@@ -64,7 +64,7 @@ function Homepage() {
     const [product, setProduct] = useState(0);
     const [Saleproduct, setSaleProduct] = useState(0);
     const [BestSellerproduct, setBestSellerproduct] = useState(0);
-    const [BestBrandrproduct, setBestBrandproduct] = useState(0);
+    const [MostFavoriterProduct, setBestBrandproduct] = useState(0);
     const [isselectsee, setisSelectSee] = useState(null);
 
     const getImageUrl = (imageName) => {
@@ -91,7 +91,7 @@ function Homepage() {
 
     const [products, setProducts] = useState([]);
     const [bestSeller, setBestSeller] = useState([]);
-    const [bestBrand, setBestBrand] = useState([]);
+    const [mostFavorite, setBestBrand] = useState([]);
 
     useEffect(() => {
         axios.get("http://localhost:8080/api/v1/products/discounted?page=0&limit=8")
@@ -115,9 +115,9 @@ function Homepage() {
     }, []);
 
     useEffect(() => {
-        axios.get("http://localhost:8080/api/products/best-brand")
+        axios.get("http://localhost:8080/api/v1/products/most-favorite?page=0&limit=8")
             .then(response => {
-                setBestBrand(response.data);
+                setBestBrand(response.data.products);
             })
             .catch(error => {
                 console.error('There was an error!', error);
@@ -268,22 +268,28 @@ function Homepage() {
                 </Carousel>
             </div>
             <div className='Banner'>
-                <div className='nameBanner'>Best Brand</div>
+                <div className='nameBanner'>Most Favorite</div>
                 {/* <a className='SeeAll'>See all</a> */}
             </div>
             <div className="wrap-Sale-Product">
-                <Carousel activeIndex={BestBrandrproduct} onSelect={handleBestBrandproduct}>
+                <Carousel activeIndex={MostFavoriterProduct} onSelect={handleBestBrandproduct}>
 
                     <Carousel.Item >
                         <div className='Sale-Product'>
-                            {bestBrand.slice(0, 4).map(product => (
-                                <Productdetail nameProduct={product.name} description={product.description} price={product.price} image={product.image} productId={product.id} sales={product.sales} />
-                            ))}
+                            {mostFavorite.slice(0, 4).map(product => (
+                                <Productdetail 
+                                nameProduct={product.name} 
+                                description={product.description} 
+                                price={product.price} 
+                                image={getImageUrl(product.product_images[0]?.image_url || product.thumbnail)} 
+                                productId={product.id} 
+                                sales={product.salesCount} 
+                            />                            ))}
                         </div>
                     </Carousel.Item>
                     <Carousel.Item >
                         <div className='Sale-Product'>
-                            {bestBrand.slice(4, 8).map(product => (
+                            {mostFavorite.slice(4, 8).map(product => (
                                 <Productdetail nameProduct={product.name} description={product.description} price={product.price} image={product.image} productId={product.id} sales={product.sales} />
                             ))}
                         </div>
