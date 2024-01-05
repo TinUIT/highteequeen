@@ -107,6 +107,9 @@ public class ProductService implements IProductService {
                     !productDTO.getThumbnail().isEmpty()) {
                 existingProduct.setThumbnail(productDTO.getThumbnail());
             }
+            if(productDTO.getInStock() >= 0) {
+                existingProduct.setInStock(productDTO.getInStock());
+            }
             return productRepository.save(existingProduct);
         }
         return null;
