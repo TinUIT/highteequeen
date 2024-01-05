@@ -93,6 +93,7 @@ public class ProductController {
                 .inStock(productRequest.getInStock())
                 .description(productRequest.getDescription())
                 .categoryId(productRequest.getCategoryId())
+                .brandId(productRequest.getBrandId())
                 .build();
     }
     @PostMapping(value = "uploads/{id}",
@@ -160,6 +161,7 @@ public class ProductController {
     public ResponseEntity<ProductListResponse> getProducts(
             @RequestParam(defaultValue = "") String keyword,
             @RequestParam(defaultValue = "0", name = "category_id") Long categoryId,
+            @RequestParam(defaultValue = "0", name = "brand_id") Long brandId,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int limit
     ) throws JsonProcessingException {
@@ -169,10 +171,10 @@ public class ProductController {
                 //Sort.by("createdAt").descending()
                 Sort.by("id").ascending()
         );
-        logger.info(String.format("keyword = %s, category_id = %d, page = %d, limit = %d",
-                keyword, categoryId, page, limit));
+        logger.info(String.format("keyword = %s, category_id = %d, brand_id = %d, page = %d, limit = %d",
+                keyword, categoryId, brandId, page, limit));
         Page<ProductResponse> productPage = productService
-                .getAllProducts(keyword, categoryId, pageRequest);
+                .getAllProducts(keyword, categoryId, brandId, pageRequest);
         totalPages = productPage.getTotalPages();
         List<ProductResponse> productResponses = productPage.getContent();
         for (ProductResponse product : productResponses) {
