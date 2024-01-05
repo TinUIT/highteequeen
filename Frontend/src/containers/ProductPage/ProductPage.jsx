@@ -105,8 +105,8 @@ const ProductPage = () => {
                                 <Headerproduct
                                     background={require("../../assets/Blush.png")}
                                     nameProduct="Blush"
-                                    expanded={expandedProduct === 0}
-                                    onClick={() => {handleExpandProduct(0);
+                                    expanded={expandedProduct === 8}
+                                    onClick={() => {handleExpandProduct(8);
                                         setTitleProduct("Blush");}}
                                 />
                             </div>
@@ -116,7 +116,7 @@ const ProductPage = () => {
                                     nameProduct="Cleanser"
                                     expanded={expandedProduct === 1}
                                     onClick={() => { handleExpandProduct(1);
-                                            setTitleProduct("Powder");}}
+                                            setTitleProduct("Cleanser");}}
                                 />
                             </div>
                             <div className="wrapper-header-product">
