@@ -81,8 +81,9 @@ function Login({ onClose }) {
       
     }
     const userInfo = JSON.parse(localStorage.getItem('user-info'));
-    if(userInfo.role === "ADMIN")
+    if(userInfo.roles.includes("ROLE_ADMIN"))
     {
+      console.log(userInfo.roles.includes("ROLE_ADMIN"))
       window.location.href = "/admin";
     }
     

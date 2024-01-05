@@ -40,3 +40,7 @@
   .NavbarOrders .List #active{
     background-color: #D77B44;
   } 
+
+  .NavbarOrders .Dropdown{
+    border-radius: 5px;
+  }

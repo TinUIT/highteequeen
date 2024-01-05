@@ -2,11 +2,13 @@ package com.highteequeen.highteequeen_backend.services.impl;
 
 import com.highteequeen.highteequeen_backend.dtos.ProductDTO;
 import com.highteequeen.highteequeen_backend.dtos.ProductImageDTO;
+import com.highteequeen.highteequeen_backend.entity.Brand;
 import com.highteequeen.highteequeen_backend.entity.Category;
 import com.highteequeen.highteequeen_backend.entity.Product;
 import com.highteequeen.highteequeen_backend.entity.ProductImage;
 import com.highteequeen.highteequeen_backend.exeptions.DataNotFoundException;
 import com.highteequeen.highteequeen_backend.exeptions.InvalidParamException;
+import com.highteequeen.highteequeen_backend.repositories.BrandRepository;
 import com.highteequeen.highteequeen_backend.repositories.CategoryRepository;
 import com.highteequeen.highteequeen_backend.repositories.ProductImageRepository;
 import com.highteequeen.highteequeen_backend.repositories.ProductRepository;
@@ -37,6 +39,7 @@ import java.util.*;
 public class ProductService implements IProductService {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
+    private final BrandRepository brandRepository;
     private final ProductImageRepository productImageRepository;
     private static String UPLOADS_FOLDER = "uploads";
     @Override
@@ -47,6 +50,11 @@ public class ProductService implements IProductService {
                 .orElseThrow(() ->
                         new DataNotFoundException(
                                 "Cannot find category with id: "+productDTO.getCategoryId()));
+        Brand existingBrand = brandRepository
+                .findById(productDTO.getBrandId())
+                .orElseThrow(() ->
+                        new DataNotFoundException(
+                                "Cannot find brand with id: "+productDTO.getBrandId()));
 
         Product newProduct = Product.builder()
                 .name(productDTO.getName())
@@ -56,6 +64,7 @@ public class ProductService implements IProductService {
                 .description(productDTO.getDescription())
                 .inStock(productDTO.getInStock())
                 .category(existingCategory)
+                .brand(existingBrand)
                 .build();
         return productRepository.save(newProduct);
     }
@@ -71,9 +80,9 @@ public class ProductService implements IProductService {
 
     @Override
     public Page<ProductResponse> getAllProducts(String keyword,
-                                                Long categoryId, PageRequest pageRequest) {
+                                                Long categoryId, Long brandId, PageRequest pageRequest) {
         Page<Product> productsPage;
-        productsPage = productRepository.searchProducts(categoryId, keyword, pageRequest);
+        productsPage = productRepository.searchProducts(categoryId, brandId, keyword, pageRequest);
         return productsPage.map(ProductResponse::fromProduct);
     }
 
@@ -106,6 +115,9 @@ public class ProductService implements IProductService {
             if(productDTO.getThumbnail() != null &&
                     !productDTO.getThumbnail().isEmpty()) {
                 existingProduct.setThumbnail(productDTO.getThumbnail());
+            }
+            if(productDTO.getInStock() >= 0) {
+                existingProduct.setInStock(productDTO.getInStock());
             }
             return productRepository.save(existingProduct);
         }

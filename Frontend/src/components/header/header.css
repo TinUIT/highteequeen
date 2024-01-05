@@ -263,6 +263,7 @@
 .Control-tab:hover .product-menu {
   display: flex;
   flex-direction: column;
+  border-radius: 5px;
 }
 
 .product-menu a {
@@ -271,6 +272,7 @@
   transition: background-color 0.3s ease;
   padding: 5px 63px;
   text-align: left;
+  border-radius: 5px;
 }
 
 .product-menu a:hover {

@@ -93,6 +93,7 @@ public class ProductController {
                 .inStock(productRequest.getInStock())
                 .description(productRequest.getDescription())
                 .categoryId(productRequest.getCategoryId())
+                .brandId(productRequest.getBrandId())
                 .build();
     }
     @PostMapping(value = "uploads/{id}",
@@ -160,6 +161,7 @@ public class ProductController {
     public ResponseEntity<ProductListResponse> getProducts(
             @RequestParam(defaultValue = "") String keyword,
             @RequestParam(defaultValue = "0", name = "category_id") Long categoryId,
+            @RequestParam(defaultValue = "0", name = "brand_id") Long brandId,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int limit
     ) throws JsonProcessingException {
@@ -169,10 +171,10 @@ public class ProductController {
                 //Sort.by("createdAt").descending()
                 Sort.by("id").ascending()
         );
-        logger.info(String.format("keyword = %s, category_id = %d, page = %d, limit = %d",
-                keyword, categoryId, page, limit));
+        logger.info(String.format("keyword = %s, category_id = %d, brand_id = %d, page = %d, limit = %d",
+                keyword, categoryId, brandId, page, limit));
         Page<ProductResponse> productPage = productService
-                .getAllProducts(keyword, categoryId, pageRequest);
+                .getAllProducts(keyword, categoryId, brandId, pageRequest);
         totalPages = productPage.getTotalPages();
         List<ProductResponse> productResponses = productPage.getContent();
         for (ProductResponse product : productResponses) {
@@ -214,6 +216,24 @@ public class ProductController {
     ) {
         PageRequest pageRequest = PageRequest.of(page, limit, Sort.by("discountPercent").descending());
         Page<ProductResponse> productPage = productService.findProductsByDiscountPercentDesc(pageRequest);
+        int totalPages = productPage.getTotalPages();
+        List<ProductResponse> productResponses = productPage.getContent();
+        for (ProductResponse product : productResponses) {
+            product.setTotalPages(totalPages);
+        }
+        return ResponseEntity.ok(ProductListResponse.builder()
+                .products(productResponses)
+                .totalPages(totalPages)
+                .build());
+    }
+
+    @GetMapping("/most-favorite")
+    public ResponseEntity<ProductListResponse> getMostFavoritedProducts(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int limit
+    ) {
+        PageRequest pageRequest = PageRequest.of(page, limit);
+        Page<ProductResponse> productPage = productService.findMostFavoritedProducts(pageRequest);
         int totalPages = productPage.getTotalPages();
         List<ProductResponse> productResponses = productPage.getContent();
         for (ProductResponse product : productResponses) {
@@ -289,6 +309,7 @@ public class ProductController {
     }
 
     @PutMapping("/favorites/add")
+    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<String> addFavorite(@RequestParam Long userId, @RequestParam Long productId) throws DataNotFoundException {
         userService.addProductToFavorites(userId, productId);
         return ResponseEntity.ok("Product added to favorites");

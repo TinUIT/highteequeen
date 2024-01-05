@@ -29,8 +29,32 @@ export default function ProductWarehouse() {
   const [totalPages, setTotalPages] = useState(0);
   const [imageUrl, setImageUrl] = useState(null);
   const [openModal, setOpenModal] = useState(false);
+  const [productModals, setProductModals] = useState({});
+  // const [bearerToken, setBearerToken] = useState(null);
+  const [userInfo, setUserInfoo] = useState(JSON.parse(localStorage.getItem('user-info')));
 
-
+  const getCategoryName = (category_id) => {
+    switch (category_id) {
+      case 1:
+        return "Cleanser";
+      case 2:
+        return "Eyeshadow";
+      case 3:
+        return "Toner";
+      case 4:
+        return "Lipstick";
+      case 5:
+        return "Powder";
+      case 6:
+        return "Eyeliner";
+      case 7:
+        return "Primer";
+      case 8:
+        return "Blush";
+      default:
+        return "";
+    }
+  };
   // useEffect(() => {
   //   const storage = getStorage(app);
   //   var storageRef = ref(storage, "white.jpg");
@@ -39,12 +63,20 @@ export default function ProductWarehouse() {
   //     setImageUrl(url);
   //   });
   // }, [products]);
+
+  const userInfoString = localStorage.getItem('user-info');
+  // console.log(userInfoString);
+
+
   useEffect(() => {
-    axios.get(`http://localhost:8080/api/v1/products?page=${currentPage}&size=5`)
+    axios.get(`http://localhost:8080/api/v1/products?page=${currentPage}&size=5`, {
+      headers: {
+        'Authorization': `Bearer ${userInfo.token}`,
+      },
+    })
       .then(response => {
         setProducts(response.data.products);
         setTotalPages(response.data.totalPages);
-        console.log(response.data.products);
       })
       .catch(error => {
         console.error('There was an error!', error);
@@ -68,30 +100,43 @@ export default function ProductWarehouse() {
       origin: "",
       description: "",
       categoryName: "",
+      inStock: "",
+      salesCount: "",
     }
     setProduct(item);
   };
 
-  const handleUpdateProduct = (id, name, price, image, brand, origin, description, categoryName) => {
+  const handleUpdateProduct = (id, name, price, image, brand, origin, description, category_id, inStock, salesCount) => {
     setIsUpdateProduct(!isUpdateProduct);
     var item = {
-      id, name, price, image, brand, origin, description, categoryName
+      id, name, price, image, brand, origin, description, category_id, inStock, salesCount
     }
     setProduct(item);
     setOpenUpdateProduct(true);
   };
 
-
+  const handleEditButtonClick = (item) => {
+    setProduct(item);
+    setOpenUpdateProduct(true);
+  };
   const handleDelete = (id) => {
 
-    axios.delete(`http://localhost:8080/api/v1/products/${id}`)
+    axios.delete(`http://localhost:8080/api/v1/products/${id}`, {
+      headers: {
+        'Authorization': `Bearer ${userInfo.token}`,
+      },
+    })
       .then(response => {
-        return axios.get(`http://localhost:8080/api/v1/products?page=${currentPage}&size=5`)
-
+        return axios.get(`http://localhost:8080/api/v1/products?page=${currentPage}&size=5`, {
+          headers: {
+            'Authorization': `Bearer ${userInfo.token}`,
+          },
+        })
       })
       .then(response => {
-        setProducts(response.data.content);
+        setProducts(response.data.products);
         setTotalPages(response.data.totalPages);
+        setProductModals(prevState => ({ ...prevState, [id]: false }));
 
 
       })
@@ -121,137 +166,149 @@ export default function ProductWarehouse() {
     endPage = currentPage + 1;
   }
   const pageNumbers = [...Array((endPage + 1) - startPage).keys()].map(i => startPage + i);
+
+
   return (
-    <><div className="Table">
-      <h1 className="tile-admin">Product</h1>
-      <TableContainer
-        component={Paper}
-        style={{ boxShadow: "0px 13px 20px 0px #80808029" }}
-      >
-        <Table sx={{ minWidth: 650 }} aria-label="simple table">
-          <TableHead>
-            <TableRow>
+    <>
+    
+      
+  <div className="Table">
+    <h1 className="tile-admin">Product</h1>
+    <div className="wrapper-Addmin-Add-Product">
+      <button className="Addmin-Add-Product" onClick={handleAddProduct}>
+        {isAddingProduct ? "Close" : "Add Product"}
+      </button>
+      
+    </div>
+    { isAddingProduct ? <AddProduct product={null} type={"Add"} /> : null }
+    <TableContainer
+      component={Paper}
+      style={{ boxShadow: "0px 13px 20px 0px #80808029" }}
+    >
+      <Table sx={{ minWidth: 650 }} aria-label="simple table">
+        <TableHead>
+          <TableRow>
 
-              <TableCell align="left">Name</TableCell>
-              <TableCell align="left">Price</TableCell>
-              <TableCell align="left">Image</TableCell>
-              <TableCell align="left">Category</TableCell>
-              <TableCell align="left">Brand</TableCell>
-              <TableCell align="left">Origin</TableCell>
-              <TableCell align="left">Description</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody style={{ color: "white" }}>
-            {posts.map((item, postIndex) => (
-              <TableRow
-                key={item.id}
-              >
+            <TableCell align="left">Name</TableCell>
+            <TableCell align="left">Price</TableCell>
+            <TableCell align="left">Image</TableCell>
+            <TableCell align="left">Category</TableCell>
+            <TableCell align="left">Brand</TableCell>
+            <TableCell align="left">Origin</TableCell>
+            <TableCell align="left">Description</TableCell>
+            <TableCell align="left">Quantity</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody style={{ color: "white" }}>
+          {posts.map((item, postIndex) => (
+            <TableRow
+              key={item.id}
+            >
 
-                <TableCell align="left">{item.name}</TableCell>
-                <TableCell align="left">{item.price}</TableCell>
-                <TableCell align="left">
-                  <div className="Product-img-admin">
-                    <div className="wrapper-img-admin-add">
-                      <img className="Img-Admin-add" src={Logoweb}>
-                      </img>
-                    </div>
-                    <div className="wrapper-item-img">{item.image}</div>
+              <TableCell align="left">{item.name}</TableCell>
+              <TableCell align="left">{item.price}</TableCell>
+              <TableCell align="left">
+                <div className="Product-img-admin">
+                  <div className="wrapper-img-admin-add">
+                    {item.product_images.map((image, index) => (
+                      <img key={index} className="Img-Admin-add" src={"http://localhost:8080/api/v1/products/images/" + image.image_url} alt={`Product ${index}`} />
+                    ))}
                   </div>
-                </TableCell>
-                <TableCell align="left">{item.categoryName}</TableCell>
-                <TableCell align="left">{item.brand}</TableCell>
-                <TableCell align="left">{item.origin}</TableCell>
-                <TableCell align="left">{item.description}</TableCell>
-                <div className="delete-button">
-                  <Button
 
-                    variant="outlined"
-                    color="error"
-                    onClick={() => setOpenModal(true)}
-                  >
-                    <i class="fas fa-trash-alt"></i>
-                  </Button>
-
-                  <Button
-
-                    variant="outlined"
-                    color="error"
-                    onClick={() => setOpenUpdateProduct(true)}
-                  >
-                    <i class="fas fa-edit"></i>
-                  </Button>
-
+                  <div className="wrapper-item-img">{item.images}</div>
                 </div>
-                <Modal
-                  openModal={openModal}
-                  content="Do you want to remove product?"
-                  onCancel={() => setOpenModal(false)}
-                  onYes={() => handleDelete(item.id)}
-                  style={{ left: "0px", backgroundColor: "transparent", color: "black" }}
-                ></Modal>
-                <Dialog open={openUpdateProduct}
-                  onClose={() => setOpenUpdateProduct(false)}
-                  classes={{ paper: 'customDialog' }}>
-                  <DialogTitle style={{fontWeight: ""}}>
-                    Edit Product
-                    <Button
-                      onClick={() => setOpenUpdateProduct(false)}
-                      style={{ position: "absolute", right: 8, top: 15, color: "red", fontSize: 25 }}
-                    >
-                      <i class="fas fa-times"></i>
-                    </Button>
+              </TableCell>
+              <TableCell align="left">{getCategoryName(item.category_id)}</TableCell>
+              <TableCell align="left">{item.brand}</TableCell>
+              <TableCell align="left">{item.origin}</TableCell>
+              <TableCell align="left">{item.description}</TableCell>
+              <TableCell align="left">{item.inStock}</TableCell>
+              <div className="delete-button">
+                <Button
+
+                  variant="outlined"
+                  color="error"
+                  onClick={() => setProductModals(prevState => ({ ...prevState, [item.id]: true }))}
+                >
+                  <i class="fas fa-trash-alt"></i>
+                </Button>
+
+                <Button
+
+                  variant="outlined"
+                  color="error"
+                  onClick={() => handleEditButtonClick(item)}
+                >
+                  <i class="fas fa-edit"></i>
+                </Button>
+
+              </div>
+              <Modal
+                openModal={productModals[item.id] || false}
+                content="Do you want to remove product?"
+                onCancel={() => setProductModals(prevState => ({ ...prevState, [item.id]: false }))}
+                onYes={() => handleDelete(item.id)}
+                style={{ left: "0px", backgroundColor: "transparent", color: "black" }}
+              ></Modal>
+              <Dialog open={openUpdateProduct}
+                onClose={() => setOpenUpdateProduct(false)}
+                classes={{ paper: 'customDialog' }}>
+                <DialogTitle style={{ fontWeight: "Bold" }}>
+                  Edit Product
+                  <Button
+                    onClick={() => setOpenUpdateProduct(false)}
+                    style={{ position: "absolute", right: 8, top: 15, color: "red", fontSize: 25 }}
+                  >
+                    <i class="fas fa-times"></i>
+                  </Button>
                   <hr />
-                  </DialogTitle>
-                  <DialogContent>
-                    <AddProduct product={product} type={"Update"} />
-                  </DialogContent>
-                  {/* <DialogActions>
+                </DialogTitle>
+                <DialogContent>
+                  <AddProduct product={product} type={"Update"} />
+                </DialogContent>
+                {/* <DialogActions>
                     <Button onClick={() => setOpenUpdateProduct(false)}>Cancel</Button>
                   </DialogActions> */}
-                </Dialog>
+              </Dialog>
 
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
 
-      </TableContainer>
+    </TableContainer>
 
-      <div className="Wrapper-Pagniation">
-        <nav aria-label="Page navigation example">
-          <ul className="pagination">
-            <li className="page-item">
-              <a className="page-link" href="#" aria-label="Previous" onClick={() => handlePageChange(currentPage > 0 ? currentPage - 1 : 0)}>
-                <span aria-hidden="true">&laquo;</span>
-              </a>
+
+    <div className="Wrapper-Pagniation">
+      <nav aria-label="Page navigation example">
+        <ul className="pagination">
+          <li className="page-item">
+            <a className="page-link" href="#" aria-label="Previous" onClick={() => handlePageChange(currentPage > 0 ? currentPage - 1 : 0)}>
+              <span aria-hidden="true">&laquo;</span>
+            </a>
+          </li>
+          {pageNumbers.map(number => (
+            <li className={`page-item ${currentPage === number ? 'active' : ''}`} key={number}>
+              <a className="page-link" href="#" onClick={() => handlePageChange(number)}>{number + 1}</a>
             </li>
-            {pageNumbers.map(number => (
-              <li className={`page-item ${currentPage === number ? 'active' : ''}`} key={number}>
-                <a className="page-link" href="#" onClick={() => handlePageChange(number)}>{number + 1}</a>
-              </li>
-            ))}
-            <li className="page-item">
-              <a className="page-link" href="#" aria-label="Next" onClick={() => handlePageChange(currentPage + 1 < totalPages ? currentPage + 1 : totalPages - 1)}>
-                <span aria-hidden="true">&raquo;</span>
-              </a>
-            </li>
-          </ul>
-        </nav>
-      </div>
-
-      <div className="wrapper-Addmin-Add-Product">
-        <button className="Addmin-Add-Product" onClick={handleAddProduct}>
-          {isAddingProduct ? "Close" : "Add Product"}
-        </button>
-      </div>
-      {isAddingProduct ? <AddProduct product={null} type={"Add"} /> : null}
-
-
-
+          ))}
+          <li className="page-item">
+            <a className="page-link" href="#" aria-label="Next" onClick={() => handlePageChange(currentPage + 1 < totalPages ? currentPage + 1 : totalPages - 1)}>
+              <span aria-hidden="true">&raquo;</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
     </div>
-      {/* {posts.map((item, postIndex) => ( 
+
+
+
+
+
+  </div>
+    {/* {posts.map((item, postIndex) => ( 
    ))} */}
-    </>
+  </>
 
   );
 }

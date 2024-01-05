@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.highteequeen.highteequeen_backend.entity.Product;
 import com.highteequeen.highteequeen_backend.entity.Role;
 import com.highteequeen.highteequeen_backend.entity.User;
+import jakarta.persistence.Column;
 import lombok.*;
 
 import java.util.Date;
@@ -45,6 +46,9 @@ public class UserResponse {
     @JsonProperty("role")
     private Role role;
 
+    @Column(name = "avatar")
+    private String avatar;
+
     private Set<Product> favoriteProducts;
     public static UserResponse fromUser(User user) {
         return UserResponse.builder()
@@ -58,6 +62,7 @@ public class UserResponse {
                 .googleAccountId(user.getGoogleAccountId())
                 .role(user.getRole())
                 .favoriteProducts(user.getFavoriteProducts())
+                .avatar(user.getAvatar())
                 .build();
     }
 }

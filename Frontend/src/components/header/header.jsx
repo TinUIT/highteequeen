@@ -127,6 +127,31 @@ function Header(props) {
       setExpandedProduct(selectedIndexed); // Expand the clicked product
     }
   };
+  useEffect(() => {
+    // Check if user is authenticated
+    if (user && user.token) {
+      // Make a request to the API to get user details
+      axios.post('http://localhost:8080/api/v1/users/details', {}, {
+        headers: {
+          'Authorization': `Bearer ${user.token}`,
+          'accept': '*/*',
+        }
+      })
+      .then(response => {
+        // Extract the user's full name from the response
+        const fullName = response.data.fullname;
+        // Update the user context with the new user information
+        updateUserProfile({ ...user, fullName });
+        // Save the user information in local storage
+        localStorage.setItem('user-info', JSON.stringify({ ...user, userData: response.data }));
+        console.log(fullName);
+      })
+      .catch(error => {
+        // Handle errors, e.g., log them or show a message to the user
+        console.error('Error fetching user details:', error);
+      });
+    }
+  }, [user.token]);
 
   // useEffect(() => {
   //   const storeRef = ref(storage, `Avartar-User/${user.image}`);
@@ -153,7 +178,7 @@ function Header(props) {
               <i class="icon fas fa-shopping-cart"></i>
               <span className="num-fav num-cart" >{totalQuantity}</span>
             </button></Link>
-          {user.fullName ?
+          {user.message ?
             (<>
               <button
                 className="RegisterButton"

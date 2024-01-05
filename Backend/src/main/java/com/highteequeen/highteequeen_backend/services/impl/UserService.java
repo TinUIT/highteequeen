@@ -198,6 +198,7 @@ public class UserService implements IUserService {
         User existingUser = userRepository.findById(userId)
                 .orElseThrow(() -> new DataNotFoundException("User not found"));
         existingUser.setActive(active);
+
         userRepository.save(existingUser);
     }
 

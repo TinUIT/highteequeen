@@ -17,6 +17,7 @@ import ReactPaginate from "react-paginate";
 //   return { name, trackingId, date, status };
 // }
 
+
 // const rows = [
 //   createData("Lasania Chiken Fri", 18908424, "2 March 2022", "Approved"),
 //   createData("Big Baza Bang ", 18908424, "2 March 2022", "Pending"),
@@ -57,7 +58,9 @@ export default function BasicTable() {
   // const [isCancel, setIsCancel] = useState(Array(rows.length).fill(false));
   const [isAccepted, setIsAccepted] = useState(Array(0).fill(false));
   const [isCancel, setIsCancel] = useState(Array(0).fill(false));
-  const [Bill, setBill] = useState([]);
+
+
+
   
   const [listOrder, setListOrder] = useState([]);
   const [ID, setID] = useState();
@@ -94,64 +97,64 @@ export default function BasicTable() {
   };
 
   const handlePageClick = ({ selected }) => {
-    setCurrentPage(selected);
+    const newPage = selected ; // Pagination starts from 0, but your API seems to start from 1
+    setCurrentPage(newPage);
+    const apiUrl = `http://localhost:8080/api/v1/orders/get-orders-by-keyword?page=${newPage}&limit=10`;
+    fetchData(apiUrl);
   };
+  
   
 
   const [currentPage, setCurrentPage] = useState(0);
   const itemsPerPage = 5; // Update this value based on your requirements
-  const pageCount = Math.ceil(Bill.length / itemsPerPage);
+  const [pageCount, setPageCount] = useState(0);
 
-  const startIndex = currentPage * itemsPerPage;
-const endIndex = startIndex + itemsPerPage;
-const displayedItems = listOrder.slice(startIndex, endIndex);
-
-
-
-
-
-
-  // useEffect(() => {
-  //   axios
-  //     .get("http://localhost:8080/api/orders?page=0&size=5")
-  //     .then((response) => {
-  //       setBill(response.data);
-  //       setContentBill(response.data.content);
-  //     })
-  //     .catch((error) => {
-  //       console.error("There was an error!", error);
-  //     });
-  // }, [ isAccepted,isCancel]);
-  useEffect(() => {
-  const fetchData = async () => {
+  const fetchData = async (url) => {
     try {
-      const response = await axios.get(
-        'http://localhost:8080/api/v1/orders/get-orders-by-keyword?page=0&limit=10',
-        {
-          headers: {
-            accept: '*',
-            Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjIsImVtYWlsIjoiMjA1MjE4MThAZ20udWl0LmVkdS52biIsInN1YiI6IjIwNTIxODE4QGdtLnVpdC5lZHUudm4iLCJleHAiOjE3MDY4MDQ4ODl9.jIPkeYVkTn87aqXUSERq6HYjgbqdbxq5bGDJfUzT4ho',
-          },
-        }
-      );
-      setBill(response.data.orders);
+      const response = await axios.get(url, {
+        headers: {
+          accept: '*',
+          Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjIsImVtYWlsIjoiMjA1MjE4MThAZ20udWl0LmVkdS52biIsInN1YiI6IjIwNTIxODE4QGdtLnVpdC5lZHUudm4iLCJleHAiOjE3MDY4MDQ4ODl9.jIPkeYVkTn87aqXUSERq6HYjgbqdbxq5bGDJfUzT4ho',
+        },
+      });
+     
       setListOrder(response.data.orders);
       setIsAccepted(Array(response.data.orders.length).fill(false));
       setIsCancel(Array(response.data.orders.length).fill(false));
+      setCurrentPage(0); // Reset current page to 0 after fetching new data
+      const totalPages = response.data.totalPages || 0;
+      setPageCount(totalPages);
+      console.log("total_page:", totalPages);
     } catch (error) {
       console.error('There was an error!', error);
     }
+
   };
 
-  fetchData();
-// }, [isAccepted, isCancel]);
-}, []);
+    const handleStatusChange = (status) => {
+      const keyword = status.toLowerCase();
+      let apiUrl;
+      console.log("keyword",keyword);
+      if(keyword=="all orders"){
+        apiUrl = `http://localhost:8080/api/v1/orders/get-orders-by-keyword?page=0&limit=10`;
+      }
+      else{
+        apiUrl = `http://localhost:8080/api/v1/orders/get-orders-by-keyword?page=0&limit=10&keyword=${keyword}`;
+      }
+      fetchData(apiUrl);
+    };
+
+    useEffect(() => {
+      const   apiUrl = `http://localhost:8080/api/v1/orders/get-orders-by-keyword?page=0&limit=10`;
+      fetchData(apiUrl);
+    }, []); // Initial data fetching
+
 
 
   return (
     <div className="Table">
       {/* <h3>Recent Orders</h3> */}
-      <NavbarOrders/>
+      <NavbarOrders onStatusChange={handleStatusChange} />
       <TableContainer
         component={Paper}
         style={{ boxShadow: "0px 13px 20px 0px #80808029" }}
@@ -172,7 +175,6 @@ const displayedItems = listOrder.slice(startIndex, endIndex);
               <TableRow
                 key={row.id}
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-
               >
                 {/* <TableCell align="left">{row.orderId}</TableCell>
                 <TableCell align="left">{row.orderDate}</TableCell> */}
@@ -257,6 +259,8 @@ const displayedItems = listOrder.slice(startIndex, endIndex);
                         product={selectedProduct}
                         onClose={handleCloseDetail}
                         ID={row.id}
+                        ID_User={row.user_id}
+                        all_total={row.total_money}
                       />
                     </TableCell>
                   </TableRow>
@@ -271,16 +275,29 @@ const displayedItems = listOrder.slice(startIndex, endIndex);
         </Table>
       
       </TableContainer>
-     
-      {/* <ReactPaginate
-          breakLabel="..."
-          nextLabel="next >"
-          onPageChange={handlePageClick}
-          pageRangeDisplayed={5}
-          pageCount={pageCount}
-          previousLabel="< previous"
-          renderOnZeroPageCount={null}
-          /> */}
+     <div className="order_page">
+      <ReactPaginate
+            breakLabel="..."
+            nextLabel="next >"
+            onPageChange={handlePageClick}
+            pageRangeDisplayed={5}
+            pageCount={pageCount}
+            previousLabel="< previous"
+            
+            pageClassName="page-item"
+            pageLinkClassName="page-link"
+            previousClassName="page-item"
+            previousLinkClassName="page-link"
+            nextClassName="page-item"
+            nextLinkClassName="page-link"
+            breakClassName="page-item"
+            breakLinkClassName="page-link"
+            containerClassName="pagination"
+            activeClassName="active"
+            />
+      
+
+     </div>
       
       
       {/* {selectedProduct && (

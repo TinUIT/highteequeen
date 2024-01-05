@@ -4,13 +4,13 @@ import { Link } from "react-router-dom";
 import Select from "react-dropdown-select";
 
 
-function NavbarOrders() {
+function NavbarOrders({onStatusChange}) {
 
   const options=[
     {id:"All Orders", name:1},
-    {id: "Wait for confirmation", name:2},
-    {id:"Delivering",name: 3},
-    {id:"Completed", name:4},
+    {id: "Pending", name:2},
+    {id:"Approved",name: 3},
+    {id:"Delivered", name:4},
     {id:"Cancelled", name:5},
   ]
   const defaultValue = [{ id: "All Orders", name: 1 }];
@@ -18,6 +18,8 @@ function NavbarOrders() {
 
   const handleSelectChange = (values) => {
     setSelectedValue(values);
+    onStatusChange(values.length > 0 ? values[0].id : "");
+    console.log("status: ",values);
   };
 
   return (
@@ -30,6 +32,7 @@ function NavbarOrders() {
         values={selectedValue}
         onChange={handleSelectChange}
         color="#D77B44"
+        border="5px"
        
       ></Select>
     {/* <p>{selectedValue.length > 0 && selectedValue[0].name}</p> */}
