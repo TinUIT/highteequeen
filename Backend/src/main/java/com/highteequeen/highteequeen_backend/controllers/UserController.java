@@ -31,6 +31,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -246,6 +247,17 @@ public class UserController {
         try {
             userService.blockOrEnable(userId, active > 0);
             String message = active > 0 ? "Successfully enabled the user." : "Successfully blocked the user.";
+            User existingUser = userRepository.findById(userId)
+                    .orElseThrow(() -> new DataNotFoundException("User not found"));
+            if(active == 0) {
+                String from = "ptt102002@gmail.com";
+                String to = existingUser.getEmail();
+                String subject = "Welcome!";
+
+                String body = "Highteequeen xin chào! Tài khoản của " + existingUser.getFullName() + "đã bị khóa. Vui lòng liên hệ ptt102002@gmail.com để biết thêm chi tiết ";
+                MailInfo mail = new MailInfo(from, to, subject, body);
+                mailer.send(mail);
+            }
             return ResponseEntity.ok().body(message);
         } catch (DataNotFoundException e) {
             return ResponseEntity.badRequest().body("User not found.");
