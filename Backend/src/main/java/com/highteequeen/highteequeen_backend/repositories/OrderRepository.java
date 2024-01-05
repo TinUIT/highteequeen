@@ -10,7 +10,14 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface OrderRepository extends JpaRepository<Order, Long> {
-    List<Order> findByUserId(Long userId);
+    @Query("SELECT o FROM Order o WHERE (:keyword IS NULL OR :keyword = '' OR " +
+            "o.fullName LIKE %:keyword% " +
+            "OR o.address LIKE %:keyword% " +
+            "OR o.note LIKE %:keyword% " +
+            "OR o.status LIKE %:keyword% " +
+            "OR o.email LIKE %:keyword%)" +
+            "AND o.user.id = :userId")
+    Page<Order> findByUserIdAndKeyword(@Param("userId") Long userId, @Param("keyword") String keyword, Pageable pageable);
 
     @Query("SELECT o FROM Order o WHERE (:keyword IS NULL OR :keyword = '' OR " +
             "o.fullName LIKE %:keyword% " +

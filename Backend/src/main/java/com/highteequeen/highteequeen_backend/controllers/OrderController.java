@@ -49,10 +49,22 @@ public class OrderController {
         }
     }
     @GetMapping("/user/{user_id}")
-    public ResponseEntity<?> getOrders(@Valid @PathVariable("user_id") Long userId) {
+    public ResponseEntity<?> getOrders(
+            @Valid @PathVariable("user_id") Long userId,
+            @RequestParam(defaultValue = "", required = false) String keyword,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int limit
+    ) {
         try {
-            int totalPages = 0;
-            List<OrderResponse> orderResponses = orderService.findByUserId(userId).stream().map(OrderResponse::fromOrder).toList();
+            PageRequest pageRequest = PageRequest.of(
+                    page, limit,
+                    Sort.by("id").ascending()
+            );
+            Page<OrderResponse> orderPage = orderService
+                    .findByUserId(userId, keyword, pageRequest)
+                    .map(OrderResponse::fromOrder);
+            int totalPages = orderPage.getTotalPages();
+            List<OrderResponse> orderResponses = orderPage.getContent();
             return ResponseEntity.ok(OrderListResponse
                     .builder()
                     .orders(orderResponses)
@@ -96,20 +108,6 @@ public class OrderController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
-
-
-    //    @PutMapping("/{id}")
-//    public ResponseEntity<?> updateOrderByUser(
-//            @Valid @PathVariable long id,
-//            ) {
-//
-//        try {
-//            Order order = orderService.updateOrder(id, orderDTO);
-//            return ResponseEntity.ok(order);
-//        } catch (Exception e) {
-//            return ResponseEntity.badRequest().body(e.getMessage());
-//        }
-//    }
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteOrder(@Valid @PathVariable Long id) {
         orderService.deleteOrder(id);

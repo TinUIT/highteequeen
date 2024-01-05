@@ -165,8 +165,8 @@ public class OrderService implements IOrderService {
     }
 
     @Override
-    public List<Order> findByUserId(Long userId) {
-        return orderRepository.findByUserId(userId);
+    public Page<Order> findByUserId(Long userId, String keyword, Pageable pageable) {
+        return orderRepository.findByUserIdAndKeyword(userId, keyword, pageable);
     }
 
     @Override
