@@ -32,6 +32,7 @@ function NavbarOrders({onStatusChange}) {
         values={selectedValue}
         onChange={handleSelectChange}
         color="#D77B44"
+        border="5px"
        
       ></Select>
     {/* <p>{selectedValue.length > 0 && selectedValue[0].name}</p> */}

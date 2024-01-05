@@ -58,7 +58,9 @@ export default function BasicTable() {
   // const [isCancel, setIsCancel] = useState(Array(rows.length).fill(false));
   const [isAccepted, setIsAccepted] = useState(Array(0).fill(false));
   const [isCancel, setIsCancel] = useState(Array(0).fill(false));
-  const [Bill, setBill] = useState([]);
+
+
+
   
   const [listOrder, setListOrder] = useState([]);
   const [ID, setID] = useState();
@@ -95,71 +97,39 @@ export default function BasicTable() {
   };
 
   const handlePageClick = ({ selected }) => {
-    setCurrentPage(selected);
+    const newPage = selected ; // Pagination starts from 0, but your API seems to start from 1
+    setCurrentPage(newPage);
+    const apiUrl = `http://localhost:8080/api/v1/orders/get-orders-by-keyword?page=${newPage}&limit=10`;
+    fetchData(apiUrl);
   };
+  
   
 
   const [currentPage, setCurrentPage] = useState(0);
   const itemsPerPage = 5; // Update this value based on your requirements
-  const pageCount = Math.ceil(Bill.length / itemsPerPage);
+  const [pageCount, setPageCount] = useState(0);
 
-  const startIndex = currentPage * itemsPerPage;
-const endIndex = startIndex + itemsPerPage;
-const displayedItems = listOrder.slice(startIndex, endIndex);
+  const fetchData = async (url) => {
+    try {
+      const response = await axios.get(url, {
+        headers: {
+          accept: '*',
+          Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjIsImVtYWlsIjoiMjA1MjE4MThAZ20udWl0LmVkdS52biIsInN1YiI6IjIwNTIxODE4QGdtLnVpdC5lZHUudm4iLCJleHAiOjE3MDY4MDQ4ODl9.jIPkeYVkTn87aqXUSERq6HYjgbqdbxq5bGDJfUzT4ho',
+        },
+      });
+     
+      setListOrder(response.data.orders);
+      setIsAccepted(Array(response.data.orders.length).fill(false));
+      setIsCancel(Array(response.data.orders.length).fill(false));
+      setCurrentPage(0); // Reset current page to 0 after fetching new data
+      const totalPages = response.data.totalPages || 0;
+      setPageCount(totalPages);
+      console.log("total_page:", totalPages);
+    } catch (error) {
+      console.error('There was an error!', error);
+    }
 
-  // useEffect(() => {
-  //   axios
-  //     .get("http://localhost:8080/api/orders?page=0&size=5")
-  //     .then((response) => {
-  //       setBill(response.data);
-  //       setContentBill(response.data.content);
-  //     })
-  //     .catch((error) => {
-  //       console.error("There was an error!", error);
-  //     });
-  // }, [ isAccepted,isCancel]);
-  // useEffect(() => {
-    
-//   const fetchData = async () => {
-//     try {
-//       const response = await axios.get(
-//         'http://localhost:8080/api/v1/orders/get-orders-by-keyword?page=0&limit=10',
-//         {
-//           headers: {
-//             accept: '*',
-//             Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjIsImVtYWlsIjoiMjA1MjE4MThAZ20udWl0LmVkdS52biIsInN1YiI6IjIwNTIxODE4QGdtLnVpdC5lZHUudm4iLCJleHAiOjE3MDY4MDQ4ODl9.jIPkeYVkTn87aqXUSERq6HYjgbqdbxq5bGDJfUzT4ho',
-//           },
-//         }
-//       );
-//       setBill(response.data.orders);
-//       setListOrder(response.data.orders);
-//       setIsAccepted(Array(response.data.orders.length).fill(false));
-//       setIsCancel(Array(response.data.orders.length).fill(false));
-//     } catch (error) {
-//       console.error('There was an error!', error);
-//     }
-//   };
-
-//   fetchData();
-// // }, [isAccepted, isCancel]);
-// }, []);
-    const fetchData = async (url) => {
-      try {
-        const response = await axios.get(url, {
-          headers: {
-            accept: '*',
-            Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjIsImVtYWlsIjoiMjA1MjE4MThAZ20udWl0LmVkdS52biIsInN1YiI6IjIwNTIxODE4QGdtLnVpdC5lZHUudm4iLCJleHAiOjE3MDY4MDQ4ODl9.jIPkeYVkTn87aqXUSERq6HYjgbqdbxq5bGDJfUzT4ho',
-          },
-        });
-        setBill(response.data.orders);
-        setListOrder(response.data.orders);
-        setIsAccepted(Array(response.data.orders.length).fill(false));
-        setIsCancel(Array(response.data.orders.length).fill(false));
-       
-      } catch (error) {
-        console.error('There was an error!', error);
-      }
-    };
+  };
 
     const handleStatusChange = (status) => {
       const keyword = status.toLowerCase();
@@ -290,6 +260,7 @@ const displayedItems = listOrder.slice(startIndex, endIndex);
                         onClose={handleCloseDetail}
                         ID={row.id}
                         ID_User={row.user_id}
+                        all_total={row.total_money}
                       />
                     </TableCell>
                   </TableRow>
@@ -304,26 +275,29 @@ const displayedItems = listOrder.slice(startIndex, endIndex);
         </Table>
       
       </TableContainer>
-     
+     <div className="order_page">
       <ReactPaginate
-          breakLabel="..."
-          nextLabel="next >"
-          onPageChange={handlePageClick}
-          pageRangeDisplayed={5}
-          pageCount={69}
-          previousLabel="< previous"
-          
-          pageClassName="page-item"
-          pageLinkClassName="page-link"
-          previousClassName="page-item"
-          previousLinkClassName="page-link"
-          nextClassName="page-item"
-          nextLinkClassName="page-link"
-          breakClassName="page-item"
-          breakLinkClassName="page-link"
-          containerClassName="pagination"
-          activeClassName="active"
-          />
+            breakLabel="..."
+            nextLabel="next >"
+            onPageChange={handlePageClick}
+            pageRangeDisplayed={5}
+            pageCount={pageCount}
+            previousLabel="< previous"
+            
+            pageClassName="page-item"
+            pageLinkClassName="page-link"
+            previousClassName="page-item"
+            previousLinkClassName="page-link"
+            nextClassName="page-item"
+            nextLinkClassName="page-link"
+            breakClassName="page-item"
+            breakLinkClassName="page-link"
+            containerClassName="pagination"
+            activeClassName="active"
+            />
+      
+
+     </div>
       
       
       {/* {selectedProduct && (

@@ -112,4 +112,14 @@ th {
   border-style: solid;
 }
 
+.order_page .pagination{
+  justify-content: center;
+}
 
+
+.order_page .page-item.active .page-link {
+  background-color: #D77B44;
+  color: WHITE;
+  border-color: #D77B44;
+  border-radius: 5px;
+}

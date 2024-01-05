@@ -66,7 +66,7 @@ const Userexample = [
     },]
 
 // export default function DetailAdminBill(props) {
-  export default function DetailAdminBill({ product, onClose, ID, ID_User }) {
+  export default function DetailAdminBill({ product, onClose, ID, ID_User,all_total }) {
   const [isAddingProduct, setIsAddingProduct] = React.useState(false);
   const [posts, setPosts] = useState([]);
   // const  [ContentBill,setContentBill]=useState([]);
@@ -160,7 +160,7 @@ useEffect(() => {
                     <div className="wrapper-info-user">Email: {info.email}</div>
                     <div className="wrapper-info-user">Phone: {info.phone_number}</div>
                     <div className="wrapper-info-user">Address: {info.address}</div>
-                    <hr />
+               
                   </>
                 )}
               </React.Fragment>
@@ -204,7 +204,8 @@ useEffect(() => {
             </Table>
           </TableContainer>
           <div className="all_total">
-            <h2>All total</h2>
+         
+            <h2>All total: ${all_total} VNĐ</h2>
           </div>
 
         </div>
