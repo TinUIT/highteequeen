@@ -39,13 +39,31 @@ export default function User() {
   }, [currentPage]);
   
 
-  const handleUpdateUser = (id, name, status) => {
+  const handleUpdateUser = async (id, is_active) => {
     setIsUpdateUser(!isUpdateUser);
-    const updatedUser = { id, name, status };
-    setUser(updatedUser);
-    setSwitchChecked(status === 'Active');
+  
+    try {
+      const response = await fetch(`http://localhost:8080/api/v1/users/block/${id}/${is_active}`, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${userInfo.token}`,
+        },
+      });
+  
+      if (response.ok) {
+        // Cập nhật trạng thái switchChecked
+        setSwitchChecked(is_active === '1');
+        console.log('Trạng thái người dùng đã được cập nhật thành công.');
+      } else {
+        console.error('Có lỗi xảy ra khi cập nhật trạng thái người dùng.');
+      }
+    } catch (error) {
+      console.error('Đã xảy ra lỗi:', error);
+    }
   };
-
+  
+  
+  
   const handleDelete = (id) => {
     axios.delete(`http://localhost:8080/api/users/delete/${id}`)
       .then(response => axios.get(`http://localhost:8080/api/v1/users?page=${currentPage}&size=5`))
@@ -115,7 +133,7 @@ export default function User() {
                       <div className="edit-button">
                         <Switch
                           checked={switchChecked}
-                          onChange={() => handleUpdateUser(user.id, user.fullname, switchChecked ? 'Inactive' : 'Active')}
+                          onChange={() => handleUpdateUser(user.id, switchChecked ? '0' : '1')}
                           color="primary"
                         />
                       </div>
