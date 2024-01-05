@@ -2,6 +2,7 @@ package com.highteequeen.highteequeen_backend.controllers;
 
 import com.highteequeen.highteequeen_backend.components.LocalizationUtils;
 import com.highteequeen.highteequeen_backend.dtos.OrderDTO;
+import com.highteequeen.highteequeen_backend.dtos.request.OrderUpdateRequest;
 import com.highteequeen.highteequeen_backend.entity.Order;
 import com.highteequeen.highteequeen_backend.responses.OrderListResponse;
 import com.highteequeen.highteequeen_backend.responses.OrderResponse;
@@ -48,10 +49,22 @@ public class OrderController {
         }
     }
     @GetMapping("/user/{user_id}")
-    public ResponseEntity<?> getOrders(@Valid @PathVariable("user_id") Long userId) {
+    public ResponseEntity<?> getOrders(
+            @Valid @PathVariable("user_id") Long userId,
+            @RequestParam(defaultValue = "", required = false) String keyword,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int limit
+    ) {
         try {
-            int totalPages = 0;
-            List<OrderResponse> orderResponses = orderService.findByUserId(userId).stream().map(OrderResponse::fromOrder).toList();
+            PageRequest pageRequest = PageRequest.of(
+                    page, limit,
+                    Sort.by("id").ascending()
+            );
+            Page<OrderResponse> orderPage = orderService
+                    .findByUserId(userId, keyword, pageRequest)
+                    .map(OrderResponse::fromOrder);
+            int totalPages = orderPage.getTotalPages();
+            List<OrderResponse> orderResponses = orderPage.getContent();
             return ResponseEntity.ok(OrderListResponse
                     .builder()
                     .orders(orderResponses)
@@ -72,12 +85,24 @@ public class OrderController {
         }
     }
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> updateOrder(
             @Valid @PathVariable long id,
             @Valid @RequestBody OrderDTO orderDTO) {
 
         try {
             Order order = orderService.updateOrder(id, orderDTO);
+            return ResponseEntity.ok(order);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PutMapping("/{id}/status")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
+    public ResponseEntity<?> updateOrderStatus(@PathVariable Long id, @RequestBody OrderUpdateRequest statusUpdate) {
+        try {
+            Order order = orderService.updateOrderStatus(id, statusUpdate);
             return ResponseEntity.ok(order);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
