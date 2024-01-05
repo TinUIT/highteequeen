@@ -13,7 +13,7 @@ const Modal2 = ({ openModal, content, onCancel, onYes,CancelShow=true,style,styl
               <i class="fa fa-close"></i>
             </button>
             <p className="modal-desc">{content}</p>
-            <div className="modal-diff-btn" style={stylebtn}>
+            <div className="modal-diff-btnn" style={stylebtn}>
               { CancelShow?( <button onClick={onCancel} className="btn-action cancel">
                 Cancel
               </button>):<></>}

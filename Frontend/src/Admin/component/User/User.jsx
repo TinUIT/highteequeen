@@ -10,6 +10,7 @@ export default function User() {
     { id: 123, name: 'Thai Thi Nhung', status: 'Active' }
     // ... other users
   ]);
+  const [userInfo,setUserInfo] = useState(JSON.parse(localStorage.getItem('user-info')));
   const [user, setUser] = useState({});
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
@@ -19,15 +20,24 @@ export default function User() {
   const [selectedUserDetails, setSelectedUserDetails] = useState(null);
 
   useEffect(() => {
-    axios.get(`http://localhost:8080/api/users?page=${currentPage}&size=5`)
+    axios.get(`http://localhost:8080/api/v1/users?page=${currentPage}&limit=10`, {
+      headers: {
+        'Authorization': `Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjIsImVtYWlsIjoiMjA1MjE3MjZAZ20udWl0LmVkdS52biIsInN1YiI6IjIwNTIxNzI2QGdtLnVpdC5lZHUudm4iLCJleHAiOjE3MDY5MjY0MDV9.PVggJprRk7nbTcOCu54LfxKzjtHF5h9kT2aO0hABHy8`,
+      },
+    })
       .then(response => {
-        setUsers(response.data.content);
-        setTotalPages(response.data.totalPages);
+        if (response.data && response.data.users) {
+          setUsers(response.data.users);
+          setTotalPages(response.data.totalPages);
+        } else {
+          console.error('Empty or invalid response data:', response.data);
+        }
       })
       .catch(error => {
         console.error('Error fetching users:', error);
       });
   }, [currentPage]);
+  
 
   const handleUpdateUser = (id, name, status) => {
     setIsUpdateUser(!isUpdateUser);
@@ -38,9 +48,9 @@ export default function User() {
 
   const handleDelete = (id) => {
     axios.delete(`http://localhost:8080/api/users/delete/${id}`)
-      .then(response => axios.get(`http://localhost:8080/api/users?page=${currentPage}&size=5`))
+      .then(response => axios.get(`http://localhost:8080/api/v1/users?page=${currentPage}&size=5`))
       .then(response => {
-        setUsers(response.data.content);
+        setUsers(response.data.users);
         setTotalPages(response.data.totalPages);
       })
       .catch(error => {
@@ -56,20 +66,19 @@ export default function User() {
   };
 
   const handleShowUserDetails = (id) => {
-    // Gọi API hoặc sử dụng dữ liệu từ state nếu đã có
-    // Ví dụ: axios.get(`http://localhost:8080/api/users/details/${id}`)
-    //   .then(response => setSelectedUserDetails(response.data));
+    if (selectedUserDetails && selectedUserDetails.id === id) {
+      return;
+    }
 
-    // Tạm thời sử dụng dữ liệu mẫu
-    const userDetails = {
-      id,
-      phoneNumber: '123456789',
-      address: 'Sample Address',
-      email: 'user@example.com',
-    };
-    setSelectedUserDetails(userDetails);
+    const userDetails = users.find(user => user.id === id);
+
+    if (userDetails) {
+      setSelectedUserDetails(userDetails);
+    } else {
+      console.error('Không tìm thấy thông tin người dùng.');
+    }
   };
-
+  
   const startPage = currentPage <= 1 ? 0 : currentPage - 1;
   const endPage = currentPage + 1 >= totalPages ? totalPages - 1 : currentPage + 1;
   const pageNumbers = Array.from({ length: endPage - startPage + 1 }, (_, i) => startPage + i);
@@ -99,14 +108,14 @@ export default function User() {
                       {user.id}
                     </span>
                   </TableCell>
-                  <TableCell align="left">{user.name}</TableCell>
+                  <TableCell align="left">{user.fullname}</TableCell>
                   <TableCell align="left">
                     <div style={{ display: 'flex', alignItems: 'center' }}>
-                      <span style={{ color: switchChecked ? 'green' : 'red' }}>{user.status}</span>
+                      <span style={{ color: switchChecked ? 'green' : 'red' }}>{user.is_active}</span>
                       <div className="edit-button">
                         <Switch
                           checked={switchChecked}
-                          onChange={() => handleUpdateUser(user.id, user.name, switchChecked ? 'Inactive' : 'Active')}
+                          onChange={() => handleUpdateUser(user.id, user.fullname, switchChecked ? 'Inactive' : 'Active')}
                           color="primary"
                         />
                       </div>
@@ -142,7 +151,7 @@ export default function User() {
               <div>
                 <h2>User Details</h2>
                 <p>ID: {selectedUserDetails.id}</p>
-                <p>Phone Number: {selectedUserDetails.phoneNumber}</p>
+                <p>Phone Number: {selectedUserDetails.phone_number}</p>
                 <p>Address: {selectedUserDetails.address}</p>
                 <p>Email: {selectedUserDetails.email}</p>
               </div>
