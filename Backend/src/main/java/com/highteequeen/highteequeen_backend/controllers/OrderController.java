@@ -2,6 +2,7 @@ package com.highteequeen.highteequeen_backend.controllers;
 
 import com.highteequeen.highteequeen_backend.components.LocalizationUtils;
 import com.highteequeen.highteequeen_backend.dtos.OrderDTO;
+import com.highteequeen.highteequeen_backend.dtos.request.OrderUpdateRequest;
 import com.highteequeen.highteequeen_backend.entity.Order;
 import com.highteequeen.highteequeen_backend.responses.OrderListResponse;
 import com.highteequeen.highteequeen_backend.responses.OrderResponse;
@@ -72,6 +73,7 @@ public class OrderController {
         }
     }
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> updateOrder(
             @Valid @PathVariable long id,
             @Valid @RequestBody OrderDTO orderDTO) {
@@ -83,6 +85,31 @@ public class OrderController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    @PutMapping("/{id}/status")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
+    public ResponseEntity<?> updateOrderStatus(@PathVariable Long id, @RequestBody OrderUpdateRequest statusUpdate) {
+        try {
+            Order order = orderService.updateOrderStatus(id, statusUpdate);
+            return ResponseEntity.ok(order);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+
+    //    @PutMapping("/{id}")
+//    public ResponseEntity<?> updateOrderByUser(
+//            @Valid @PathVariable long id,
+//            ) {
+//
+//        try {
+//            Order order = orderService.updateOrder(id, orderDTO);
+//            return ResponseEntity.ok(order);
+//        } catch (Exception e) {
+//            return ResponseEntity.badRequest().body(e.getMessage());
+//        }
+//    }
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteOrder(@Valid @PathVariable Long id) {
         orderService.deleteOrder(id);

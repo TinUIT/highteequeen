@@ -4,6 +4,7 @@ import com.highteequeen.highteequeen_backend.dtos.CartItemDTO;
 import com.highteequeen.highteequeen_backend.dtos.OrderDTO;
 import com.highteequeen.highteequeen_backend.dtos.OrderDetailDTO;
 import com.highteequeen.highteequeen_backend.dtos.OrderWithDetailsDTO;
+import com.highteequeen.highteequeen_backend.dtos.request.OrderUpdateRequest;
 import com.highteequeen.highteequeen_backend.entity.*;
 import com.highteequeen.highteequeen_backend.exeptions.DataNotFoundException;
 import com.highteequeen.highteequeen_backend.repositories.OrderDetailRepository;
@@ -171,6 +172,19 @@ public class OrderService implements IOrderService {
     @Override
     public Page<Order> getOrdersByKeyword(String keyword, Pageable pageable) {
         return orderRepository.findByKeyword(keyword, pageable);
+    }
+
+    @Override
+    public Order updateOrderStatus(Long id, OrderUpdateRequest statusUpdate) throws DataNotFoundException {
+        Order order = orderRepository.findById(id)
+                .orElseThrow(() -> new DataNotFoundException("Cannot find order with id: " + id));
+
+        User user = userRepository.findById(statusUpdate.getUserId())
+                .orElseThrow(() -> new DataNotFoundException("Cannot find user with id: " + statusUpdate.getUserId()));
+        order.setUser(user);
+        order.setStatus(statusUpdate.getStatus());
+        orderRepository.save(order);
+        return order;
     }
 }
 
