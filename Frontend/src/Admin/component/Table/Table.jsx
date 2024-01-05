@@ -17,6 +17,7 @@ import ReactPaginate from "react-paginate";
 //   return { name, trackingId, date, status };
 // }
 
+
 // const rows = [
 //   createData("Lasania Chiken Fri", 18908424, "2 March 2022", "Approved"),
 //   createData("Big Baza Bang ", 18908424, "2 March 2022", "Pending"),
@@ -106,11 +107,6 @@ export default function BasicTable() {
 const endIndex = startIndex + itemsPerPage;
 const displayedItems = listOrder.slice(startIndex, endIndex);
 
-
-
-
-
-
   // useEffect(() => {
   //   axios
   //     .get("http://localhost:8080/api/orders?page=0&size=5")
@@ -122,36 +118,73 @@ const displayedItems = listOrder.slice(startIndex, endIndex);
   //       console.error("There was an error!", error);
   //     });
   // }, [ isAccepted,isCancel]);
-  useEffect(() => {
-  const fetchData = async () => {
-    try {
-      const response = await axios.get(
-        'http://localhost:8080/api/v1/orders/get-orders-by-keyword?page=0&limit=10',
-        {
+  // useEffect(() => {
+    
+//   const fetchData = async () => {
+//     try {
+//       const response = await axios.get(
+//         'http://localhost:8080/api/v1/orders/get-orders-by-keyword?page=0&limit=10',
+//         {
+//           headers: {
+//             accept: '*',
+//             Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjIsImVtYWlsIjoiMjA1MjE4MThAZ20udWl0LmVkdS52biIsInN1YiI6IjIwNTIxODE4QGdtLnVpdC5lZHUudm4iLCJleHAiOjE3MDY4MDQ4ODl9.jIPkeYVkTn87aqXUSERq6HYjgbqdbxq5bGDJfUzT4ho',
+//           },
+//         }
+//       );
+//       setBill(response.data.orders);
+//       setListOrder(response.data.orders);
+//       setIsAccepted(Array(response.data.orders.length).fill(false));
+//       setIsCancel(Array(response.data.orders.length).fill(false));
+//     } catch (error) {
+//       console.error('There was an error!', error);
+//     }
+//   };
+
+//   fetchData();
+// // }, [isAccepted, isCancel]);
+// }, []);
+    const fetchData = async (url) => {
+      try {
+        const response = await axios.get(url, {
           headers: {
             accept: '*',
             Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjIsImVtYWlsIjoiMjA1MjE4MThAZ20udWl0LmVkdS52biIsInN1YiI6IjIwNTIxODE4QGdtLnVpdC5lZHUudm4iLCJleHAiOjE3MDY4MDQ4ODl9.jIPkeYVkTn87aqXUSERq6HYjgbqdbxq5bGDJfUzT4ho',
           },
-        }
-      );
-      setBill(response.data.orders);
-      setListOrder(response.data.orders);
-      setIsAccepted(Array(response.data.orders.length).fill(false));
-      setIsCancel(Array(response.data.orders.length).fill(false));
-    } catch (error) {
-      console.error('There was an error!', error);
-    }
-  };
+        });
+        setBill(response.data.orders);
+        setListOrder(response.data.orders);
+        setIsAccepted(Array(response.data.orders.length).fill(false));
+        setIsCancel(Array(response.data.orders.length).fill(false));
+       
+      } catch (error) {
+        console.error('There was an error!', error);
+      }
+    };
 
-  fetchData();
-// }, [isAccepted, isCancel]);
-}, []);
+    const handleStatusChange = (status) => {
+      const keyword = status.toLowerCase();
+      let apiUrl;
+      console.log("keyword",keyword);
+      if(keyword=="all orders"){
+        apiUrl = `http://localhost:8080/api/v1/orders/get-orders-by-keyword?page=0&limit=10`;
+      }
+      else{
+        apiUrl = `http://localhost:8080/api/v1/orders/get-orders-by-keyword?page=0&limit=10&keyword=${keyword}`;
+      }
+      fetchData(apiUrl);
+    };
+
+    useEffect(() => {
+      const   apiUrl = `http://localhost:8080/api/v1/orders/get-orders-by-keyword?page=0&limit=10`;
+      fetchData(apiUrl);
+    }, []); // Initial data fetching
+
 
 
   return (
     <div className="Table">
       {/* <h3>Recent Orders</h3> */}
-      <NavbarOrders/>
+      <NavbarOrders onStatusChange={handleStatusChange} />
       <TableContainer
         component={Paper}
         style={{ boxShadow: "0px 13px 20px 0px #80808029" }}
@@ -172,7 +205,6 @@ const displayedItems = listOrder.slice(startIndex, endIndex);
               <TableRow
                 key={row.id}
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-
               >
                 {/* <TableCell align="left">{row.orderId}</TableCell>
                 <TableCell align="left">{row.orderDate}</TableCell> */}
@@ -257,6 +289,7 @@ const displayedItems = listOrder.slice(startIndex, endIndex);
                         product={selectedProduct}
                         onClose={handleCloseDetail}
                         ID={row.id}
+                        ID_User={row.user_id}
                       />
                     </TableCell>
                   </TableRow>
@@ -272,15 +305,25 @@ const displayedItems = listOrder.slice(startIndex, endIndex);
       
       </TableContainer>
      
-      {/* <ReactPaginate
+      <ReactPaginate
           breakLabel="..."
           nextLabel="next >"
           onPageChange={handlePageClick}
           pageRangeDisplayed={5}
-          pageCount={pageCount}
+          pageCount={69}
           previousLabel="< previous"
-          renderOnZeroPageCount={null}
-          /> */}
+          
+          pageClassName="page-item"
+          pageLinkClassName="page-link"
+          previousClassName="page-item"
+          previousLinkClassName="page-link"
+          nextClassName="page-item"
+          nextLinkClassName="page-link"
+          breakClassName="page-item"
+          breakLinkClassName="page-link"
+          containerClassName="pagination"
+          activeClassName="active"
+          />
       
       
       {/* {selectedProduct && (
