@@ -11,10 +11,7 @@ import com.highteequeen.highteequeen_backend.exeptions.DataNotFoundException;
 import com.highteequeen.highteequeen_backend.exeptions.InvalidPasswordException;
 import com.highteequeen.highteequeen_backend.helper.MailInfo;
 import com.highteequeen.highteequeen_backend.repositories.UserRepository;
-import com.highteequeen.highteequeen_backend.responses.LoginResponse;
-import com.highteequeen.highteequeen_backend.responses.RegisterResponse;
-import com.highteequeen.highteequeen_backend.responses.ResponseObject;
-import com.highteequeen.highteequeen_backend.responses.UserResponse;
+import com.highteequeen.highteequeen_backend.responses.*;
 import com.highteequeen.highteequeen_backend.services.IMailService;
 import com.highteequeen.highteequeen_backend.services.ITokenService;
 import com.highteequeen.highteequeen_backend.services.IUserService;
@@ -23,6 +20,9 @@ import com.highteequeen.highteequeen_backend.utils.MessageKeys;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -31,6 +31,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -43,6 +44,33 @@ public class UserController {
     private final UserRepository userRepository;
     private final AuthenticationService authenticationService;
     private final ITokenService tokenService;
+
+    @GetMapping("")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<?> getAllUser(
+            @RequestParam(defaultValue = "", required = false) String keyword,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int limit
+    ){
+        try {
+            PageRequest pageRequest = PageRequest.of(
+                    page, limit,
+                    //Sort.by("createdAt").descending()
+                    Sort.by("id").ascending()
+            );
+            Page<UserResponse> userPage = userService.findAll(keyword, pageRequest)
+                    .map(UserResponse::fromUser);
+            int totalPages = userPage.getTotalPages();
+            List<UserResponse> userResponses = userPage.getContent();
+            return ResponseEntity.ok(UserListResponse
+                    .builder()
+                    .users(userResponses)
+                    .totalPages(totalPages)
+                    .build());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
     @PostMapping("/register")
     public ResponseEntity<RegisterResponse> createUser(
             @Valid @RequestBody UserDTO userDTO,
@@ -219,6 +247,17 @@ public class UserController {
         try {
             userService.blockOrEnable(userId, active > 0);
             String message = active > 0 ? "Successfully enabled the user." : "Successfully blocked the user.";
+            User existingUser = userRepository.findById(userId)
+                    .orElseThrow(() -> new DataNotFoundException("User not found"));
+            if(active == 0) {
+                String from = "ptt102002@gmail.com";
+                String to = existingUser.getEmail();
+                String subject = "Welcome!";
+
+                String body = "Highteequeen xin chào! Tài khoản của " + existingUser.getFullName() + "đã bị khóa. Vui lòng liên hệ ptt102002@gmail.com để biết thêm chi tiết ";
+                MailInfo mail = new MailInfo(from, to, subject, body);
+                mailer.send(mail);
+            }
             return ResponseEntity.ok().body(message);
         } catch (DataNotFoundException e) {
             return ResponseEntity.badRequest().body("User not found.");

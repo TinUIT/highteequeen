@@ -13,21 +13,22 @@ import axios from "axios";
 import NavbarOrders from "./NavbarOrders";
 import ReactPaginate from "react-paginate";
 
-function createData(name, trackingId, date, status) {
-  return { name, trackingId, date, status };
-}
+// function createData(name, trackingId, date, status) {
+//   return { name, trackingId, date, status };
+// }
 
-const rows = [
-  createData("Lasania Chiken Fri", 18908424, "2 March 2022", "Approved"),
-  createData("Big Baza Bang ", 18908424, "2 March 2022", "Pending"),
-  createData("Mouth Freshner", 18908424, "2 March 2022", "Approved"),
-  createData("Cupcaka", 18908421, "2 March 2022", "Delivered"),
-  createData("Cupcakb", 18908421, "2 March 2022", "Delivered"),
-  createData("Cupcakc", 18908421, "2 March 2022", "Delivered"),
-  createData("Cupcakd", 18908421, "2 March 2022", "Delivered"),
-  createData("Cupcake", 18908421, "2 March 2022", "Delivered"),
-  createData("Cupcakf", 18908421, "2 March 2022", "Delivered"),
-];
+
+// const rows = [
+//   createData("Lasania Chiken Fri", 18908424, "2 March 2022", "Approved"),
+//   createData("Big Baza Bang ", 18908424, "2 March 2022", "Pending"),
+//   createData("Mouth Freshner", 18908424, "2 March 2022", "Approved"),
+//   createData("Cupcaka", 18908421, "2 March 2022", "Delivered"),
+//   createData("Cupcakb", 18908421, "2 March 2022", "Delivered"),
+//   createData("Cupcakc", 18908421, "2 March 2022", "Delivered"),
+//   createData("Cupcakd", 18908421, "2 March 2022", "Delivered"),
+//   createData("Cupcake", 18908421, "2 March 2022", "Delivered"),
+//   createData("Cupcakf", 18908421, "2 March 2022", "Delivered"),
+// ];
 
 const makeStyle = (status) => {
   if (status === "Approved") {
@@ -53,11 +54,15 @@ const makeStyle = (status) => {
 export default function BasicTable() {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [isAccept, setisAccept] = useState(false);
-  const [isAccepted, setIsAccepted] = useState(Array(rows.length).fill(false));
-  const [isCancel, setIsCancel] = useState(Array(rows.length).fill(false));
-  const [Bill, setBill] = useState([]);
-  // const [ContentBill, setContentBill] = useState([]);
-  const [ContentBill, setContentBill] = useState(rows);
+  // const [isAccepted, setIsAccepted] = useState(Array(rows.length).fill(false));
+  // const [isCancel, setIsCancel] = useState(Array(rows.length).fill(false));
+  const [isAccepted, setIsAccepted] = useState(Array(0).fill(false));
+  const [isCancel, setIsCancel] = useState(Array(0).fill(false));
+
+
+
+  
+  const [listOrder, setListOrder] = useState([]);
   const [ID, setID] = useState();
 
   const handleDetailBill = (product, index) => {
@@ -92,39 +97,64 @@ export default function BasicTable() {
   };
 
   const handlePageClick = ({ selected }) => {
-    setCurrentPage(selected);
+    const newPage = selected ; // Pagination starts from 0, but your API seems to start from 1
+    setCurrentPage(newPage);
+    const apiUrl = `http://localhost:8080/api/v1/orders/get-orders-by-keyword?page=${newPage}&limit=10`;
+    fetchData(apiUrl);
   };
+  
   
 
   const [currentPage, setCurrentPage] = useState(0);
   const itemsPerPage = 5; // Update this value based on your requirements
-  const pageCount = Math.ceil(Bill.length / itemsPerPage);
+  const [pageCount, setPageCount] = useState(0);
 
-  const startIndex = currentPage * itemsPerPage;
-const endIndex = startIndex + itemsPerPage;
-const displayedItems = ContentBill.slice(startIndex, endIndex);
-
-
-
-
-
-
-  useEffect(() => {
-    axios
-      .get("http://localhost:8080/api/orders?page=0&size=5")
-      .then((response) => {
-        setBill(response.data);
-        setContentBill(response.data.content);
-      })
-      .catch((error) => {
-        console.error("There was an error!", error);
+  const fetchData = async (url) => {
+    try {
+      const response = await axios.get(url, {
+        headers: {
+          accept: '*',
+          Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjIsImVtYWlsIjoiMjA1MjE4MThAZ20udWl0LmVkdS52biIsInN1YiI6IjIwNTIxODE4QGdtLnVpdC5lZHUudm4iLCJleHAiOjE3MDY4MDQ4ODl9.jIPkeYVkTn87aqXUSERq6HYjgbqdbxq5bGDJfUzT4ho',
+        },
       });
-  }, [ isAccepted,isCancel]);
+     
+      setListOrder(response.data.orders);
+      setIsAccepted(Array(response.data.orders.length).fill(false));
+      setIsCancel(Array(response.data.orders.length).fill(false));
+      setCurrentPage(0); // Reset current page to 0 after fetching new data
+      const totalPages = response.data.totalPages || 0;
+      setPageCount(totalPages);
+      console.log("total_page:", totalPages);
+    } catch (error) {
+      console.error('There was an error!', error);
+    }
+
+  };
+
+    const handleStatusChange = (status) => {
+      const keyword = status.toLowerCase();
+      let apiUrl;
+      console.log("keyword",keyword);
+      if(keyword=="all orders"){
+        apiUrl = `http://localhost:8080/api/v1/orders/get-orders-by-keyword?page=0&limit=10`;
+      }
+      else{
+        apiUrl = `http://localhost:8080/api/v1/orders/get-orders-by-keyword?page=0&limit=10&keyword=${keyword}`;
+      }
+      fetchData(apiUrl);
+    };
+
+    useEffect(() => {
+      const   apiUrl = `http://localhost:8080/api/v1/orders/get-orders-by-keyword?page=0&limit=10`;
+      fetchData(apiUrl);
+    }, []); // Initial data fetching
+
+
 
   return (
     <div className="Table">
       {/* <h3>Recent Orders</h3> */}
-      <NavbarOrders/>
+      <NavbarOrders onStatusChange={handleStatusChange} />
       <TableContainer
         component={Paper}
         style={{ boxShadow: "0px 13px 20px 0px #80808029" }}
@@ -132,7 +162,7 @@ const displayedItems = ContentBill.slice(startIndex, endIndex);
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
             <TableRow>
-              <TableCell align="left">Tracking ID</TableCell>
+              <TableCell align="left">Order ID</TableCell>
               <TableCell align="left">Date</TableCell>
               <TableCell align="left">Status</TableCell>
               <TableCell align="left"></TableCell>
@@ -140,15 +170,16 @@ const displayedItems = ContentBill.slice(startIndex, endIndex);
             </TableRow>
           </TableHead>
           <TableBody style={{ color: "white" }}>
-            {ContentBill.map((row, index) => (
+            {listOrder.map((row, index) => (
+               <React.Fragment key={row.id}>
               <TableRow
-                key={row.name}
+                key={row.id}
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
               >
                 {/* <TableCell align="left">{row.orderId}</TableCell>
                 <TableCell align="left">{row.orderDate}</TableCell> */}
-                <TableCell align="left">{row.trackingId}</TableCell>
-                <TableCell align="left">{row.date}</TableCell>
+                <TableCell align="left">{row.id}</TableCell>
+                <TableCell align="left">{`${row.order_date[2]} / ${row.order_date[1]} / ${row.order_date[0]}`}</TableCell>
                 <TableCell align="left">
                   <span className="status" style={makeStyle(row.status)}>
                     {row.status}
@@ -221,28 +252,57 @@ const displayedItems = ContentBill.slice(startIndex, endIndex);
                   </div>
                 </TableCell>
               </TableRow>
+              {selectedProduct === row && (
+                  <TableRow>
+                    <TableCell align="left" colSpan={5}>
+                      <DetailAdminBill
+                        product={selectedProduct}
+                        onClose={handleCloseDetail}
+                        ID={row.id}
+                        ID_User={row.user_id}
+                        all_total={row.total_money}
+                      />
+                    </TableCell>
+                  </TableRow>
+                )}
+
+              </React.Fragment>
             ))}
+            
           </TableBody>
        
 
         </Table>
       
       </TableContainer>
-     
-      {/* <ReactPaginate
-          breakLabel="..."
-          nextLabel="next >"
-          onPageChange={handlePageClick}
-          pageRangeDisplayed={5}
-          pageCount={pageCount}
-          previousLabel="< previous"
-          renderOnZeroPageCount={null}
-          /> */}
+     <div className="order_page">
+      <ReactPaginate
+            breakLabel="..."
+            nextLabel="next >"
+            onPageChange={handlePageClick}
+            pageRangeDisplayed={5}
+            pageCount={pageCount}
+            previousLabel="< previous"
+            
+            pageClassName="page-item"
+            pageLinkClassName="page-link"
+            previousClassName="page-item"
+            previousLinkClassName="page-link"
+            nextClassName="page-item"
+            nextLinkClassName="page-link"
+            breakClassName="page-item"
+            breakLinkClassName="page-link"
+            containerClassName="pagination"
+            activeClassName="active"
+            />
+      
+
+     </div>
       
       
-      {selectedProduct && (
+      {/* {selectedProduct && (
         <DetailAdminBill product={selectedProduct} onClose={handleCloseDetail} ID={ID} />
-      )}
+      )} */}
     </div>
   );
 }

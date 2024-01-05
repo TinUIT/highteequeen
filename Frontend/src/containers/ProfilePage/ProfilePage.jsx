@@ -19,10 +19,10 @@ import { UserContext } from "../../contexts/UserContext";
 const ProfilePage = () => {
     const [userInfo,setUserInfo] = useState(JSON.parse(localStorage.getItem('user-info')));   
     const { user, updateUserProfile } = useContext(UserContext);
-    const [fullName, setFullName] = useState(user.fullName);
-    const [email, setEmail] = useState(user.email);
-    const [address, setAddress] = useState(user.address);
-    const [phone, setPhone] = useState(user.phone)  
+    const [fullName, setFullName] = useState(user.userData.fullname);
+    const [email, setEmail] = useState(user.username);
+    const [address, setAddress] = useState(user.userData.address);
+    const [phone, setPhone] = useState(user.userData.phone_number)  
     const [isMobile, setIsMobile] = useState(false);
     const [openModal,setOpenModal]= useState(false);
 
@@ -138,7 +138,7 @@ const ProfilePage = () => {
                                 <div className="Edit Email"><div className="tile-input">Email</div><input className="Input" value={email ? email : ''} onChange={(e) =>setEmail(e.target.value)}></input></div>
                                 <div className="Edit Phone"><div className="tile-input">Phone</div><input className="Input" value={phone ? phone: ''} onChange={(e) =>setPhone(e.target.value)}></input></div>
                                 <div className="Edit Address"><div className="tile-input">Address</div><input className="Input" value={address ? address: ''} onChange={(e) =>setAddress(e.target.value)}></input></div>
-                                <Form>
+                                {/* <Form>
                                     {['radio'].map((type) => (
                                         <div key={`inline-${type}`} className="mb-3">
                                             <Form.Check
@@ -167,7 +167,7 @@ const ProfilePage = () => {
                                             />
                                         </div>
                                     ))}
-                                </Form>
+                                </Form> */}
 
                             </div>
                             <div className="wrapper-button-profile">

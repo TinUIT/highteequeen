@@ -15,16 +15,17 @@ const ProductPage = () => {
     const [currentPage, setCurrentPage] = useState(0);
     const [totalPages, setTotalPages] = useState(0);
     const [TileProduct,setTitleProduct]=useState();
-    const [apiEndpoint, setApiEndpoint] = useState("http://localhost:8080/api/products");
+    const [apiEndpoint, setApiEndpoint] = useState("http://localhost:8080/api/v1/products");
     const location = useLocation();
     const isselectsee = location?.state?.isselectsee;
     const [selectedButton, setSelectedButton] = useState(null);
     useEffect(() => {
        
-        axios.get(`${apiEndpoint}?page=${currentPage}&size=6`)
+        axios.get(`${apiEndpoint}?page=${currentPage}&limit=6`)
             .then(response => {
-                setProducts(response.data.content);
+                setProducts(response.data.products);
                 setTotalPages(response.data.totalPages);
+                console.log(response.data.products)
             })
             .catch(error => {
                 console.error('There was an error!', error);
@@ -38,24 +39,24 @@ const ProductPage = () => {
         setSelectedButton(buttonName);
         switch (buttonName) {
             case 'Best-seller':
-                setApiEndpoint("http://localhost:8080/api/products/best-sellers");
+                setApiEndpoint("http://localhost:8080/api/v1/products/best-sellers");
                 break;
             case 'Discount':
-                setApiEndpoint("http://localhost:8080/api/products/sales");
+                setApiEndpoint("http://localhost:8080/api/v1/products/sales");
                 break;
             case 'Low-price':
-                setApiEndpoint("http://localhost:8080/api/products/low-price");
+                setApiEndpoint("http://localhost:8080/api/v1/products/low-price");
                 break;
             case 'High-price':
-                setApiEndpoint("http://localhost:8080/api/products/high-price");
+                setApiEndpoint("http://localhost:8080/api/v1/products/high-price");
                 break;
             default:
-                setApiEndpoint("http://localhost:8080/api/products");
+                setApiEndpoint("http://localhost:8080/api/v1/products");
         }
     };
 
     const handleFilterCategoryName = (categoryName) => {
-        setApiEndpoint(`http://localhost:8080/api/products/category/${categoryName}`)
+        setApiEndpoint(`http://localhost:8080/api/v1/products/category/${categoryName}`)
     }
     const handleSelectProduct = (selectedIndexed, e) => {
         setProduct(selectedIndexed);

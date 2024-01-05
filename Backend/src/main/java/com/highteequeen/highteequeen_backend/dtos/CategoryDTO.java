@@ -3,7 +3,7 @@ package com.highteequeen.highteequeen_backend.dtos;
 import lombok.*;
 import jakarta.validation.constraints.NotEmpty;
 
-@Data//toString
+@Data
 @Getter
 @Setter
 @AllArgsConstructor

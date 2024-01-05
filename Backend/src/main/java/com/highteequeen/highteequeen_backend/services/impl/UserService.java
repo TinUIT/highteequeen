@@ -4,6 +4,7 @@ import com.highteequeen.highteequeen_backend.components.JwtTokenUtils;
 import com.highteequeen.highteequeen_backend.components.LocalizationUtils;
 import com.highteequeen.highteequeen_backend.dtos.UpdateUserDTO;
 import com.highteequeen.highteequeen_backend.dtos.UserDTO;
+import com.highteequeen.highteequeen_backend.entity.Product;
 import com.highteequeen.highteequeen_backend.entity.Role;
 import com.highteequeen.highteequeen_backend.entity.Token;
 import com.highteequeen.highteequeen_backend.entity.User;
@@ -11,6 +12,7 @@ import com.highteequeen.highteequeen_backend.exeptions.DataNotFoundException;
 import com.highteequeen.highteequeen_backend.exeptions.ExpiredTokenException;
 import com.highteequeen.highteequeen_backend.exeptions.InvalidPasswordException;
 import com.highteequeen.highteequeen_backend.exeptions.PermissionDenyException;
+import com.highteequeen.highteequeen_backend.repositories.ProductRepository;
 import com.highteequeen.highteequeen_backend.repositories.RoleRepository;
 import com.highteequeen.highteequeen_backend.repositories.TokenRepository;
 import com.highteequeen.highteequeen_backend.repositories.UserRepository;
@@ -19,6 +21,8 @@ import com.highteequeen.highteequeen_backend.utils.MessageKeys;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -38,6 +42,7 @@ public class UserService implements IUserService {
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
     private final TokenRepository tokenRepository;
+    private final ProductRepository productRepository;
     private final JwtTokenUtils jwtTokenUtil;
     private final AuthenticationManager authenticationManager;
     private final LocalizationUtils localizationUtils;
@@ -161,6 +166,16 @@ public class UserService implements IUserService {
 
         return userRepository.save(existingUser);
     }
+    public void addProductToFavorites(Long userId, Long productId) throws DataNotFoundException {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new DataNotFoundException("User not found"));
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new DataNotFoundException("Product not found"));
+
+        user.getFavoriteProducts().add(product);
+        userRepository.save(user);
+    }
+
 
     @Override
     @Transactional
@@ -183,7 +198,13 @@ public class UserService implements IUserService {
         User existingUser = userRepository.findById(userId)
                 .orElseThrow(() -> new DataNotFoundException("User not found"));
         existingUser.setActive(active);
+
         userRepository.save(existingUser);
+    }
+
+    @Override
+    public Page<User> findAll(String keyword, Pageable pageable) {
+        return userRepository.findAll(keyword, pageable);
     }
 
 }

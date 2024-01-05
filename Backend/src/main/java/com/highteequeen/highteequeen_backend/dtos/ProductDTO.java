@@ -28,4 +28,7 @@ public class ProductDTO {
     @JsonProperty("category_id")
     private Long categoryId;
 
+    @JsonProperty("brand_id")
+    private Long brandId;
+
 }

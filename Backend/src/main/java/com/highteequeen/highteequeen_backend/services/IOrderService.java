@@ -1,6 +1,7 @@
 package com.highteequeen.highteequeen_backend.services;
 
 import com.highteequeen.highteequeen_backend.dtos.OrderDTO;
+import com.highteequeen.highteequeen_backend.dtos.request.OrderUpdateRequest;
 import com.highteequeen.highteequeen_backend.entity.Order;
 import com.highteequeen.highteequeen_backend.exeptions.DataNotFoundException;
 import org.springframework.data.domain.Page;
@@ -13,6 +14,8 @@ public interface IOrderService {
     Order getOrder(Long id);
     Order updateOrder(Long id, OrderDTO orderDTO) throws DataNotFoundException;
     void deleteOrder(Long id);
-    List<Order> findByUserId(Long userId);
+    Page<Order> findByUserId(Long userId, String keyword, Pageable pageable);
     Page<Order> getOrdersByKeyword(String keyword, Pageable pageable);
+
+    Order updateOrderStatus(Long id, OrderUpdateRequest statusUpdate) throws DataNotFoundException;
 }

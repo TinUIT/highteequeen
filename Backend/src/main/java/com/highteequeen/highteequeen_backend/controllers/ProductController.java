@@ -1,16 +1,17 @@
 package com.highteequeen.highteequeen_backend.controllers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.github.javafaker.Faker;
 import com.highteequeen.highteequeen_backend.components.LocalizationUtils;
 import com.highteequeen.highteequeen_backend.dtos.ProductDTO;
 import com.highteequeen.highteequeen_backend.dtos.ProductImageDTO;
 import com.highteequeen.highteequeen_backend.dtos.request.ProductRequest;
 import com.highteequeen.highteequeen_backend.entity.Product;
 import com.highteequeen.highteequeen_backend.entity.ProductImage;
+import com.highteequeen.highteequeen_backend.exeptions.DataNotFoundException;
 import com.highteequeen.highteequeen_backend.responses.ProductListResponse;
 import com.highteequeen.highteequeen_backend.responses.ProductResponse;
 import com.highteequeen.highteequeen_backend.services.IProductService;
+import com.highteequeen.highteequeen_backend.services.IUserService;
 import com.highteequeen.highteequeen_backend.utils.MessageKeys;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import jakarta.validation.Valid;
@@ -25,16 +26,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -44,6 +40,7 @@ import java.util.stream.Collectors;
 public class ProductController {
     private static final Logger logger = LoggerFactory.getLogger(ProductController.class);
     private final IProductService productService;
+    private final IUserService userService;
     private final LocalizationUtils localizationUtils;
     @PostMapping(value = "", consumes = {"multipart/form-data"})
     @PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -59,10 +56,8 @@ public class ProductController {
                         .toList();
                 return ResponseEntity.badRequest().body(errorMessages);
             }
-
             ProductDTO productDTO = convertToProductDTO(productRequest);
             Product newProduct = productService.createProduct(productDTO);
-
             for (MultipartFile file : productRequest.getImages()) {
                 if(file.getSize() == 0) {
                     continue;
@@ -98,6 +93,7 @@ public class ProductController {
                 .inStock(productRequest.getInStock())
                 .description(productRequest.getDescription())
                 .categoryId(productRequest.getCategoryId())
+                .brandId(productRequest.getBrandId())
                 .build();
     }
     @PostMapping(value = "uploads/{id}",
@@ -148,7 +144,6 @@ public class ProductController {
         try {
             java.nio.file.Path imagePath = Paths.get("uploads/"+imageName);
             UrlResource resource = new UrlResource(imagePath.toUri());
-
             if (resource.exists()) {
                 return ResponseEntity.ok()
                         .contentType(MediaType.IMAGE_JPEG)
@@ -166,6 +161,7 @@ public class ProductController {
     public ResponseEntity<ProductListResponse> getProducts(
             @RequestParam(defaultValue = "") String keyword,
             @RequestParam(defaultValue = "0", name = "category_id") Long categoryId,
+            @RequestParam(defaultValue = "0", name = "brand_id") Long brandId,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int limit
     ) throws JsonProcessingException {
@@ -175,10 +171,10 @@ public class ProductController {
                 //Sort.by("createdAt").descending()
                 Sort.by("id").ascending()
         );
-        logger.info(String.format("keyword = %s, category_id = %d, page = %d, limit = %d",
-                keyword, categoryId, page, limit));
+        logger.info(String.format("keyword = %s, category_id = %d, brand_id = %d, page = %d, limit = %d",
+                keyword, categoryId, brandId, page, limit));
         Page<ProductResponse> productPage = productService
-                .getAllProducts(keyword, categoryId, pageRequest);
+                .getAllProducts(keyword, categoryId, brandId, pageRequest);
         totalPages = productPage.getTotalPages();
         List<ProductResponse> productResponses = productPage.getContent();
         for (ProductResponse product : productResponses) {
@@ -190,7 +186,6 @@ public class ProductController {
                 .totalPages(totalPages)
                 .build());
     }
-
     @GetMapping("/best-sellers")
     public ResponseEntity<ProductListResponse> getBestSellingProducts(
             @RequestParam(defaultValue = "0") int page,
@@ -214,7 +209,41 @@ public class ProductController {
                 .totalPages(totalPages)
                 .build());
     }
+    @GetMapping("/discounted")
+    public ResponseEntity<ProductListResponse> getDiscountedProducts(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int limit
+    ) {
+        PageRequest pageRequest = PageRequest.of(page, limit, Sort.by("discountPercent").descending());
+        Page<ProductResponse> productPage = productService.findProductsByDiscountPercentDesc(pageRequest);
+        int totalPages = productPage.getTotalPages();
+        List<ProductResponse> productResponses = productPage.getContent();
+        for (ProductResponse product : productResponses) {
+            product.setTotalPages(totalPages);
+        }
+        return ResponseEntity.ok(ProductListResponse.builder()
+                .products(productResponses)
+                .totalPages(totalPages)
+                .build());
+    }
 
+    @GetMapping("/most-favorite")
+    public ResponseEntity<ProductListResponse> getMostFavoritedProducts(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int limit
+    ) {
+        PageRequest pageRequest = PageRequest.of(page, limit);
+        Page<ProductResponse> productPage = productService.findMostFavoritedProducts(pageRequest);
+        int totalPages = productPage.getTotalPages();
+        List<ProductResponse> productResponses = productPage.getContent();
+        for (ProductResponse product : productResponses) {
+            product.setTotalPages(totalPages);
+        }
+        return ResponseEntity.ok(ProductListResponse.builder()
+                .products(productResponses)
+                .totalPages(totalPages)
+                .build());
+    }
     @GetMapping("/{id}")
     public ResponseEntity<?> getProductById(
             @PathVariable("id") Long productId
@@ -229,7 +258,6 @@ public class ProductController {
     }
     @GetMapping("/by-ids")
     public ResponseEntity<?> getProductsByIds(@RequestParam("ids") String ids) {
-        //eg: 1,3,5,7
         try {
             List<Long> productIds = Arrays.stream(ids.split(","))
                     .map(Long::parseLong)
@@ -253,7 +281,6 @@ public class ProductController {
     }
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-
     public ResponseEntity<?> updateProduct(
             @PathVariable long id,
             @RequestBody ProductDTO productDTO) {
@@ -272,7 +299,6 @@ public class ProductController {
             redirectAttributes.addFlashAttribute("message", "Vui lòng chọn một tệp để tải lên.");
             return ResponseEntity.badRequest().body("Vui lòng chọn một tệp để tải lên.");
         }
-
         try {
             List<Product> products = productService.createProductsFromExcel(file);
             return ResponseEntity.ok(products);
@@ -282,4 +308,10 @@ public class ProductController {
         }
     }
 
+    @PutMapping("/favorites/add")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public ResponseEntity<String> addFavorite(@RequestParam Long userId, @RequestParam Long productId) throws DataNotFoundException {
+        userService.addProductToFavorites(userId, productId);
+        return ResponseEntity.ok("Product added to favorites");
+    }
 }
