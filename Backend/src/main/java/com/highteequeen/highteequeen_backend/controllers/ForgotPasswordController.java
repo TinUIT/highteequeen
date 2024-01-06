@@ -22,11 +22,11 @@ public class ForgotPasswordController {
 
     @GetMapping("/reset_password")
     public String showResetPasswordForm() {
-
+        return null;
     }
 
     @PostMapping("/reset_password")
     public String processResetPassword() {
-
+        return null;
     }
 }

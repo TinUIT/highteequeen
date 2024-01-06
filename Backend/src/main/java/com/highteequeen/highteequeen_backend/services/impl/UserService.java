@@ -238,12 +238,12 @@ public class UserService implements IUserService {
         return userRepository.findByResetPasswordToken(token);
     }
 
-    public void updatePassword(Customer customer, String newPassword) {
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        String encodedPassword = passwordEncoder.encode(newPassword);
-        customer.setPassword(encodedPassword);
-
-        customer.setResetPasswordToken(null);
-        customerRepo.save(customer);
-    }
+//    public void updatePassword(Customer customer, String newPassword) {
+//        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+//        String encodedPassword = passwordEncoder.encode(newPassword);
+//        customer.setPassword(encodedPassword);
+//
+//        customer.setResetPasswordToken(null);
+//        customerRepo.save(customer);
+//    }
 }
