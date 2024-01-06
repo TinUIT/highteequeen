@@ -55,6 +55,30 @@ export default function ProductWarehouse() {
         return "";
     }
   };
+
+  // const getBrandName = (brand_id) => {
+  //   switch (brand_id) {
+  //     case 1:
+  //       return "3CE";
+  //     case 2:
+  //       return "Black Rouge";
+  //       case 3:
+  //         return "3CE";
+  //       case 4:
+  //         return "Black Rouge";
+  //         case 5:
+  //       return "3CE";
+  //     case 6:
+  //       return "Black Rouge";
+  //       case 7:
+  //         return "3CE";
+  //       case 8:
+  //         return "Black Rouge";
+  //     default:
+  //       return "";
+  //   }
+  // };
+  
   // useEffect(() => {
   //   const storage = getStorage(app);
   //   var storageRef = ref(storage, "white.jpg");
@@ -76,6 +100,7 @@ export default function ProductWarehouse() {
     })
       .then(response => {
         setProducts(response.data.products);
+        console.log(response.data.products);
         setTotalPages(response.data.totalPages);
       })
       .catch(error => {
@@ -96,8 +121,8 @@ export default function ProductWarehouse() {
       name: "",
       price: "",
       image: "",
-      brand: "",
-      origin: "",
+      brandId: "",
+      // origin: "",
       description: "",
       categoryName: "",
       inStock: "",
@@ -106,10 +131,10 @@ export default function ProductWarehouse() {
     setProduct(item);
   };
 
-  const handleUpdateProduct = (id, name, price, image, brand, origin, description, category_id, inStock, salesCount) => {
+  const handleUpdateProduct = (id, name, price, image, brandId, description, category_id, inStock, salesCount) => {
     setIsUpdateProduct(!isUpdateProduct);
     var item = {
-      id, name, price, image, brand, origin, description, category_id, inStock, salesCount
+      id, name, price, image, brandId, description, category_id, inStock, salesCount
     }
     setProduct(item);
     setOpenUpdateProduct(true);
@@ -188,15 +213,15 @@ export default function ProductWarehouse() {
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
         <TableHead>
           <TableRow>
-
+          <TableCell align="left">Id</TableCell>
             <TableCell align="left">Name</TableCell>
             <TableCell align="left">Price</TableCell>
             <TableCell align="left">Image</TableCell>
             <TableCell align="left">Category</TableCell>
             <TableCell align="left">Brand</TableCell>
-            <TableCell align="left">Origin</TableCell>
             <TableCell align="left">Description</TableCell>
             <TableCell align="left">Quantity</TableCell>
+            <TableCell align="left">Sale</TableCell>
           </TableRow>
         </TableHead>
         <TableBody style={{ color: "white" }}>
@@ -204,7 +229,7 @@ export default function ProductWarehouse() {
             <TableRow
               key={item.id}
             >
-
+              <TableCell align="left">{item.id}</TableCell>
               <TableCell align="left">{item.name}</TableCell>
               <TableCell align="left">{item.price}</TableCell>
               <TableCell align="left">
@@ -219,10 +244,10 @@ export default function ProductWarehouse() {
                 </div>
               </TableCell>
               <TableCell align="left">{getCategoryName(item.category_id)}</TableCell>
-              <TableCell align="left">{item.brand}</TableCell>
-              <TableCell align="left">{item.origin}</TableCell>
+              <TableCell align="left">{item.brand_id}</TableCell>
               <TableCell align="left">{item.description}</TableCell>
               <TableCell align="left">{item.inStock}</TableCell>
+              <TableCell align="left">{item.salesCount}</TableCell>
               <div className="delete-button">
                 <Button
 

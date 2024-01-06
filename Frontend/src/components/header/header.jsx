@@ -29,7 +29,7 @@ function Header(props) {
   const [openPopupLogin, setOpenPopupLogin] = useState(false);
   const [openPopupRegister, setOpenPopupRegister] = useState(false);
   const [navBackground, setNavBackground] = useState(false);
-  const [selectedTab, setSelectedTab] = useState(3);
+  const [selectedTab, setSelectedTab] = useState(1);
   const navRef = useRef();
   const [openModal, setOpenModal] = useState(false);
   const { cart } = useContext(CartContext);
@@ -223,13 +223,13 @@ function Header(props) {
             <div className="Control-tab" >
               <NavLink className={`Control-tab ${selectedTab === 1 ? 'active' : ''}`} eventKey="1" to="/" onClick={() => setSelectedTab(1)}>
                 HOME
-                {selectedTab === 1 && <hr className="tap-control" />}
+                <div className="div-tap-control">{selectedTab === 1 && <hr className="tap-control" />}</div>
               </NavLink>
             </div>
             <div className="Control-tab" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
               <NavLink className={`Control-tab ${selectedTab === 2 ? 'active' : ''}`} eventKey="2" to="/product" onClick={() => setSelectedTab(2)}>
                 PRODUCTS
-                {selectedTab === 2 && <hr className="tap-control" />}
+                <div className="div-tap-control">{selectedTab === 2 && <hr className="tap-control" />}</div>
               </NavLink>
               {isHovered && (
                 <div className="product-menu">
@@ -296,13 +296,13 @@ function Header(props) {
             </div>
             <div className={`Control-tab ${selectedTab === 3 ? 'active' : ''}`}>
               <NavLink className="Control-tab" eventKey="3" onClick={() => setSelectedTab(3)} to="/distribution-channel-page">BRAND
-                {selectedTab === 3 && <hr className="tap-control" />}
+                <div className="div-tap-control">{selectedTab === 3 && <hr className="tap-control" />}</div>
               </NavLink>
             </div>
             <div className={`Control-tab ${selectedTab === 4 ? 'active' : ''}`}>
               <NavLink className="Control-tab" eventKey="4" to="/about-us" onClick={() => setSelectedTab(4)}>
                 ABOUT
-                {selectedTab === 4 && <hr className="tap-control" />}
+                <div className="div-tap-control">{selectedTab === 4 && <hr className="tap-control" />}</div>
               </NavLink>
             </div>
             {console.log("selectedTab: ", selectedTab)}
