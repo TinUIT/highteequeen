@@ -256,9 +256,9 @@ public class UserController {
             if(active == 0) {
                 String from = "ptt102002@gmail.com";
                 String to = existingUser.getEmail();
-                String subject = "Welcome!";
+                String subject = "Thông báo!";
 
-                String body = "Highteequeen xin chào! Tài khoản của " + existingUser.getFullName() + "đã bị khóa. Vui lòng liên hệ ptt102002@gmail.com để biết thêm chi tiết ";
+                String body = "Highteequeen xin chào! Tài khoản của " + existingUser.getFullName() + " đã bị khóa. Vui lòng liên hệ ptt102002@gmail.com để biết thêm chi tiết ";
                 MailInfo mail = new MailInfo(from, to, subject, body);
                 mailer.send(mail);
             }

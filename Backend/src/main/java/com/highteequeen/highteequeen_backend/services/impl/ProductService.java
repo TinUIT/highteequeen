@@ -119,6 +119,9 @@ public class ProductService implements IProductService {
             if(productDTO.getInStock() >= 0) {
                 existingProduct.setInStock(productDTO.getInStock());
             }
+            if(productDTO.getDiscountPercent() > 0) {
+                existingProduct.setDiscountPercent(productDTO.getDiscountPercent());
+            }
             return productRepository.save(existingProduct);
         }
         return null;
