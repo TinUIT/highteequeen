@@ -13,6 +13,7 @@ public class ForgotPasswordController {
 
     @PostMapping("/forgot_password")
     public String processForgotPassword() {
+        return null;
     }
 
     public void sendEmail(){
