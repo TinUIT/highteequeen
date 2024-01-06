@@ -9,9 +9,7 @@ import com.highteequeen.highteequeen_backend.entity.Role;
 import com.highteequeen.highteequeen_backend.entity.Token;
 import com.highteequeen.highteequeen_backend.entity.User;
 import com.highteequeen.highteequeen_backend.exeptions.DataNotFoundException;
-import com.highteequeen.highteequeen_backend.exeptions.ExpiredTokenException;
 import com.highteequeen.highteequeen_backend.exeptions.InvalidPasswordException;
-import com.highteequeen.highteequeen_backend.exeptions.PermissionDenyException;
 import com.highteequeen.highteequeen_backend.repositories.ProductRepository;
 import com.highteequeen.highteequeen_backend.repositories.RoleRepository;
 import com.highteequeen.highteequeen_backend.repositories.TokenRepository;
@@ -19,21 +17,29 @@ import com.highteequeen.highteequeen_backend.repositories.UserRepository;
 import com.highteequeen.highteequeen_backend.services.IUserService;
 import com.highteequeen.highteequeen_backend.utils.MessageKeys;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.UUID;
 
 @RequiredArgsConstructor
 @Service
@@ -46,6 +52,7 @@ public class UserService implements IUserService {
     private final JwtTokenUtils jwtTokenUtil;
     private final AuthenticationManager authenticationManager;
     private final LocalizationUtils localizationUtils;
+    private static String UPLOADS_FOLDER = "avatars";
     @Override
     @Transactional
     public User createUser(UserDTO userDTO) throws Exception {
@@ -144,25 +151,6 @@ public class UserService implements IUserService {
         if (updatedUserDTO.getAddress() != null) {
             existingUser.setAddress(updatedUserDTO.getAddress());
         }
-        if (updatedUserDTO.getDateOfBirth() != null) {
-            existingUser.setDateOfBirth(updatedUserDTO.getDateOfBirth());
-        }
-        if (updatedUserDTO.getFacebookAccountId() > 0) {
-            existingUser.setFacebookAccountId(updatedUserDTO.getFacebookAccountId());
-        }
-        if (updatedUserDTO.getGoogleAccountId() > 0) {
-            existingUser.setGoogleAccountId(updatedUserDTO.getGoogleAccountId());
-        }
-
-        if (updatedUserDTO.getPassword() != null
-                && !updatedUserDTO.getPassword().isEmpty()) {
-            if(!updatedUserDTO.getPassword().equals(updatedUserDTO.getRetypePassword())) {
-                throw new DataNotFoundException("Password and retype password not the same");
-            }
-            String newPassword = updatedUserDTO.getPassword();
-            String encodedPassword = passwordEncoder.encode(newPassword);
-            existingUser.setPassword(encodedPassword);
-        }
 
         return userRepository.save(existingUser);
     }
@@ -207,5 +195,49 @@ public class UserService implements IUserService {
         return userRepository.findAll(keyword, pageable);
     }
 
-}
+    @Override
+    public String storeFile(MultipartFile file) throws IOException {
+        if (!isImageFile(file) || file.getOriginalFilename() == null) {
+            throw new IOException("Invalid image format");
+        }
+        String filename = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
+        String uniqueFilename = UUID.randomUUID().toString() + "_" + filename;
+        java.nio.file.Path uploadDir = Paths.get(UPLOADS_FOLDER);
+        if (!Files.exists(uploadDir)) {
+            Files.createDirectories(uploadDir);
+        }
+        java.nio.file.Path destination = Paths.get(uploadDir.toString(), uniqueFilename);
+        Files.copy(file.getInputStream(), destination, StandardCopyOption.REPLACE_EXISTING);
+        return uniqueFilename;
+    }
 
+    private boolean isImageFile(MultipartFile file) {
+        String contentType = file.getContentType();
+        return contentType != null && contentType.startsWith("image/");
+    }
+    @Override
+    public void updateResetPasswordToken(String token, String email) throws DataNotFoundException {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new DataNotFoundException("User not found"));
+        if (user != null) {
+            user.setResetPasswordToken(token);
+            userRepository.save(user);
+        } else {
+            throw new DataNotFoundException("Could not find any customer with the email " + email);
+        }
+    }
+
+    @Override
+    public User getByResetPasswordToken(String token) {
+        return userRepository.findByResetPasswordToken(token);
+    }
+
+    public void updatePassword(User customer, String newPassword) {
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        String encodedPassword = passwordEncoder.encode(newPassword);
+        customer.setPassword(encodedPassword);
+
+        customer.setResetPasswordToken(null);
+        userRepository.save(customer);
+    }
+}

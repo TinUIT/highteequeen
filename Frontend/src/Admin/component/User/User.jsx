@@ -10,6 +10,7 @@ export default function User() {
     { id: 123, name: 'Thai Thi Nhung', status: 'Active' }
     // ... other users
   ]);
+  const [userStates, setUserStates] = useState({});
   const [userInfo,setUserInfo] = useState(JSON.parse(localStorage.getItem('user-info')));
   const [user, setUser] = useState({});
   const [currentPage, setCurrentPage] = useState(0);
@@ -40,8 +41,6 @@ export default function User() {
   
 
   const handleUpdateUser = async (id, is_active) => {
-    setIsUpdateUser(!isUpdateUser);
-  
     try {
       const response = await fetch(`http://localhost:8080/api/v1/users/block/${id}/${is_active}`, {
         method: 'PUT',
@@ -51,8 +50,20 @@ export default function User() {
       });
   
       if (response.ok) {
-        // Cập nhật trạng thái switchChecked
-        setSwitchChecked(is_active === '1');
+        setUsers(prevUsers => {
+          return prevUsers.map(user => {
+            if (user.id === id) {
+              return { ...user, is_active: is_active === '1' };
+            }
+            return user;
+          });
+        });
+  
+        setUserStates(prevUserStates => ({
+          ...prevUserStates,
+          [id]: is_active === '1',
+        }));
+  
         console.log('Trạng thái người dùng đã được cập nhật thành công.');
       } else {
         console.error('Có lỗi xảy ra khi cập nhật trạng thái người dùng.');
@@ -62,8 +73,7 @@ export default function User() {
     }
   };
   
-  
-  
+
   const handleDelete = (id) => {
     axios.delete(`http://localhost:8080/api/users/delete/${id}`)
       .then(response => axios.get(`http://localhost:8080/api/v1/users?page=${currentPage}&size=5`))
@@ -132,8 +142,8 @@ export default function User() {
                       <span style={{ color: switchChecked ? 'green' : 'red' }}>{user.is_active}</span>
                       <div className="edit-button">
                         <Switch
-                          checked={switchChecked}
-                          onChange={() => handleUpdateUser(user.id, switchChecked ? '0' : '1')}
+                          checked={userStates[user.id] || false}
+                          onChange={() => handleUpdateUser(user.id, userStates[user.id] ? '0' : '1')}
                           color="primary"
                         />
                       </div>

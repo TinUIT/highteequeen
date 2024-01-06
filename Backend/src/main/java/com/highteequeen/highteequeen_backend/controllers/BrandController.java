@@ -43,8 +43,6 @@ public class BrandController {
 
     @GetMapping("")
     public ResponseEntity<List<Brand>> getAllBrands(
-            @RequestParam("page")     int page,
-            @RequestParam("limit")    int limit
     ) {
         List<Brand> brands = brandService.getAllBrands();
         return ResponseEntity.ok(brands);

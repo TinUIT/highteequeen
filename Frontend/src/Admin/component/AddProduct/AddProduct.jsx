@@ -15,31 +15,23 @@ const Addproduct = (props) => {
   const [imagePaths, setImagePaths] = useState([]);
   const [id, setId] = useState(props.product ? props.product.id : "");
   const [name, setName] = useState(props.product ? props.product.name : "");
-  const [brand, setBrand] = useState(props.product ? props.product.brand : "");
+  const [brand_id, setBrand_id] = useState(props.product ? props.product.brand : "");
   const [description, setDescription] = useState(props.product ? props.product.description : "");
   const [price, setPrice] = useState(props.product ? props.product.price : 0);
-  const [origin, setOrigin] = useState(props.product ? props.product.origin : "");
+  // const [origin, setOrigin] = useState(props.product ? props.product.origin : "");
   const [category_id, setCategory_id] = useState(props.product ? props.product.category_id : "");
   const [file, setFile] = useState(props.product ? props.product.image : null);
   const [inStock, setInStock] = useState(props.product ? props.product.inStock : 0);
+  const [brands, setBrands] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedBrand, setSelectedBrand] = useState("");
 
-  const categoryOptions = [
-    { name: "Select Category", value: "" },
-    { name: "Cleanser", value: "1" },
-    // { name: "Cleansing Water", value: "7" },
-    { name: "Eyeshadow", value: "2" },
-    { name: "Toner", value: "3" },
-    { name: "Lipstick", value: "4" },
-    { name: "Powder", value: "5" },
-    { name: "Eyeliner", value: "6" },
-    { name: "Primer", value: "7" },
-    { name: "Blush", value: "8" },
-   
-  ];
+  
 
-  const handleCategoryChange = (e) => {
-    setCategory_id(e.target.value);
-  };
+  // const handleCategoryChange = (e) => {
+  //   setCategory_id(e.target.value);
+  // };
 
   const [userInfo, setUserInfo] = useState(JSON.parse(localStorage.getItem('user-info')));
   const responseAddProduct = async () => {
@@ -53,7 +45,7 @@ const Addproduct = (props) => {
       formData.append("price", price);
       formData.append("description", description);
       formData.append("categoryId", category_id);
-      // formData.append("categoryId", "1");
+      formData.append("brandId", brand_id);
       // formData.append("origin", origin);
       formData.append("inStock", inStock);
       for (const [key, value] of formData.entries()) {
@@ -113,7 +105,7 @@ const Addproduct = (props) => {
       const res = await axios.put(`http://localhost:8080/api/v1/products/${id}`, {
         id,
         name,
-        // brand,
+        brand_id,
         // image: file && file.name,
         price,
         description,
@@ -185,6 +177,45 @@ const Addproduct = (props) => {
     }
   }, [props.product, props.type]);
 
+  useEffect(() => {
+    axios.get(`http://localhost:8080/api/v1/brands`, {
+      headers: {
+        'Authorization': `Bearer ${userInfo.token}`,
+      },
+    })
+      .then(response => {
+        setBrands(response.data);
+      })
+      .catch(error => {
+        console.error('There was an error fetching brands!', error);
+      });
+  }, []);
+
+  useEffect(() => {
+    axios.get(`http://localhost:8080/api/v1/categories?page=0&limit=10`, {
+      headers: {
+        'Authorization': `Bearer ${userInfo.token}`,
+      },
+    })
+      .then(response => {
+        setCategories(response.data);
+      })
+      .catch(error => {
+        console.error('There was an error fetching brands!', error);
+      });
+  }, []);
+
+  const getCategoryId = (category_name) => {
+    const category = categories.find(category => category.name === category_name);
+    console.log(category);
+    return category ? category.id : "";
+  };
+
+  const getBrandId = (brand_name) => {
+    const brand = brands.find(brand => brand.name === brand_name);
+    return brand ? brand.id : "0";
+  };
+
   return (
     <div className="AddProduct">
       <div className="wrappper-Input-Product">
@@ -247,22 +278,34 @@ const Addproduct = (props) => {
           <div className="Title-Input">CATEGORY</div>
           <select
             className="select"
-            onChange={handleCategoryChange}
-            value={category_id}
+            onChange={(e) => {
+              setCategory_id(getCategoryId(e.target.value));
+              setSelectedCategory(e.target.value);
+            }}
+            value={selectedCategory}
           >
-            {categoryOptions.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.name}
-              </option>
-            ))}
+            <option disabled selected hidden value="">
+              Select Category
+            </option>
+            <option value="Cleanser">Cleanser</option>
+            <option value="Eyeshadow">Eyeshadow</option>
+            <option value="Toner">Toner</option>
+            <option value="Lipstick">Lipstick</option>
+            <option value="Powder">Powder</option>
+            <option value="Eyeliner">Eyeliner</option>
+            <option value="Primer">Primer</option>
+            <option value="Blush">Blush</option>
           </select>
         </div>
         <div className="input-add-product">
           <div className="Title-Input">BRAND</div>
           <select
             className="select"
-            onChange={(e) => setBrand(e.target.value)}
-            value={brand ? brand : null}
+            onChange={(e) => {
+              setBrand_id(getBrandId(e.target.value));
+              setSelectedBrand(e.target.value);
+            }}
+            value={selectedBrand}
           >
             <option disabled selected hidden value="">
               Select Brand
@@ -271,11 +314,15 @@ const Addproduct = (props) => {
             <option value="Black Rouge">Black Rouge</option>
             <option value="B.O.M">B.O.M</option>
             <option value="Maybelline">Maybelline</option>
-            <option value="Aprilskin">Aprilskin</option>
-            <option value="Lemonade">Lemonade</option>
+            <option value="Dior">Dior</option>
+            <option value="MAC">MAC</option>
+            <option value="LaRoche Posay">LaRoche Posay</option>
+            <option value="Bioderma">Bioderma</option>
+            <option value="NARS">NARS</option>
+            <option value="L'Oreal">L'Oreal</option>
           </select>
         </div>
-        <div className="input-add-product">
+        {/* <div className="input-add-product">
           <div className="Title-Input">ORIGIN</div>
           <select
             className="select"
@@ -289,7 +336,7 @@ const Addproduct = (props) => {
             <option value="America">America</option>
             <option value="VietNam">Viet Nam</option>
           </select>
-        </div>
+        </div> */}
         <div className="input-add-product">
           <div className="Title-Input">DESCRIPTION</div>
           <input

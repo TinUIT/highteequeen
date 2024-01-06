@@ -1,6 +1,5 @@
 import "./favorite.css";
 import Header from "../../components/header/header";
-
 import { Footer } from "../../components/footer/footer";
 import Avartar from "../../assets/avatar.png";
 import FavoriteCard from "../../components/FavoriteCart/FavoriteCart";
@@ -89,19 +88,11 @@ const Favorite = () => {
                                     price={item.price}
                                     imgProduct={item.imageUrl}
                                     onRemove={() => handleRemoveItem(index)}
-
-
                                 />
                             ))}
-
-
                         </div>)}
-
-
                 </div>
-
             </div>
-
             <Footer />
             <Modal
                 openModal={openModal}

@@ -27,7 +27,7 @@ function Slidebar() {
     window.location.href = "/";
   };
 
-  return (!userInfo.roles.includes("ROLE_ADMIN")) ? navigate('/')  : (
+  return (!userInfo?.roles?.includes("ROLE_ADMIN")) ?  <Navigate to="/" replace />   : (
 
     <>
       <Tab.Container id="left-tabs-example" defaultActiveKey="first">
