@@ -151,15 +151,6 @@ public class UserService implements IUserService {
         if (updatedUserDTO.getAddress() != null) {
             existingUser.setAddress(updatedUserDTO.getAddress());
         }
-        if (updatedUserDTO.getDateOfBirth() != null) {
-            existingUser.setDateOfBirth(updatedUserDTO.getDateOfBirth());
-        }
-        if (updatedUserDTO.getFacebookAccountId() > 0) {
-            existingUser.setFacebookAccountId(updatedUserDTO.getFacebookAccountId());
-        }
-        if (updatedUserDTO.getGoogleAccountId() > 0) {
-            existingUser.setGoogleAccountId(updatedUserDTO.getGoogleAccountId());
-        }
 
         return userRepository.save(existingUser);
     }
