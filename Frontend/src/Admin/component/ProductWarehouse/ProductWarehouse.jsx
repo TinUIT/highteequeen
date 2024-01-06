@@ -30,55 +30,50 @@ export default function ProductWarehouse() {
   const [imageUrl, setImageUrl] = useState(null);
   const [openModal, setOpenModal] = useState(false);
   const [productModals, setProductModals] = useState({});
+  const [brands, setBrands] = useState([]);
+  const [categories, setCategories] = useState([]);
   // const [bearerToken, setBearerToken] = useState(null);
   const [userInfo, setUserInfoo] = useState(JSON.parse(localStorage.getItem('user-info')));
 
   const getCategoryName = (category_id) => {
-    switch (category_id) {
-      case 1:
-        return "Cleanser";
-      case 2:
-        return "Eyeshadow";
-      case 3:
-        return "Toner";
-      case 4:
-        return "Lipstick";
-      case 5:
-        return "Powder";
-      case 6:
-        return "Eyeliner";
-      case 7:
-        return "Primer";
-      case 8:
-        return "Blush";
-      default:
-        return "";
-    }
+    const category = categories.find(category => category.id === category_id);
+    return category ? category.name : "";
   };
 
-  // const getBrandName = (brand_id) => {
-  //   switch (brand_id) {
-  //     case 1:
-  //       return "3CE";
-  //     case 2:
-  //       return "Black Rouge";
-  //       case 3:
-  //         return "3CE";
-  //       case 4:
-  //         return "Black Rouge";
-  //         case 5:
-  //       return "3CE";
-  //     case 6:
-  //       return "Black Rouge";
-  //       case 7:
-  //         return "3CE";
-  //       case 8:
-  //         return "Black Rouge";
-  //     default:
-  //       return "";
-  //   }
-  // };
-  
+  useEffect(() => {
+    axios.get(`http://localhost:8080/api/v1/brands`, {
+      headers: {
+        'Authorization': `Bearer ${userInfo.token}`,
+      },
+    })
+      .then(response => {
+        setBrands(response.data);
+      })
+      .catch(error => {
+        console.error('There was an error fetching brands!', error);
+      });
+  }, []);
+
+  useEffect(() => {
+    axios.get(`http://localhost:8080/api/v1/categories?page=${currentPage}&limit=10`, {
+      headers: {
+        'Authorization': `Bearer ${userInfo.token}`,
+      },
+    })
+      .then(response => {
+        setCategories(response.data);
+        console.log(response.data);
+      })
+      .catch(error => {
+        console.error('There was an error fetching brands!', error);
+      });
+  }, []);
+
+
+  const getBrandName = (brand_id) => {
+    const brand = brands.find(brand => brand.id === brand_id);
+    return brand ? brand.name : "";
+  };
   // useEffect(() => {
   //   const storage = getStorage(app);
   //   var storageRef = ref(storage, "white.jpg");
@@ -131,16 +126,18 @@ export default function ProductWarehouse() {
     setProduct(item);
   };
 
-  const handleUpdateProduct = (id, name, price, image, brandId, description, category_id, inStock, salesCount) => {
+  const handleUpdateProduct = (id, name, price, image, brand_id, description, category_id, inStock, salesCount) => {
     setIsUpdateProduct(!isUpdateProduct);
     var item = {
-      id, name, price, image, brandId, description, category_id, inStock, salesCount
+      id, name, price, image, brand_id, description, category_id, inStock, salesCount
     }
     setProduct(item);
     setOpenUpdateProduct(true);
   };
 
   const handleEditButtonClick = (item) => {
+    const categoryName = getCategoryName(item.category_id);
+    const updatedProduct = { ...item, categoryName };
     setProduct(item);
     setOpenUpdateProduct(true);
   };
@@ -244,7 +241,7 @@ export default function ProductWarehouse() {
                 </div>
               </TableCell>
               <TableCell align="left">{getCategoryName(item.category_id)}</TableCell>
-              <TableCell align="left">{item.brand_id}</TableCell>
+              <TableCell align="left">{getBrandName(item.brand_id)}</TableCell>
               <TableCell align="left">{item.description}</TableCell>
               <TableCell align="left">{item.inStock}</TableCell>
               <TableCell align="left">{item.salesCount}</TableCell>
