@@ -23,6 +23,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -223,6 +224,7 @@ public class UserService implements IUserService {
         String contentType = file.getContentType();
         return contentType != null && contentType.startsWith("image/");
     }
+    @Override
     public void updateResetPasswordToken(String token, String email) throws DataNotFoundException {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new DataNotFoundException("User not found"));
@@ -234,16 +236,17 @@ public class UserService implements IUserService {
         }
     }
 
+    @Override
     public User getByResetPasswordToken(String token) {
         return userRepository.findByResetPasswordToken(token);
     }
 
-//    public void updatePassword(Customer customer, String newPassword) {
-//        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-//        String encodedPassword = passwordEncoder.encode(newPassword);
-//        customer.setPassword(encodedPassword);
-//
-//        customer.setResetPasswordToken(null);
-//        customerRepo.save(customer);
-//    }
+    public void updatePassword(User customer, String newPassword) {
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        String encodedPassword = passwordEncoder.encode(newPassword);
+        customer.setPassword(encodedPassword);
+
+        customer.setResetPasswordToken(null);
+        userRepository.save(customer);
+    }
 }
