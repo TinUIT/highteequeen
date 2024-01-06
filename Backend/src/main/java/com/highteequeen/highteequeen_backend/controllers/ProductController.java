@@ -187,27 +187,32 @@ public class ProductController {
                 .build());
     }
     @GetMapping("/best-sellers")
-    public ResponseEntity<ProductListResponse> getBestSellingProducts(
+    public ResponseEntity<?> getBestSellingProducts(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int limit
     ) {
-        int totalPages = 0;
-        PageRequest pageRequest = PageRequest.of(
-                page, limit,
-                Sort.by("salesCount").descending()
-        );
-        Page<ProductResponse> productPage = productService
-                .getBestSellingProducts(pageRequest);
-        totalPages = productPage.getTotalPages();
-        List<ProductResponse> productResponses = productPage.getContent();
-        for (ProductResponse product : productResponses) {
-            product.setTotalPages(totalPages);
+        try {
+            int totalPages = 0;
+            PageRequest pageRequest = PageRequest.of(
+                    page, limit,
+                    Sort.by("salesCount").descending()
+            );
+            Page<ProductResponse> productPage = productService
+                    .getBestSellingProducts(pageRequest);
+            totalPages = productPage.getTotalPages();
+            List<ProductResponse> productResponses = productPage.getContent();
+            for (ProductResponse product : productResponses) {
+                product.setTotalPages(totalPages);
+            }
+            return ResponseEntity.ok(ProductListResponse
+                    .builder()
+                    .products(productResponses)
+                    .totalPages(totalPages)
+                    .build());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
-        return ResponseEntity.ok(ProductListResponse
-                .builder()
-                .products(productResponses)
-                .totalPages(totalPages)
-                .build());
+
     }
     @GetMapping("/discounted")
     public ResponseEntity<ProductListResponse> getDiscountedProducts(

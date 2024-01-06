@@ -1,10 +1,9 @@
 package com.highteequeen.highteequeen_backend.controllers;
 
 import com.highteequeen.highteequeen_backend.components.LocalizationUtils;
-import com.highteequeen.highteequeen_backend.dtos.RefreshTokenDTO;
-import com.highteequeen.highteequeen_backend.dtos.UpdateUserDTO;
-import com.highteequeen.highteequeen_backend.dtos.UserDTO;
-import com.highteequeen.highteequeen_backend.dtos.UserLoginDTO;
+import com.highteequeen.highteequeen_backend.dtos.*;
+import com.highteequeen.highteequeen_backend.entity.Product;
+import com.highteequeen.highteequeen_backend.entity.ProductImage;
 import com.highteequeen.highteequeen_backend.entity.Token;
 import com.highteequeen.highteequeen_backend.entity.User;
 import com.highteequeen.highteequeen_backend.exeptions.DataNotFoundException;
@@ -20,16 +19,21 @@ import com.highteequeen.highteequeen_backend.utils.MessageKeys;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -261,6 +265,55 @@ public class UserController {
             return ResponseEntity.ok().body(message);
         } catch (DataNotFoundException e) {
             return ResponseEntity.badRequest().body("User not found.");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/avatars/{imageName}")
+    public ResponseEntity<?> viewImage(@PathVariable String imageName) {
+        try {
+            java.nio.file.Path imagePath = Paths.get("avatars/"+imageName);
+            UrlResource resource = new UrlResource(imagePath.toUri());
+            if (resource.exists()) {
+                return ResponseEntity.ok()
+                        .contentType(MediaType.IMAGE_JPEG)
+                        .body(resource);
+            } else {
+                return ResponseEntity.ok()
+                        .contentType(MediaType.IMAGE_JPEG)
+                        .body(new UrlResource(Paths.get("avatars/default-avatar-image.jpg").toUri()));
+            }
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PostMapping(value = "uploads/{id}",
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<?> uploadImages(
+            @PathVariable("id") Long userId,
+            @ModelAttribute("file") MultipartFile file,
+            @RequestHeader("Authorization") String authorizationHeader
+    ){
+        try {
+            String extractedToken = authorizationHeader.substring(7);
+            User user = userService.getUserDetailsFromToken(extractedToken);
+                if(file.getSize() > 10 * 1024 * 1024) {
+                    return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE)
+                            .body(localizationUtils
+                                    .getLocalizedMessage(MessageKeys.UPLOAD_IMAGES_FILE_LARGE));
+                }
+                String contentType = file.getContentType();
+                if(contentType == null || !contentType.startsWith("image/")) {
+                    return ResponseEntity.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE)
+                            .body(localizationUtils.getLocalizedMessage(MessageKeys.UPLOAD_IMAGES_FILE_MUST_BE_IMAGE));
+                }
+                String filename = userService.storeFile(file);
+                user.setAvatar(filename);
+                userRepository.save(user);
+            return ResponseEntity.ok().body("Avartar change suscessfully");
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
