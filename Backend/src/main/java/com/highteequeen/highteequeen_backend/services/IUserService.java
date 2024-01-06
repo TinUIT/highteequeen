@@ -7,6 +7,9 @@ import com.highteequeen.highteequeen_backend.exeptions.DataNotFoundException;
 import com.highteequeen.highteequeen_backend.exeptions.InvalidPasswordException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 public interface IUserService {
     User createUser(UserDTO userDTO) throws Exception;
@@ -20,4 +23,6 @@ public interface IUserService {
     Page<User> findAll(String keyword, Pageable pageable) throws Exception;
 
     void addProductToFavorites(Long userId, Long productId) throws DataNotFoundException;
+
+    String storeFile(MultipartFile file) throws IOException;
 }

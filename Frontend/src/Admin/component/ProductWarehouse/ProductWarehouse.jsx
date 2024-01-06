@@ -30,30 +30,49 @@ export default function ProductWarehouse() {
   const [imageUrl, setImageUrl] = useState(null);
   const [openModal, setOpenModal] = useState(false);
   const [productModals, setProductModals] = useState({});
+  const [brands, setBrands] = useState([]);
+  const [categories, setCategories] = useState([]);
   // const [bearerToken, setBearerToken] = useState(null);
   const [userInfo, setUserInfoo] = useState(JSON.parse(localStorage.getItem('user-info')));
 
   const getCategoryName = (category_id) => {
-    switch (category_id) {
-      case 1:
-        return "Cleanser";
-      case 2:
-        return "Eyeshadow";
-      case 3:
-        return "Toner";
-      case 4:
-        return "Lipstick";
-      case 5:
-        return "Powder";
-      case 6:
-        return "Eyeliner";
-      case 7:
-        return "Primer";
-      case 8:
-        return "Blush";
-      default:
-        return "";
-    }
+    const category = categories.find(category => category.id === category_id);
+    return category ? category.name : "";
+  };
+
+  useEffect(() => {
+    axios.get(`http://localhost:8080/api/v1/brands`, {
+      headers: {
+        'Authorization': `Bearer ${userInfo.token}`,
+      },
+    })
+      .then(response => {
+        setBrands(response.data);
+      })
+      .catch(error => {
+        console.error('There was an error fetching brands!', error);
+      });
+  }, []);
+
+  useEffect(() => {
+    axios.get(`http://localhost:8080/api/v1/categories?page=${currentPage}&limit=10`, {
+      headers: {
+        'Authorization': `Bearer ${userInfo.token}`,
+      },
+    })
+      .then(response => {
+        setCategories(response.data);
+        console.log(response.data);
+      })
+      .catch(error => {
+        console.error('There was an error fetching brands!', error);
+      });
+  }, []);
+
+
+  const getBrandName = (brand_id) => {
+    const brand = brands.find(brand => brand.id === brand_id);
+    return brand ? brand.name : "";
   };
   // useEffect(() => {
   //   const storage = getStorage(app);
@@ -76,6 +95,7 @@ export default function ProductWarehouse() {
     })
       .then(response => {
         setProducts(response.data.products);
+        console.log(response.data.products);
         setTotalPages(response.data.totalPages);
       })
       .catch(error => {
@@ -96,8 +116,8 @@ export default function ProductWarehouse() {
       name: "",
       price: "",
       image: "",
-      brand: "",
-      origin: "",
+      brandId: "",
+      // origin: "",
       description: "",
       categoryName: "",
       inStock: "",
@@ -106,16 +126,18 @@ export default function ProductWarehouse() {
     setProduct(item);
   };
 
-  const handleUpdateProduct = (id, name, price, image, brand, origin, description, category_id, inStock, salesCount) => {
+  const handleUpdateProduct = (id, name, price, image, brand_id, description, category_id, inStock, salesCount) => {
     setIsUpdateProduct(!isUpdateProduct);
     var item = {
-      id, name, price, image, brand, origin, description, category_id, inStock, salesCount
+      id, name, price, image, brand_id, description, category_id, inStock, salesCount
     }
     setProduct(item);
     setOpenUpdateProduct(true);
   };
 
   const handleEditButtonClick = (item) => {
+    const categoryName = getCategoryName(item.category_id);
+    const updatedProduct = { ...item, categoryName };
     setProduct(item);
     setOpenUpdateProduct(true);
   };
@@ -188,15 +210,15 @@ export default function ProductWarehouse() {
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
         <TableHead>
           <TableRow>
-
+          <TableCell align="left">Id</TableCell>
             <TableCell align="left">Name</TableCell>
             <TableCell align="left">Price</TableCell>
             <TableCell align="left">Image</TableCell>
             <TableCell align="left">Category</TableCell>
             <TableCell align="left">Brand</TableCell>
-            <TableCell align="left">Origin</TableCell>
             <TableCell align="left">Description</TableCell>
             <TableCell align="left">Quantity</TableCell>
+            <TableCell align="left">Sale</TableCell>
           </TableRow>
         </TableHead>
         <TableBody style={{ color: "white" }}>
@@ -204,7 +226,7 @@ export default function ProductWarehouse() {
             <TableRow
               key={item.id}
             >
-
+              <TableCell align="left">{item.id}</TableCell>
               <TableCell align="left">{item.name}</TableCell>
               <TableCell align="left">{item.price}</TableCell>
               <TableCell align="left">
@@ -219,10 +241,10 @@ export default function ProductWarehouse() {
                 </div>
               </TableCell>
               <TableCell align="left">{getCategoryName(item.category_id)}</TableCell>
-              <TableCell align="left">{item.brand}</TableCell>
-              <TableCell align="left">{item.origin}</TableCell>
+              <TableCell align="left">{getBrandName(item.brand_id)}</TableCell>
               <TableCell align="left">{item.description}</TableCell>
               <TableCell align="left">{item.inStock}</TableCell>
+              <TableCell align="left">{item.salesCount}</TableCell>
               <div className="delete-button">
                 <Button
 

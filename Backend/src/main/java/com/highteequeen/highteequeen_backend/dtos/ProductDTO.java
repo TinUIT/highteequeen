@@ -23,6 +23,7 @@ public class ProductDTO {
     private Float price;
     private String thumbnail;
     private int inStock;
+    private float discountPercent;
     private String description;
 
     @JsonProperty("category_id")

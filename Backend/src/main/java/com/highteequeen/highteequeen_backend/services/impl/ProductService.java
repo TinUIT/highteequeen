@@ -119,6 +119,9 @@ public class ProductService implements IProductService {
             if(productDTO.getInStock() >= 0) {
                 existingProduct.setInStock(productDTO.getInStock());
             }
+            if(productDTO.getDiscountPercent() > 0) {
+                existingProduct.setDiscountPercent(productDTO.getDiscountPercent());
+            }
             return productRepository.save(existingProduct);
         }
         return null;
@@ -179,7 +182,7 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public Page<ProductResponse> getBestSellingProducts(PageRequest pageRequest) {
+    public Page<ProductResponse>  getBestSellingProducts(PageRequest pageRequest) {
         Page<Product> productsPage;
         productsPage = productRepository.searchBestSellingProducts(pageRequest);
         return productsPage.map(ProductResponse::fromProduct);
