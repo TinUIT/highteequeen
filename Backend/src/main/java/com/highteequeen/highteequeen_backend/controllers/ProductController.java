@@ -30,6 +30,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -94,6 +96,7 @@ public class ProductController {
                 .description(productRequest.getDescription())
                 .categoryId(productRequest.getCategoryId())
                 .brandId(productRequest.getBrandId())
+                .discountPercent(0)
                 .build();
     }
     @PostMapping(value = "uploads/{id}",
@@ -142,7 +145,7 @@ public class ProductController {
     @GetMapping("/images/{imageName}")
     public ResponseEntity<?> viewImage(@PathVariable String imageName) {
         try {
-            java.nio.file.Path imagePath = Paths.get("uploads/"+imageName);
+            Path imagePath = Paths.get("uploads/"+imageName);
             UrlResource resource = new UrlResource(imagePath.toUri());
             if (resource.exists()) {
                 return ResponseEntity.ok()
@@ -163,29 +166,36 @@ public class ProductController {
             @RequestParam(defaultValue = "0", name = "category_id") Long categoryId,
             @RequestParam(defaultValue = "0", name = "brand_id") Long brandId,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int limit
-    ) throws JsonProcessingException {
-        int totalPages = 0;
-        PageRequest pageRequest = PageRequest.of(
-                page, limit,
-                //Sort.by("createdAt").descending()
-                Sort.by("id").ascending()
-        );
+            @RequestParam(defaultValue = "10") int limit,
+            @RequestParam(defaultValue = "") String priceSort
+    ) {
+        PageRequest pageRequest = createPageRequest(page, limit, priceSort);
+
         logger.info(String.format("keyword = %s, category_id = %d, brand_id = %d, page = %d, limit = %d",
                 keyword, categoryId, brandId, page, limit));
+
         Page<ProductResponse> productPage = productService
                 .getAllProducts(keyword, categoryId, brandId, pageRequest);
-        totalPages = productPage.getTotalPages();
+
         List<ProductResponse> productResponses = productPage.getContent();
-        for (ProductResponse product : productResponses) {
-            product.setTotalPages(totalPages);
-        }
+        int totalPages = productPage.getTotalPages();
+
         return ResponseEntity.ok(ProductListResponse
                 .builder()
                 .products(productResponses)
                 .totalPages(totalPages)
                 .build());
     }
+
+    private PageRequest createPageRequest(int page, int limit, String priceSort) {
+        if (priceSort.equalsIgnoreCase("asc")) {
+            return PageRequest.of(page, limit, Sort.by("price").ascending());
+        } else if (priceSort.equalsIgnoreCase("des")) {
+            return PageRequest.of(page, limit, Sort.by("price").descending());
+        }
+        return PageRequest.of(page, limit, Sort.by("id").ascending());
+    }
+
     @GetMapping("/best-sellers")
     public ResponseEntity<?> getBestSellingProducts(
             @RequestParam(defaultValue = "0") int page,

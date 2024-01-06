@@ -22,6 +22,7 @@ public class ProductResponse extends BaseResponse {
     private int inStock;
     private int totalPages;
     private long salesCount;
+    private float discountPercent;
 
     @JsonProperty("product_images")
     private List<ProductImage> productImages = new ArrayList<>();
@@ -39,6 +40,7 @@ public class ProductResponse extends BaseResponse {
                 .thumbnail(product.getThumbnail())
                 .description(product.getDescription())
                 .inStock(product.getInStock())
+                .discountPercent(product.getDiscountPercent())
                 .salesCount(product.getSalesCount() == null ? 0 : product.getSalesCount())
                 .categoryId(product.getCategory().getId())
                 .brandId(product.getBrand().getId())
