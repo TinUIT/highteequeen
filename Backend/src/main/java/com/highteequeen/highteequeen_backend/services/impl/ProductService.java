@@ -179,7 +179,7 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public Page<ProductResponse> getBestSellingProducts(PageRequest pageRequest) {
+    public Page<ProductResponse>  getBestSellingProducts(PageRequest pageRequest) {
         Page<Product> productsPage;
         productsPage = productRepository.searchBestSellingProducts(pageRequest);
         return productsPage.map(ProductResponse::fromProduct);
