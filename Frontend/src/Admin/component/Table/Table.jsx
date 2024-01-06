@@ -58,6 +58,7 @@ export default function BasicTable() {
   // const [isCancel, setIsCancel] = useState(Array(rows.length).fill(false));
   const [isAccepted, setIsAccepted] = useState(Array(0).fill(false));
   const [isCancel, setIsCancel] = useState(Array(0).fill(false));
+  const [userInfo, setUserInfo] = useState(JSON.parse(localStorage.getItem('user-info')));
 
 
 
@@ -76,15 +77,51 @@ export default function BasicTable() {
     setSelectedProduct(null);
   };
 
-  const handleAccept = (index) => {
-    axios.get(`http://localhost:8080/api/orders/${index}/success`).then(() => {
-      const newIsAccepted = [...isAccepted];
-      newIsAccepted[index - 1] = true;
+  // const handleAccept = (orderId) => {
+  //   axios.get(`http://localhost:8080/api/orders/${index}/success`).then(() => {
+  //     const newIsAccepted = [...isAccepted];
+  //     newIsAccepted[index - 1] = true;
       
-      setIsAccepted(newIsAccepted);
+  //     setIsAccepted(newIsAccepted);
      
-    });
+  //   });
+   
+
+  // };
+  const handleUpdateStatus = (orderId, userId,status_update) => {
+    const apiUrl = `http://localhost:8080/api/v1/orders/${orderId}/status`;
+  
+    // Use the Authorization header with the user's token
+    const headers = {
+      accept: 'application/json',
+      Authorization: `Bearer ${userInfo.token}`,
+      'Content-Type': 'application/json',
+    };
+  
+    // Set the new status to "delivered" and provide the user_id
+    const requestData = {
+      status: status_update,
+      user_id: userId, // Replace with the appropriate user_id
+    };
+  
+    axios.put(apiUrl, requestData, { headers })
+      .then((response) => {
+        console.log('Order successfully accepted:', response.data);
+        
+        const updatedListOrder = [...listOrder];
+        updatedListOrder[ID - 1].status = 'delivered';
+        setListOrder(updatedListOrder);
+
+        // Update the local isAccepted state accordingly
+        const newIsAccepted = [...isAccepted];
+        newIsAccepted[ID - 1] = true;
+        setIsAccepted(newIsAccepted);
+      })
+      .catch((error) => {
+        console.error('Error accepting order:', error);
+      });
   };
+  
 
 
   const handleCancel = (index) => {
@@ -102,8 +139,6 @@ export default function BasicTable() {
     const apiUrl = `http://localhost:8080/api/v1/orders/get-orders-by-keyword?page=${newPage}&limit=10`;
     fetchData(apiUrl);
   };
-  
-  
 
   const [currentPage, setCurrentPage] = useState(0);
   const itemsPerPage = 5; // Update this value based on your requirements
@@ -114,7 +149,7 @@ export default function BasicTable() {
       const response = await axios.get(url, {
         headers: {
           accept: '*',
-          Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjIsImVtYWlsIjoiMjA1MjE4MThAZ20udWl0LmVkdS52biIsInN1YiI6IjIwNTIxODE4QGdtLnVpdC5lZHUudm4iLCJleHAiOjE3MDY4MDQ4ODl9.jIPkeYVkTn87aqXUSERq6HYjgbqdbxq5bGDJfUzT4ho',
+          Authorization: `Bearer ${userInfo.token}`,
         },
       });
      
@@ -147,7 +182,7 @@ export default function BasicTable() {
     useEffect(() => {
       const   apiUrl = `http://localhost:8080/api/v1/orders/get-orders-by-keyword?page=0&limit=10`;
       fetchData(apiUrl);
-    }, []); // Initial data fetching
+    }, [currentPage, isAccepted, isCancel]); // Initial data fetching
 
 
 
@@ -201,25 +236,25 @@ export default function BasicTable() {
                 </TableCell>
                 <TableCell align="left" className="Active">
                   <div className="Wrap-button-active">
-                    {row.status === "on-process" ? (
+                    {row.status === "pending" ? (
                       <>
                         <button
                           className="ButtonActive Accept"
-                          onClick={() => handleAccept(row.orderId)}
+                          onClick={() => handleUpdateStatus(row.id, row.user_id,'delivered')}
                         >
                           Accept
                         </button>
                         <button
                           className="ButtonActive Deny"
-                          onClick={() => handleCancel(row.orderId)}
+                          onClick={() => handleUpdateStatus(row.id,row.user_id,'cancelled')}
                         >
                           Deny
                         </button>
                       </>
                     ) : (
                       <>
-                        {row.status !== "success" ? (
-                          isAccepted[index] && row.status === "success" ? (
+                        {row.status !== "delivered" ? (
+                          isAccepted[index] && row.status === "delivered" ? (
                             <div className="Wrap-img-tick-accept">
                               <img
                                 className="IMG-Tick-Accept"
@@ -230,7 +265,7 @@ export default function BasicTable() {
                           ) : (
                             <button
                               className="ButtonActive Accept"
-                              onClick={() => handleAccept(row.orderId)}
+                              onClick={() => handleUpdateStatus(row.id, row.user_id,'delivered')}
                             >
                               Accept
                             </button>
@@ -239,7 +274,7 @@ export default function BasicTable() {
                           !isCancel[index] && row.status !== "deny" ? (
                             <button
                               className="ButtonActive Deny"
-                              onClick={() => handleCancel(row.orderId)}
+                              onClick={() => handleUpdateStatus(row.id,row.user_id,'cancelled')}
                             >
                               Deny
                             </button>
