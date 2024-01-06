@@ -1,90 +1,99 @@
-.MuiTableRow-root > * {
-    padding: 10px;
-  }
-  
-  .MuiTableRow-root.MuiTableRow-head > * {
-    font-weight: bold !important;
-  }
-  
-  /* .Table td,
+.MuiTableRow-root>* {
+  padding: 10px;
+}
+
+.MuiTableRow-root.MuiTableRow-head>* {
+  font-weight: bold !important;
+}
+
+/* .Table td,
   th {
     border: none !important;
   } */
-  .Wrapper-Pagniation{
- 
-    border-radius: 0.7rem !important;
-   margin-left: 10px;
+.Wrapper-Pagniation {
+
+  border-radius: 0.7rem !important;
+  margin-left: 10px;
   margin-right: 10px;
-    margin-bottom: 20px;
-    background-color: #F8E2CF;
-  
-  }
-  .status {
-    padding: 8px;
-    border-radius: 9px;
-  }
-  
-  .Details {
-    color: #00b5ff !important;
-  }
-  
-  @media screen and (max-width: 1200px) {
-    .Table {
-      width: 170%;
-      margin-top: 2rem;
-    }
-  }
-  
-  
-  @media screen and (max-width: 768px) {
-    .Table{
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      width: 23rem;
-    }}
-.wrapper-Addmin-Add-Product{
-    width: 90%;
-    text-align: right;
-    margin-top: 5%;
-    
-
-  }
-.Addmin-Add-Product{
-    
-    padding: 0.75% 2%;
-    border-radius: 5px;
-    font-family: 'Nunito Sans', sans-serif;
-    font-weight: 700;
-    font-size: 15px;
-   
-    border-color: #FF5C5C;
-    color: #FF5C5C;
+  margin-bottom: 20px;
+  /* background-color: #F8E2CF; */
 
 }
-.Addmin-Add-Product:hover{
-    background-color: #FF5C5C;
-    padding: 1% 2.1%;
-    box-shadow: solid 5px 5px ;
-    color:white;
+
+.status {
+  padding: 8px;
+  border-radius: 9px;
+}
+
+.Details {
+  color: #00b5ff !important;
+}
+
+@media screen and (max-width: 1200px) {
+  .Table {
+    width: 170%;
+    margin-top: 2rem;
+  }
+}
+
+
+@media screen and (max-width: 768px) {
+  .Table {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 23rem;
+  }
+}
+
+.wrapper-Addmin-Add-Product {
+  width: 90%;
+  text-align: right;
+  margin-bottom: 1%;
+
 
 }
-.Product-img-admin{
+
+.Addmin-Add-Product {
+
+  padding: 0.75% 2%;
+  border-radius: 5px;
+  font-family: 'Nunito Sans', sans-serif;
+  font-weight: 700;
+  font-size: 15px;
+
+  border-color: #FF5C5C;
+  color: #FF5C5C;
+
+}
+
+.Addmin-Add-Product:hover {
+  background-color: #FF5C5C;
+  padding: 1% 2.1%;
+  box-shadow: solid 5px 5px;
+  color: white;
+
+}
+
+.Product-img-admin {
   display: flex;
   width: 100%;
 }
-.Img-Admin-add{
+
+.Img-Admin-add {
   width: 100%;
   text-align: center;
-  
+
 }
-.wrapper-img-admin-add{
+
+.wrapper-img-admin-add {
   width: 20%;
 }
-.wrapper-item-img{
+
+.wrapper-item-img {
   width: 80%;
-  padding-top: 5%!important;
+  padding-top: 5% !important;
 }
 
 .delete-button {
@@ -97,7 +106,7 @@
   width: 540px;
 }
 
-.customDialog .input-add-product .add-produc-design-input{
+.customDialog .input-add-product .add-produc-design-input {
   width: 100%;
 }
 
@@ -105,18 +114,22 @@
   width: 100%;
 }
 
-.customDialog .Title-Input{
+.customDialog .Title-Input {
   width: 30%;
 }
 
-.customDialog .input-add-product{
+.customDialog .input-add-product {
   width: 100%;
 }
 
-.customDialog .Wrapper-Add-Admin-Add-Pd{
+.customDialog .Wrapper-Add-Admin-Add-Pd {
   width: 100%;
 }
 
 .customDialog .wrapper-add-produc-design-input {
   width: 100%;
 }
+/* 
+.AddProduct{
+  margin-left: 15%;
+} */

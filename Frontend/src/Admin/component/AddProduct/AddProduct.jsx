@@ -18,7 +18,7 @@ const Addproduct = (props) => {
   const [brand, setBrand] = useState(props.product ? props.product.brand : "");
   const [description, setDescription] = useState(props.product ? props.product.description : "");
   const [price, setPrice] = useState(props.product ? props.product.price : 0);
-  const [origin, setOrigin] = useState(props.product ? props.product.origin : "");
+  // const [origin, setOrigin] = useState(props.product ? props.product.origin : "");
   const [category_id, setCategory_id] = useState(props.product ? props.product.category_id : "");
   const [file, setFile] = useState(props.product ? props.product.image : null);
   const [inStock, setInStock] = useState(props.product ? props.product.inStock : 0);
@@ -37,6 +37,19 @@ const Addproduct = (props) => {
    
   ];
 
+  const brandOptions = [
+    { name: "Select Brand", value: "" },
+    { name: "Cleanser", value: "1" },
+    // { name: "Cleansing Water", value: "7" },
+    { name: "Eyeshadow", value: "2" },
+    { name: "Toner", value: "3" },
+    { name: "Lipstick", value: "4" },
+    { name: "Powder", value: "5" },
+    { name: "Eyeliner", value: "6" },
+    { name: "Primer", value: "7" },
+    { name: "Blush", value: "8" },
+   
+  ];
   const handleCategoryChange = (e) => {
     setCategory_id(e.target.value);
   };
@@ -271,11 +284,15 @@ const Addproduct = (props) => {
             <option value="Black Rouge">Black Rouge</option>
             <option value="B.O.M">B.O.M</option>
             <option value="Maybelline">Maybelline</option>
-            <option value="Aprilskin">Aprilskin</option>
-            <option value="Lemonade">Lemonade</option>
+            <option value="Dior">Dior</option>
+            <option value="MAC">MAC</option>
+            <option value="LaRoche Posay">LaRoche Posay</option>
+            <option value="Bioderma">Bioderma</option>
+            <option value="NARS">NARS</option>
+            <option value="L'Oreal">L'Oreal</option>
           </select>
         </div>
-        <div className="input-add-product">
+        {/* <div className="input-add-product">
           <div className="Title-Input">ORIGIN</div>
           <select
             className="select"
@@ -289,7 +306,7 @@ const Addproduct = (props) => {
             <option value="America">America</option>
             <option value="VietNam">Viet Nam</option>
           </select>
-        </div>
+        </div> */}
         <div className="input-add-product">
           <div className="Title-Input">DESCRIPTION</div>
           <input
