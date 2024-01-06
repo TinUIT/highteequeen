@@ -160,16 +160,6 @@ public class UserService implements IUserService {
             existingUser.setGoogleAccountId(updatedUserDTO.getGoogleAccountId());
         }
 
-        if (updatedUserDTO.getPassword() != null
-                && !updatedUserDTO.getPassword().isEmpty()) {
-            if(!updatedUserDTO.getPassword().equals(updatedUserDTO.getRetypePassword())) {
-                throw new DataNotFoundException("Password and retype password not the same");
-            }
-            String newPassword = updatedUserDTO.getPassword();
-            String encodedPassword = passwordEncoder.encode(newPassword);
-            existingUser.setPassword(encodedPassword);
-        }
-
         return userRepository.save(existingUser);
     }
     public void addProductToFavorites(Long userId, Long productId) throws DataNotFoundException {
@@ -233,5 +223,27 @@ public class UserService implements IUserService {
         String contentType = file.getContentType();
         return contentType != null && contentType.startsWith("image/");
     }
-}
+    public void updateResetPasswordToken(String token, String email) throws DataNotFoundException {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new DataNotFoundException("User not found"));
+        if (user != null) {
+            user.setResetPasswordToken(token);
+            userRepository.save(user);
+        } else {
+            throw new DataNotFoundException("Could not find any customer with the email " + email);
+        }
+    }
 
+    public User getByResetPasswordToken(String token) {
+        return userRepository.findByResetPasswordToken(token);
+    }
+
+    public void updatePassword(Customer customer, String newPassword) {
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        String encodedPassword = passwordEncoder.encode(newPassword);
+        customer.setPassword(encodedPassword);
+
+        customer.setResetPasswordToken(null);
+        customerRepo.save(customer);
+    }
+}
