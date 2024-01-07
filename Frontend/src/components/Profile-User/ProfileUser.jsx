@@ -17,7 +17,7 @@ const ProfileUser = () => {
   const [url, setUrl] = useState('');
   const { user, updateUserProfile } = useContext(UserContext);
   const [file, setFile] = useState(userInfo ? userInfo.image: {});
-  const [fullName, setFullName] = useState(user ? user.userData.fullname : "");
+  const [fullName, setFullName] = useState(userInfo ? userInfo.userData.fullname : "");
   const [email, setEmail] = useState(userInfo ? userInfo.email : "");
   const [address, setAddress] = useState(userInfo ? userInfo.address: "");
   const [phone, setPhone] = useState(userInfo ? userInfo.phone : "")  
@@ -106,7 +106,7 @@ const ProfileUser = () => {
           <img className="avartar-image" src={url}></img>
         </div>
         <div className="Wrapper-Name-Person">
-          <div className="Name-person">{user ? user.userData.fullname : ""}</div>
+          <div className="Name-person">{userInfo ? userInfo.userData.fullname : ""}</div>
           <div className="Wrapper-edit">
             <i class="edit-profile far fa-edit"></i>
             <input
