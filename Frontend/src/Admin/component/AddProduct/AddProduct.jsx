@@ -26,8 +26,9 @@ const Addproduct = (props) => {
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedBrand, setSelectedBrand] = useState("");
-
-  
+  const [discountPercent, setDiscountPercent] = useState(props.product ? props.product.discountPercent : 0);
+  const [categoryName, setCategoryName] = useState(props.product ? props.product.brandName : "");
+  const [brandName, setBrandName] = useState(props.product ? props.product.brandName : "");
 
   // const handleCategoryChange = (e) => {
   //   setCategory_id(e.target.value);
@@ -163,9 +164,9 @@ const Addproduct = (props) => {
     const updatedImagePaths = [...imagePaths];
     updatedImagePaths.splice(index, 1);
     setImagePaths(updatedImagePaths);
-    
+
   };
-  
+
   useEffect(() => {
     // Check if it's an update operation and there is a product with images
     if (props.type === "Update" && props.product && props.product.product_images) {
@@ -215,6 +216,56 @@ const Addproduct = (props) => {
     const brand = brands.find(brand => brand.name === brand_name);
     return brand ? brand.id : "0";
   };
+  const getCategoryName = (category_id) => {
+    const category = categories.find(category => category.id === category_id);
+    return category ? category.name : "";
+  };
+  const getBrandName = (brand_id) => {
+    const brand = brands.find(brand => brand.id === brand_id);
+    return brand ? brand.name : "";
+  };
+
+  useEffect(() => {
+    axios.get(`http://localhost:8080/api/v1/brands`, {
+      headers: {
+        'Authorization': `Bearer ${userInfo.token}`,
+      },
+    })
+      .then(response => {
+        setBrands(response.data);
+      })
+      .catch(error => {
+        console.error('There was an error fetching brands!', error);
+      });
+  }, []);
+
+  useEffect(() => {
+    axios.get(`http://localhost:8080/api/v1/categories?page=0&limit=10`, {
+      headers: {
+        'Authorization': `Bearer ${userInfo.token}`,
+      },
+    })
+      .then(response => {
+        setCategories(response.data);
+        console.log(response.data);
+      })
+      .catch(error => {
+        console.error('There was an error fetching brands!', error);
+      });
+  }, []);
+
+
+
+  // useEffect(() => {
+  //   // Check if it's an update operation and there is a product with a categoryName
+  //   if (props.type === "Update" && props.product && props.product.categoryName) {
+  //     setCategoryName(getCategoryName(props.product.category_id));
+  //     setBrandName(getBrandName(props.product.brand_id));
+  //     // setSelectedCategory(getCategoryName(props.product.category_id));
+  //     // setSelectedBrand(getBrandName(props.product.brand_id));
+  //   }
+  // }, [props.product, props.type]);
+
 
   return (
     <div className="AddProduct">
@@ -273,55 +324,167 @@ const Addproduct = (props) => {
 
           </div>
         </div>
+        {/* {props.type === "Update" && (
+          <div>
+            <div className="input-add-product">
+              <div className="Title-Input">CATEGORY</div>
+              <select
+                className="select"
+                onChange={(e) => {
+                  setCategory_id(getCategoryId(e.target.value));
+                  setSelectedCategory(e.target.value);
+                }}
+                value={selectedCategory}
+              >
+                <option disabled selected hidden value={selectedCategory}>
+                {selectedCategory}
+                </option>
+                <option value="Cleanser">Cleanser</option>
+                <option value="Eyeshadow">Eyeshadow</option>
+                <option value="Toner">Toner</option>
+                <option value="Lipstick">Lipstick</option>
+                <option value="Powder">Powder</option>
+                <option value="Eyeliner">Eyeliner</option>
+                <option value="Primer">Primer</option>
+                <option value="Blush">Blush</option>
+              </select>
+            </div>
+            <div className="input-add-product">
+              <div className="Title-Input">BRAND</div>
+              <select
+                className="select"
+                onChange={(e) => {
+                  setBrand_id(getBrandId(e.target.value));
+                  setSelectedBrand(e.target.value);
+                }}
+                value={selectedBrand}
+              >
+                <option disabled selected hidden value="">
+                  Select Brand
+                </option>
+                <option value="3CE">3CE</option>
+                <option value="Black Rouge">Black Rouge</option>
+                <option value="B.O.M">B.O.M</option>
+                <option value="Maybelline">Maybelline</option>
+                <option value="Dior">Dior</option>
+                <option value="MAC">MAC</option>
+                <option value="LaRoche Posay">LaRoche Posay</option>
+                <option value="Bioderma">Bioderma</option>
+                <option value="NARS">NARS</option>
+                <option value="L'Oreal">L'Oreal</option>
+              </select>
+            </div>
+          </div>
+        )} */}
+        {props.type === "Update" &&  (
+          <div>
+            {/* {setCategoryName(getCategoryName(props.product.category_id))}
+                {setBrandName(getBrandName(props.product.brand_id))} */}
+            <div className="input-add-product">
+              <div className="Title-Input">CATEGORY</div>
+              <select
+                className="select"
+                onChange={(e) => {
+                  setCategory_id(getCategoryId(e.target.value));
+                  setSelectedCategory(e.target.value);
+                }}
+                value={selectedCategory}
+              >
+                
+                <option disabled hidden defaultValue={getCategoryName(category_id)}>
+                  {getCategoryName(category_id)}
+                </option>
+                
+                <option value="Cleanser">Cleanser</option>
+                <option value="Eyeshadow">Eyeshadow</option>
+                <option value="Toner">Toner</option>
+                <option value="Lipstick">Lipstick</option>
+                <option value="Powder">Powder</option>
+                <option value="Eyeliner">Eyeliner</option>
+                <option value="Primer">Primer</option>
+                <option value="Blush">Blush</option>
+              </select>
+            </div>
+            <div className="input-add-product">
+              <div className="Title-Input">BRAND</div>
+              <select
+                className="select"
+                onChange={(e) => {
+                  setBrand_id(getBrandId(e.target.value));
+                  setSelectedBrand(e.target.value);
+                }}
+                value={selectedBrand}
+              >
+                <option disabled defaultValue={brandName} hidden>
+  {brandName}
+</option>
+                <option value="3CE">3CE</option>
+                <option value="Black Rouge">Black Rouge</option>
+                <option value="B.O.M">B.O.M</option>
+                <option value="Maybelline">Maybelline</option>
+                <option value="Dior">Dior</option>
+                <option value="MAC">MAC</option>
+                <option value="LaRoche Posay">LaRoche Posay</option>
+                <option value="Bioderma">Bioderma</option>
+                <option value="NARS">NARS</option>
+                <option value="L'Oreal">L'Oreal</option>
+              </select>
+            </div>
+          </div>
+        )}
+        {props.type === "Add" && (
+          <div>
+            <div className="input-add-product">
+              <div className="Title-Input">CATEGORY</div>
+              <select
+                className="select"
+                onChange={(e) => {
+                  setCategory_id(getCategoryId(e.target.value));
+                  setSelectedCategory(e.target.value);
+                }}
+                value={selectedCategory}
+              >
+                <option disabled selected hidden value="">
+                  Select Category
+                </option>
+                <option value="Cleanser">Cleanser</option>
+                <option value="Eyeshadow">Eyeshadow</option>
+                <option value="Toner">Toner</option>
+                <option value="Lipstick">Lipstick</option>
+                <option value="Powder">Powder</option>
+                <option value="Eyeliner">Eyeliner</option>
+                <option value="Primer">Primer</option>
+                <option value="Blush">Blush</option>
+              </select>
+            </div>
+            <div className="input-add-product">
+              <div className="Title-Input">CATEGORY</div>
+              <select
+                className="select"
+                onChange={(e) => {
+                  setBrand_id(getBrandId(e.target.value));
+                  setSelectedBrand(e.target.value);
+                }}
+                value={selectedBrand}
+              >
+                <option disabled selected hidden value="">
+                  Select Brand
+                </option>
+                <option value="3CE">3CE</option>
+                <option value="Black Rouge">Black Rouge</option>
+                <option value="B.O.M">B.O.M</option>
+                <option value="Maybelline">Maybelline</option>
+                <option value="Dior">Dior</option>
+                <option value="MAC">MAC</option>
+                <option value="LaRoche Posay">LaRoche Posay</option>
+                <option value="Bioderma">Bioderma</option>
+                <option value="NARS">NARS</option>
+                <option value="L'Oreal">L'Oreal</option>
+              </select>
+            </div>
+          </div>
+        )}
 
-        <div className="input-add-product">
-          <div className="Title-Input">CATEGORY</div>
-          <select
-            className="select"
-            onChange={(e) => {
-              setCategory_id(getCategoryId(e.target.value));
-              setSelectedCategory(e.target.value);
-            }}
-            value={selectedCategory}
-          >
-            <option disabled selected hidden value="">
-              Select Category
-            </option>
-            <option value="Cleanser">Cleanser</option>
-            <option value="Eyeshadow">Eyeshadow</option>
-            <option value="Toner">Toner</option>
-            <option value="Lipstick">Lipstick</option>
-            <option value="Powder">Powder</option>
-            <option value="Eyeliner">Eyeliner</option>
-            <option value="Primer">Primer</option>
-            <option value="Blush">Blush</option>
-          </select>
-        </div>
-        <div className="input-add-product">
-          <div className="Title-Input">BRAND</div>
-          <select
-            className="select"
-            onChange={(e) => {
-              setBrand_id(getBrandId(e.target.value));
-              setSelectedBrand(e.target.value);
-            }}
-            value={selectedBrand}
-          >
-            <option disabled selected hidden value="">
-              Select Brand
-            </option>
-            <option value="3CE">3CE</option>
-            <option value="Black Rouge">Black Rouge</option>
-            <option value="B.O.M">B.O.M</option>
-            <option value="Maybelline">Maybelline</option>
-            <option value="Dior">Dior</option>
-            <option value="MAC">MAC</option>
-            <option value="LaRoche Posay">LaRoche Posay</option>
-            <option value="Bioderma">Bioderma</option>
-            <option value="NARS">NARS</option>
-            <option value="L'Oreal">L'Oreal</option>
-          </select>
-        </div>
         {/* <div className="input-add-product">
           <div className="Title-Input">ORIGIN</div>
           <select
@@ -355,6 +518,17 @@ const Addproduct = (props) => {
             onChange={(e) => setInStock(e.target.value)}
           />
         </div>
+        {props.type === "Update" && (
+          <div className="input-add-product">
+            <div className="Title-Input">DISCOUNT</div>
+            <input
+              className="add-produc-design-input"
+              type="text"
+              value={discountPercent}
+              onChange={(e) => setDiscountPercent(e.target.value)}
+            />
+          </div>
+        )}
       </div>
       <div className="Wrapper-Add-Admin-Add-Pd">
         <button

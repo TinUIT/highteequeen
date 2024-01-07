@@ -1,7 +1,6 @@
 import './productdetail.css'
 import logoName from '../../assets/SonA12.png';
 import { Link } from 'react-router-dom';
-
 import { useState, useEffect ,useContext} from 'react';
 import Login from "../../components/login/loginform";
 import { Dialog } from "@material-ui/core";
@@ -9,7 +8,7 @@ import { UserContext } from "../../contexts/UserContext";
 import { FavoriteContext } from '../../contexts/FavoriteContext';
 import { useLocation } from 'react-router-dom';
 import { CartContext } from '../../contexts/CartContext';
-
+import axios from 'axios';
 
 function Productdetail  (props) {
   const location = useLocation()
@@ -21,6 +20,7 @@ function Productdetail  (props) {
   const { productId } = props;
   const {sales}=props;
   const {image}=props;
+  const [userInfo,setUserInfo] = useState(JSON.parse(localStorage.getItem('user-info')));
 
   const [countProduct, setCountProduct] = useState(1);
   const { addToFavoriteCart } = useContext( FavoriteContext);
@@ -28,16 +28,41 @@ function Productdetail  (props) {
  
   
   const handleFavorite = () => {
-    if (user.fullName)
-    {
-    const product = { productId, nameProduct, price, imageUrl, quantity: countProduct};
-    console.log(product)
-    addToFavoriteCart(product);} 
-    else {setOpenPopupLogin(true)}
-  };
+    if (user.id) {
+      const product = { productId, nameProduct, price, imageUrl, quantity: countProduct };
+  
+      axios.put(`http://localhost:8080/api/v1/products/favorites/add?userId=${user.id}&productId=${productId}`, product, {
+        headers: {
+          'Authorization': `Bearer ${userInfo.token}`,
+          'Content-Type': 'application/json', // Set the content type
+        },
+      })
+        .then(response => {
+          if (response.data) {
+            console.log('Product added to favorites:', response.data);
+            addToFavoriteCart(product);
+          } else {
+            console.error('Empty or invalid response data:', response.data);
+          }
+        })
+        .catch(error => {
+          if (error.response) {
+            console.error('Server responded with an error status:', error.response.status);
+            console.error('Error response data:', error.response.data);
+          } else if (error.request) {
+            console.error('No response received from the server');
+          } else {
+            console.error('Error setting up the request:', error.message);
+          }
+        });
+    } else {
+      setOpenPopupLogin(true);
+    }
+  };  
+  
   const { addToCart } = useContext(CartContext);
   const handleAddToCart = () => {
-    if (user.fullName)
+    if (user.id)
     {
     const product = { productId, nameProduct, price, imageUrl, quantity: countProduct };
     console.log(product)

@@ -23,7 +23,7 @@ export default function User() {
   useEffect(() => {
     axios.get(`http://localhost:8080/api/v1/users?page=${currentPage}&limit=10`, {
       headers: {
-        'Authorization': `Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjIsImVtYWlsIjoiMjA1MjE3MjZAZ20udWl0LmVkdS52biIsInN1YiI6IjIwNTIxNzI2QGdtLnVpdC5lZHUudm4iLCJleHAiOjE3MDY5MjY0MDV9.PVggJprRk7nbTcOCu54LfxKzjtHF5h9kT2aO0hABHy8`,
+        'Authorization': `Bearer ${userInfo.token}`,
       },
     })
       .then(response => {
