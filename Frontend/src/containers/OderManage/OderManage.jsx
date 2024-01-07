@@ -39,119 +39,115 @@ function OderManage() {
 
 
     const [currentPage, setCurrentPage] = useState(0);
-    const [bill, setBill] = useState([]);
     const [listOrder, setListOrder] = useState([]);
     const [pageCount, setPageCount] = useState(0);
     const itemsPerPage = 5;
 
-    useEffect(() => {
-        console.log("user_infor: ",userInfo);
+    // useEffect(() => {
+    //     console.log("user_infor: ",userInfo);
 
-        if (userInfo && userInfo.orders && userInfo.orders.length > 0) {
-            const OnProcessPro = userInfo.orders.map((order) => {
-                if (order.status === "pending") {
-                    return order.orderDetails;
-                }
-
-
-                return "";
-            });
-            setOnProcess(OnProcessPro);
+    //     if (userInfo && userInfo.orders && userInfo.orders.length > 0) {
+    //         const OnProcessPro = userInfo.orders.map((order) => {
+    //             if (order.status === "pending") {
+    //                 return order.orderDetails;
+    //             }
 
 
-
-
-        }
+    //             return "";
+    //         });
+    //         setOnProcess(OnProcessPro);
+    //     }
        
 
-    }, [userInfo]);
+    // }, [userInfo]);
 
-    useEffect(() => {
-        console.log("user_infor: ",userInfo);
-        if (userInfo && userInfo.orders && userInfo.orders.length > 0) {
-            const successPro = userInfo.orders.map((order) => {
-                if (order.status === "delivered") {
-                    return order.orderDetails;
-                }
+    // useEffect(() => {
+    //     console.log("user_infor: ",userInfo);
+    //     if (userInfo && userInfo.orders && userInfo.orders.length > 0) {
+    //         const successPro = userInfo.orders.map((order) => {
+    //             if (order.status === "delivered") {
+    //                 return order.orderDetails;
+    //             }
 
-                return "";
-            });
-            setSuccess(successPro);
+    //             return "";
+    //         });
+    //         setSuccess(successPro);
+    //     }
 
+    // }, [userInfo]);
+    // useEffect(() => {
+    //     console.log("user_infor: ",userInfo);
+    //     if (userInfo && userInfo.orders && userInfo.orders.length > 0) {
+    //         const CancelsPro = userInfo.orders.map((order) => {
+    //             if (order.status === "deny") {
+    //                 return order.orderDetails;
+    //             }
 
+    //             return "";
+    //         });
+    //         setCancel(CancelsPro);
 
-        }
+    //     }
 
-    }, [userInfo]);
-    useEffect(() => {
-        console.log("user_infor: ",userInfo);
-        if (userInfo && userInfo.orders && userInfo.orders.length > 0) {
-            const CancelsPro = userInfo.orders.map((order) => {
-                if (order.status === "deny") {
-                    return order.orderDetails;
-                }
-
-                return "";
-            });
-            setCancel(CancelsPro);
-
-
-
-        }
-
-    }, [userInfo]);
+    // }, [userInfo]);
 
 
     const handlePageClick = ({ selected }) => {
         const newPage = selected ; // Pagination starts from 0, but your API seems to start from 1
         setCurrentPage(newPage);
-        const apiUrl = `http://localhost:8080/api/v1/orders/get-orders-by-keyword?page=${newPage}&limit=10`;
+        const apiUrl = `http://localhost:8080/api/v1/orders/user/${userInfo.id}?page=${newPage}&limit=10`;
+        
         fetchData(apiUrl);
-      };
+    };
     
-      const fetchData = async (url) => {
+      const fetchData = async (url) => {    
         try {
           const response = await axios.get(url, {
             headers: {
               accept: '*',
-              Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjUsImVtYWlsIjoicXV5dHJhbjA4MDEyMDAyQGdtYWlsLmNvbSIsInN1YiI6InF1eXRyYW4wODAxMjAwMkBnbWFpbC5jb20iLCJleHAiOjE3MDcwMzU3MjN9.TpWQAdif_tlgyPbAK-nb7S25ZO3H8v-CZDbI_7skdSM',
+              Authorization: `Bearer ${userInfo.token}`,
             },
           });
        
           setListOrder(response.data.orders);
+          console.log("listOrder: ",listOrder);
           setCurrentPage(0); // Reset current page to 0 after fetching new data
           const totalPages = response.data.totalPages || 0;
           setPageCount(totalPages);
+          console.log(response.data.orders);
+        
           console.log("total_page:", totalPages);
         } catch (error) {
           console.error('There was an error!', error);
         }
-    
       };
     
-        const handleStatusChange = (status) => {
-          const keyword = status.toLowerCase();
-          let apiUrl;
-          console.log("keyword",keyword);
-          if(keyword=="all orders"){
-            apiUrl = `http://localhost:8080/api/v1/orders/get-orders-by-keyword?page=0&limit=10`;
-          }
-          else{
-            apiUrl = `http://localhost:8080/api/v1/orders/get-orders-by-keyword?page=0&limit=10&keyword=${keyword}`;
-          }
+        const handleStatusChange = (status, value) => {
+
+            if (value === iconsActive) {
+                return;
+            }
+
+            setIconsActive(value);
+            const keyword = status.toLowerCase();
+            let apiUrl;
+            console.log("keyword",keyword);
+            if(keyword=="all orders"){
+                apiUrl = `http://localhost:8080/api/v1/orders/user/${userInfo.id}?page=0&limit=10`;
+            }
+            else{
+                apiUrl = `http://localhost:8080/api/v1/orders/user/${userInfo.id}?keyword=${keyword}&page=0&limit=10`;
+            }
           fetchData(apiUrl);
         };
     
         useEffect(() => {
-          const   apiUrl = `http://localhost:8080/api/v1/orders/user/${userInfo.id}`;
-          fetchData(apiUrl);
-          console.log("listOrder: ",listOrder);
-        }, []); // Initial data fetching
-    
-    
-
+          const   apiUrl = `http://localhost:8080/api/v1/orders/user/${userInfo.id}?page=0&limit=10`;
       
-
+          fetchData(apiUrl);
+          console.log("user_id: ",userInfo.id);
+        }, [userInfo.id]); // Initial data fetching
+    
     const handleLogout = () => {
         localStorage.removeItem('user-info');
         setUserInfo("");
@@ -236,103 +232,322 @@ function OderManage() {
                     <div className="wrapper-body-oder">
                         <MDBTabs className='mb-3'>
                             <MDBTabsItem>
-                                <MDBTabsLink onClick={() => handleIconsClick('tab1')} active={iconsActive === 'tab1'}>
+                                <MDBTabsLink onClick={() =>  handleStatusChange('All orders','tab1')} active={iconsActive === 'tab1'}>
                                     <MDBIcon fas icon='clock' className='me-2' /> All Orders
                                 </MDBTabsLink>
                             </MDBTabsItem>
                             <MDBTabsItem>
-                                <MDBTabsLink onClick={() => handleIconsClick('tab2')} active={iconsActive === 'tab2'}>
+                                <MDBTabsLink onClick={() =>  handleStatusChange('Pending','tab2') } active={iconsActive === 'tab2'}>
                                     <MDBIcon fas icon='clock' className='me-2' /> Pending
                                 </MDBTabsLink>
                             </MDBTabsItem>
                             <MDBTabsItem>
-                                <MDBTabsLink onClick={() => handleIconsClick('tab3')} active={iconsActive === 'tab3'}>
+                                <MDBTabsLink onClick={() =>  handleStatusChange('Approved','tab3')} active={iconsActive === 'tab3'}>
                                     <MDBIcon fas icon='check-double' className='me-2' /> Approved
                                 </MDBTabsLink>
                             </MDBTabsItem>
                             <MDBTabsItem>
-                                <MDBTabsLink onClick={() => handleIconsClick('tab4')} active={iconsActive === 'tab4'}>
+                                <MDBTabsLink onClick={() =>  handleStatusChange('Delivered','tab4')} active={iconsActive === 'tab4'}>
                                     <MDBIcon fas icon='ban' className='me-2' /> Delivered
                                 </MDBTabsLink>
                             </MDBTabsItem>
                             <MDBTabsItem>
-                                <MDBTabsLink onClick={() => handleIconsClick('tab5')} active={iconsActive === 'tab5'}>
+                                <MDBTabsLink onClick={() =>  handleStatusChange('Cancelled','tab5')} active={iconsActive === 'tab5'}>
                                     <MDBIcon fas icon='ban' className='me-2' /> Cancelled
                                 </MDBTabsLink>
                             </MDBTabsItem>
                         </MDBTabs>
 
                         <MDBTabsContent>
+       
                             <MDBTabsPane show={iconsActive === 'tab1'}>
-                                {OnProcess.length === 0 ? (
-                                    <div>No orders in the On Process category.</div>
-                                ) : (
-                                    OnProcess.map((order) => (
-                                        order && order[0] ? (
-                                            <CardComplete
-                                                nameProduct={order[0].productName}
-                                                colorProduct={order[0].colorProduct}
-                                                price={order[0].price}
-                                                Image={order[0].image}
-                                                isChooseNumProduct={order.isChooseNumProduct}
-                                                number={order[0].quantity}
-                                                isCancel={false}
-                                                isClose={false}
-                                                key={order.orderId}
-                                                isFirebase={true}
-                                                
-                                            />
-                                        ) : null
-                                    ))
-                                )}
+                            {listOrder.length === 0 ? (
+                                <div>No orders in the All Orders category.</div>
+                            ) : (
+                                listOrder.map((order) => (
+                                    <div className="all_purchase">
+                                        <div className="ruler_status" key={order.id}>
+                                            {/* Display order information */}
+                                            <div id="id">
+                                                <div id="id_inf">Mã số đơn hàng: {order.id} </div>
+                                            </div>
+                                            <div id="tradeDate">
+                                                <div id="tradeDate_inf"> Ngày đặt hàng: {`${order.order_date[2]} / ${order.order_date[1]} / ${order.order_date[0]}`}</div>
+                                            </div>
+                                            <div id="status">
+                                                <div id="status_inf"> Trạng thái: {order.status}</div>
+                                            </div>
+                                            <div>
+                                                <button id="btn_detail">
+                                                    Xem chi tiết <i className="fa-solid fa-arrow-right"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div className="order_product">
+                                            {order.order_details && order.order_details.length > 0 && (
+                                                order.order_details.map((orderDetail) => (
+                                                    <CardComplete
+                                                        nameProduct={orderDetail.product.name}
+                                                        colorProduct={orderDetail.color}
+                                                        price={orderDetail.price}
+                                                        Image={orderDetail.product.thumbnail}
+                                                        isChooseNumProduct={orderDetail.numberOfProducts}
+                                                        number={orderDetail.numberOfProducts}
+                                                        isCancel={false}
+                                                        isClose={false}
+                                                        key={orderDetail.id}
+                                                        isFirebase={false}
+                                                    />
+                                                ))
+                                            )}
+                                        </div>
+                                        <div className="all_total_user">
+                                            <h3> All total: {order.total_money}</h3>
+
+                                        </div>
+                                       
+                                    </div>
+                               
+                                ))
+                            )}
+
                             </MDBTabsPane>
 
                             <MDBTabsPane show={iconsActive === 'tab2'}>
-                                {Success.length === 0 ? (
-                                    <div>No orders in the Success category.</div>
-                                ) : (
-                                    Success.map((order) => (
-                                        order && order[0] ? (
-                                            <CardComplete
-                                                nameProduct={order[0].productName}
-                                                colorProduct={order[0].colorProduct}
-                                                price={order.price}
-                                                Image={order[0].image}
-                                                isChooseNumProduct={order.isChooseNumProduct}
-                                                number={order[0].quantity}
-                                              
-                                                isClose={false}
-                                                key={order.orderId}
-                                                isFirebase={true}
-                                            />
-                                        ) : null
-                                    ))
-                                )}
+                            {listOrder.length === 0 ? (
+                                <div>No orders in the All Orders category.</div>
+                            ) : (
+                                listOrder.map((order) => (
+                                    <div className="all_purchase">
+
+                                   
+                                    <div className="ruler_status" key={order.id}>
+                                        {/* Display order information */}
+                                        <div id="id">
+                                            <div id="id_inf">Mã số đơn hàng: {order.id} </div>
+                                        </div>
+                                        <div id="tradeDate">
+                                            <div id="tradeDate_inf"> Ngày đặt hàng: {`${order.order_date[2]} / ${order.order_date[1]} / ${order.order_date[0]}`}</div>
+                                        </div>
+                                        <div id="status">
+                                            <div id="status_inf"> Trạng thái: {order.status}</div>
+                                        </div>
+                                        <div>
+                                            <button id="btn_detail">
+                                                Xem chi tiết <i className="fa-solid fa-arrow-right"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div className="order_product">
+                                        {order.order_details && order.order_details.length > 0 && (
+                                            order.order_details.map((orderDetail) => (
+                                                <CardComplete
+                                                    nameProduct={orderDetail.product.name}
+                                                    colorProduct={orderDetail.color}
+                                                    price={orderDetail.price}
+                                                    Image={orderDetail.product.thumbnail}
+                                                    isChooseNumProduct={orderDetail.numberOfProducts}
+                                                    number={orderDetail.numberOfProducts}
+                                                    isCancel={false}
+                                                    isClose={false}
+                                                    key={orderDetail.id}
+                                                    isFirebase={false}
+                                                />
+                                            ))
+                                        )}
+                                    </div>
+                                    <div className="all_total_user">
+                                        <h3> All total: {order.total_money}</h3>
+
+                                    </div>
+                                   
+                                    </div>
+                               
+                                ))
+                            )}
                             </MDBTabsPane>
 
                             <MDBTabsPane show={iconsActive === 'tab3'}>
-                                {Cancel.length === 0 ? (
-                                    <div>No orders in the Cancel category.</div>
-                                ) : (
-                                    Cancel.map((order) => (
-                                        order && order[0] ? (
-                                            <CardComplete
-                                                nameProduct={order[0].productName}
-                                                colorProduct={order[0].colorProduct}
-                                                price={order.price}
-                                                Image={order[0].image}
-                                                isChooseNumProduct={order.isChooseNumProduct}
-                                                number={order[0].quantity}
-                                               
-                                                isClose={false}
-                                                key={order.orderId}
-                                                isFirebase={true}
-                                                
-                                            />
-                                        ) : null
-                                    ))
-                                )}
+                            {listOrder.length === 0 ? (
+                                <div>No orders in the All Orders category.</div>
+                            ) : (
+                                listOrder.map((order) => (
+                                    <div className="all_purchase">
+
+                                   
+                                    <div className="ruler_status" key={order.id}>
+                                        {/* Display order information */}
+                                        <div id="id">
+                                            <div id="id_inf">Mã số đơn hàng: {order.id} </div>
+                                        </div>
+                                        <div id="tradeDate">
+                                            <div id="tradeDate_inf"> Ngày đặt hàng: {`${order.order_date[2]} / ${order.order_date[1]} / ${order.order_date[0]}`}</div>
+                                        </div>
+                                        <div id="status">
+                                            <div id="status_inf"> Trạng thái: {order.status}</div>
+                                        </div>
+                                        <div>
+                                            <button id="btn_detail">
+                                                Xem chi tiết <i className="fa-solid fa-arrow-right"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div className="order_product">
+                                        {order.order_details && order.order_details.length > 0 && (
+                                            order.order_details.map((orderDetail) => (
+                                                <CardComplete
+                                                    nameProduct={orderDetail.product.name}
+                                                    colorProduct={orderDetail.color}
+                                                    price={orderDetail.price}
+                                                    Image={orderDetail.product.thumbnail}
+                                                    isChooseNumProduct={orderDetail.numberOfProducts}
+                                                    number={orderDetail.numberOfProducts}
+                                                    isCancel={false}
+                                                    isClose={false}
+                                                    key={orderDetail.id}
+                                                    isFirebase={false}
+                                                />
+                                            ))
+                                        )}
+                                    </div>
+                                    <div className="all_total_user">
+                                        <h3> All total: {order.total_money}</h3>
+
+                                    </div>
+                                   
+                                    </div>
+                               
+                                ))
+                            )}
                             </MDBTabsPane>
+                            <MDBTabsPane show={iconsActive === 'tab4'}>
+                            {listOrder.length === 0 ? (
+                                <div>No orders in the All Orders category.</div>
+                            ) : (
+                                listOrder.map((order) => (
+                                    <div className="all_purchase">
+
+                                   
+                                    <div className="ruler_status" key={order.id}>
+                                        {/* Display order information */}
+                                        <div id="id">
+                                            <div id="id_inf">Mã số đơn hàng: {order.id} </div>
+                                        </div>
+                                        <div id="tradeDate">
+                                            <div id="tradeDate_inf"> Ngày đặt hàng: {`${order.order_date[2]} / ${order.order_date[1]} / ${order.order_date[0]}`}</div>
+                                        </div>
+                                        <div id="status">
+                                            <div id="status_inf"> Trạng thái: {order.status}</div>
+                                        </div>
+                                        <div>
+                                            <button id="btn_detail">
+                                                Xem chi tiết <i className="fa-solid fa-arrow-right"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div className="order_product">
+                                        {order.order_details && order.order_details.length > 0 && (
+                                            order.order_details.map((orderDetail) => (
+                                                <CardComplete
+                                                    nameProduct={orderDetail.product.name}
+                                                    colorProduct={orderDetail.color}
+                                                    price={orderDetail.price}
+                                                    Image={orderDetail.product.thumbnail}
+                                                    isChooseNumProduct={orderDetail.numberOfProducts}
+                                                    number={orderDetail.numberOfProducts}
+                                                    isCancel={false}
+                                                    isClose={false}
+                                                    key={orderDetail.id}
+                                                    isFirebase={false}
+                                                />
+                                            ))
+                                        )}
+                                    </div>
+                                    <div className="all_total_user">
+                                        <h3> All total: {order.total_money}</h3>
+
+                                    </div>
+                                   
+                                </div>
+                                ))
+                            )}
+                            </MDBTabsPane>
+
+                            <MDBTabsPane show={iconsActive === 'tab5'}>
+                            {listOrder.length === 0 ? (
+                                <div>No orders in the All Orders category.</div>
+                            ) : (
+                                listOrder.map((order) => (
+                                    <div className="all_purchase">
+
+                                   
+                                    <div className="ruler_status" key={order.id}>
+                                        {/* Display order information */}
+                                        <div id="id">
+                                            <div id="id_inf">Mã số đơn hàng: {order.id} </div>
+                                        </div>
+                                        <div id="tradeDate">
+                                            <div id="tradeDate_inf"> Ngày đặt hàng: {`${order.order_date[2]} / ${order.order_date[1]} / ${order.order_date[0]}`}</div>
+                                        </div>
+                                        <div id="status">
+                                            <div id="status_inf"> Trạng thái: {order.status}</div>
+                                        </div>
+                                        <div>
+                                            <button id="btn_detail">
+                                                Xem chi tiết <i className="fa-solid fa-arrow-right"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div className="order_product">
+                                        {order.order_details && order.order_details.length > 0 && (
+                                            order.order_details.map((orderDetail) => (
+                                                <CardComplete
+                                                    nameProduct={orderDetail.product.name}
+                                                    colorProduct={orderDetail.color}
+                                                    price={orderDetail.price}
+                                                    Image={orderDetail.product.thumbnail}
+                                                    isChooseNumProduct={orderDetail.numberOfProducts}
+                                                    number={orderDetail.numberOfProducts}
+                                                    isCancel={false}
+                                                    isClose={false}
+                                                    key={orderDetail.id}
+                                                    isFirebase={false}
+                                                />
+                                            ))
+                                        )}
+                                    </div>
+                                    <div className="all_total_user">
+                                        <h3> All total: {order.total_money}</h3>
+
+                                    </div>
+                                   
+                                </div>
+                               
+                                ))
+                            )}
+                            </MDBTabsPane>
+                            <div className="order_user_page">
+                                <ReactPaginate
+                                    breakLabel="..."
+                                    nextLabel="next >"
+                                    onPageChange={handlePageClick}
+                                    pageRangeDisplayed={5}
+                                    pageCount={pageCount}
+                                    previousLabel="< previous"
+                                    
+                                    pageClassName="page-item"
+                                    pageLinkClassName="page-link"
+                                    previousClassName="page-item"
+                                    previousLinkClassName="page-link"
+                                    nextClassName="page-item"
+                                    nextLinkClassName="page-link"
+                                    breakClassName="page-item"
+                                    breakLinkClassName="page-link"
+                                    containerClassName="pagination"
+                                    activeClassName="active"
+                                    />
+                            </div>
+                            
 
                         </MDBTabsContent>
 
@@ -350,17 +565,7 @@ function OderManage() {
                 onCancel={() => setOpenModal(false)}
                 onYes={handleLogout}
             ></Modal>
-             <ReactPaginate
-                previousLabel={'previous'}
-                nextLabel={'next'}
-                breakLabel={'...'}
-                pageCount={pageCount}
-                marginPagesDisplayed={2}
-                pageRangeDisplayed={5}
-                onPageChange={handlePageClick}
-                containerClassName={'pagination'}
-                activeClassName={'active'}
-            />
+       
         </>
     );
 };
