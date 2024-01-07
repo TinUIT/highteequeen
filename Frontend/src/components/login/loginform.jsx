@@ -81,11 +81,18 @@ function Login({ onClose }) {
       
     }
     const userInfo = JSON.parse(localStorage.getItem('user-info'));
-    if(userInfo.roles.includes("ROLE_ADMIN"))
-    {
+    if (userInfo?.roles || userInfo?.roles?.includes("ROLE_ADMIN")) {
       console.log(userInfo.roles.includes("ROLE_ADMIN"))
       window.location.href = "/admin";
+    } else {
+      // Thuộc tính roles không tồn tại, mở Modal lỗi
+      setOpenModal(true);
     }
+    // if(userInfo.roles?.includes("ROLE_ADMIN"))
+    // {
+    //   console.log(userInfo.roles.includes("ROLE_ADMIN"))
+    //   window.location.href = "/admin";
+    // }
     
     
   };
