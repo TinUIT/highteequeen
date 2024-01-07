@@ -318,5 +318,12 @@ public class UserController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+//    @PostMapping("/forgot-password")
+//    public ResponseEntity<?> requestPasswordReset(@RequestParam String email) {
+//        String token = userService.generateResetToken(email);
+//        emailService.sendResetLink(email, token);
+//        return ResponseEntity.ok().body("Password reset link has been sent to your email.");
+//    }
 }
 

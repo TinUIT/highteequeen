@@ -41,9 +41,10 @@ function Header(props) {
   const customerId = user && user.customerId;
   const [userInfo, setUserInfo] = useState(JSON.parse(localStorage.getItem('user-info')));
   const [url, setUrl] = useState('');
-  const {TileProduct, setTitleProduct} = props;
+  const { TileProduct, setTitleProduct } = props;
   const [product, setProduct] = useState(0);
   const [expandedProduct, setExpandedProduct] = useState(null);
+  const [NameUser,setNameUser]= useState("");
 
   const handleLogout = () => {
     localStorage.removeItem('user-info');
@@ -137,19 +138,19 @@ function Header(props) {
           'accept': '*/*',
         }
       })
-      .then(response => {
-        // Extract the user's full name from the response
-        const fullName = response.data.fullname;
-        // Update the user context with the new user information
-        updateUserProfile({ ...user, fullName });
-        // Save the user information in local storage
-        localStorage.setItem('user-info', JSON.stringify({ ...user, userData: response.data }));
-        console.log(fullName);
-      })
-      .catch(error => {
-        // Handle errors, e.g., log them or show a message to the user
-        console.error('Error fetching user details:', error);
-      });
+        .then(response => {
+          // Extract the user's full name from the response
+
+          // Save the user information in local storage
+          localStorage.setItem('user-info', JSON.stringify({ ...user, userData: response.data }));
+          setNameUser(response.data.fullname); 
+          console.log(NameUser)
+
+        })
+        .catch(error => {
+          // Handle errors, e.g., log them or show a message to the user
+          console.error('Error fetching user details:', error);
+        });
     }
   }, [user.token]);
 
@@ -180,12 +181,14 @@ function Header(props) {
             </button></Link>
           {user.message ?
             (<>
-              <button
-                className="RegisterButton"
-                onClick={handleProfileClick}
-              >
-                {user.fullName}
-              </button>
+             
+                <button
+                  className="RegisterButton"
+                  onClick={handleProfileClick}
+                >
+                  {NameUser} {/* Lấy tên người dùng từ userData.fullname */}
+                </button>
+              
               <HLCard>
                 <HLDropdown overlay={menu} trigger={["click"]}>
                   <Avatar

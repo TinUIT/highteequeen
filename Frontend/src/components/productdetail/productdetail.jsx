@@ -11,7 +11,6 @@ import { useLocation } from 'react-router-dom';
 import { CartContext } from '../../contexts/CartContext';
 
 
-
 function Productdetail  (props) {
   const location = useLocation()
   const [imageUrl, setImageUrl] = useState(null);
@@ -49,11 +48,8 @@ function Productdetail  (props) {
   return(
     
     <div className="wrappperProductdetail" >
-       <Link state={{ nameProduct: props.nameProduct, price : props.price, image: props.image, description:props.description, productId: props.productId }} to="/product-detail">
-    
-      <div className="Backgroud-Product-cpn" style={{ backgroundImage: `url(${image})` }}>
-
-      </div>
+      <Link state={{ nameProduct: props.nameProduct, price : props.price, image: props.image, description:props.description, productId: props.productId }} to="/product-detail">
+      <div className="Backgroud-Product-cpn" style={{ backgroundImage: `url(${image})` }}></div>
       </Link>
       <div className='Background-ProducdetailtName'  state={{ nameProduct: props.nameProduct, price : props.price, image: props.image, description:props.description, productId: props.productId }}>  
       <div className='ProducdetailtName'>
@@ -87,10 +83,7 @@ function Productdetail  (props) {
       <Dialog open={openPopupLogin} onClose={() => setOpenPopupLogin(false)}>
         <Login onClose={() => setOpenPopupLogin(false)} />
       </Dialog>
-      
-
     </div>
-  
   );
 }
   export default Productdetail;

@@ -23,6 +23,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -150,25 +151,6 @@ public class UserService implements IUserService {
         if (updatedUserDTO.getAddress() != null) {
             existingUser.setAddress(updatedUserDTO.getAddress());
         }
-        if (updatedUserDTO.getDateOfBirth() != null) {
-            existingUser.setDateOfBirth(updatedUserDTO.getDateOfBirth());
-        }
-        if (updatedUserDTO.getFacebookAccountId() > 0) {
-            existingUser.setFacebookAccountId(updatedUserDTO.getFacebookAccountId());
-        }
-        if (updatedUserDTO.getGoogleAccountId() > 0) {
-            existingUser.setGoogleAccountId(updatedUserDTO.getGoogleAccountId());
-        }
-
-        if (updatedUserDTO.getPassword() != null
-                && !updatedUserDTO.getPassword().isEmpty()) {
-            if(!updatedUserDTO.getPassword().equals(updatedUserDTO.getRetypePassword())) {
-                throw new DataNotFoundException("Password and retype password not the same");
-            }
-            String newPassword = updatedUserDTO.getPassword();
-            String encodedPassword = passwordEncoder.encode(newPassword);
-            existingUser.setPassword(encodedPassword);
-        }
 
         return userRepository.save(existingUser);
     }
@@ -233,5 +215,29 @@ public class UserService implements IUserService {
         String contentType = file.getContentType();
         return contentType != null && contentType.startsWith("image/");
     }
-}
+    @Override
+    public void updateResetPasswordToken(String token, String email) throws DataNotFoundException {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new DataNotFoundException("User not found"));
+        if (user != null) {
+            user.setResetPasswordToken(token);
+            userRepository.save(user);
+        } else {
+            throw new DataNotFoundException("Could not find any customer with the email " + email);
+        }
+    }
 
+    @Override
+    public User getByResetPasswordToken(String token) {
+        return userRepository.findByResetPasswordToken(token);
+    }
+
+    public void updatePassword(User customer, String newPassword) {
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        String encodedPassword = passwordEncoder.encode(newPassword);
+        customer.setPassword(encodedPassword);
+
+        customer.setResetPasswordToken(null);
+        userRepository.save(customer);
+    }
+}
