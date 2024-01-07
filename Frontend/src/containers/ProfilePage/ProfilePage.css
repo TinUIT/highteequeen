@@ -149,3 +149,9 @@
     color: aliceblue !important; 
 
 }
+.ReadOnly {
+    background-color: rgb(220,224,230);
+    color: black;
+    opacity: 0.55;
+    cursor: default;
+}
