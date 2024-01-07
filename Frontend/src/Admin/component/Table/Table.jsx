@@ -77,61 +77,42 @@ export default function BasicTable() {
     setSelectedProduct(null);
   };
 
-  // const handleAccept = (orderId) => {
-  //   axios.get(`http://localhost:8080/api/orders/${index}/success`).then(() => {
-  //     const newIsAccepted = [...isAccepted];
-  //     newIsAccepted[index - 1] = true;
-      
-  //     setIsAccepted(newIsAccepted);
-     
-  //   });
-   
-
-  // };
-  const handleUpdateStatus = (orderId, userId,status_update) => {
-    const apiUrl = `http://localhost:8080/api/v1/orders/${orderId}/status`;
+  const handleUpdateStatus = async (orderId, userId, status_update) => {
+    try {
+      const apiUrl = `http://localhost:8080/api/v1/orders/${orderId}/status`;
   
-    // Use the Authorization header with the user's token
-    const headers = {
-      accept: 'application/json',
-      Authorization: `Bearer ${userInfo.token}`,
-      'Content-Type': 'application/json',
-    };
+      // Use the Authorization header with the user's token
+      const headers = {
+        accept: 'application/json',
+        Authorization: `Bearer ${userInfo.token}`,
+        'Content-Type': 'application/json',
+      };
   
-    // Set the new status to "delivered" and provide the user_id
-    const requestData = {
-      status: status_update,
-      user_id: userId, // Replace with the appropriate user_id
-    };
+      // Set the new status to "delivered" and provide the user_id
+      const requestData = {
+        status: status_update,
+        user_id: userId,
+      };
   
-    axios.put(apiUrl, requestData, { headers })
-      .then((response) => {
-        console.log('Order successfully accepted:', response.data);
-        
-        const updatedListOrder = [...listOrder];
-        updatedListOrder[ID - 1].status = 'delivered';
-        setListOrder(updatedListOrder);
-
-        // Update the local isAccepted state accordingly
-        const newIsAccepted = [...isAccepted];
-        newIsAccepted[ID - 1] = true;
-        setIsAccepted(newIsAccepted);
-      })
-      .catch((error) => {
-        console.error('Error accepting order:', error);
-      });
+      // Update the local state immediately
+      const updatedListOrder = [...listOrder];
+      updatedListOrder[orderId - 1].status = status_update; // Assuming orderId is 1-indexed
+      setListOrder(updatedListOrder);
+  
+      // Update the local isAccepted state accordingly
+      const newIsAccepted = [...isAccepted];
+      newIsAccepted[orderId - 1] = true; // Assuming orderId is 1-indexed
+      setIsAccepted(newIsAccepted);
+  
+      // Make the API request
+      const response = await axios.put(apiUrl, requestData, { headers });
+      console.log('Order successfully accepted:', response.data);
+    } catch (error) {
+      console.error('Error accepting order:', error);
+    }
   };
   
 
-
-  const handleCancel = (index) => {
-    axios.get(`http://localhost:8080/api/orders/${index}/deny`).then(() => {
-      const newIsCancel = [...isCancel];
-      newIsCancel[index - 1] = true;
-      setIsCancel(newIsCancel);
-   
-    });
-  };
 
   const handlePageClick = ({ selected }) => {
     const newPage = selected ; // Pagination starts from 0, but your API seems to start from 1
@@ -182,7 +163,7 @@ export default function BasicTable() {
     useEffect(() => {
       const   apiUrl = `http://localhost:8080/api/v1/orders/get-orders-by-keyword?page=0&limit=10`;
       fetchData(apiUrl);
-    }, [currentPage, isAccepted, isCancel]); // Initial data fetching
+    }, []); // Initial data fetching
 
 
 

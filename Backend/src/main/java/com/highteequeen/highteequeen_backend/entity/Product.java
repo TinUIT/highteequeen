@@ -1,5 +1,6 @@
 package com.highteequeen.highteequeen_backend.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -38,13 +39,16 @@ public class Product extends BaseEntity{
     private Long salesCount;
 
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "category_id")
     private Category category;
 
     @ManyToMany(mappedBy = "favoriteProducts")
+    @JsonBackReference
     private Set<User> favoritedByUsers = new HashSet<>();
 
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "brand_id")
     private Brand brand;
 
@@ -54,5 +58,5 @@ public class Product extends BaseEntity{
     @Column(name = "discount_percent")
     private float discountPercent;
 
-    
+
 }
