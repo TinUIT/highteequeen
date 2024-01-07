@@ -1,8 +1,8 @@
 .container-cardcomplete {
   display: flex;
   padding: 20px 40px 20px 20px;
-  border-top: 0.3px solid;
-  border-bottom: 0.3px solid;
+  /* border-top: 0.3px solid; */
+  border-bottom: 0.5px solid;
   align-items: center;
   justify-content: space-between;
   position: relative;

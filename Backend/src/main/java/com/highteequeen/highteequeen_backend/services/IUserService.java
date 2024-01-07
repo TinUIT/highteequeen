@@ -25,4 +25,10 @@ public interface IUserService {
     void addProductToFavorites(Long userId, Long productId) throws DataNotFoundException;
 
     String storeFile(MultipartFile file) throws IOException;
+
+    void updateResetPasswordToken(String token, String email) throws DataNotFoundException;
+
+    User getByResetPasswordToken(String token);
+
+    void updatePassword(User customer, String newPassword);
 }

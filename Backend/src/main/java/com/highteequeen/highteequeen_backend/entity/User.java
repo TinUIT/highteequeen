@@ -55,6 +55,8 @@ public class User extends BaseEntity implements UserDetails {
 
     @Column(name = "avatar")
     private String avatar;
+    @Column(name = "reset_password_token")
+    private String resetPasswordToken;
     @ManyToMany
     @JoinTable(
             name = "user_favorites",

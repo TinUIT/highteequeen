@@ -22,9 +22,14 @@ const ProfilePage = () => {
     const [fullName, setFullName] = useState(user.userData.fullname);
     const [email, setEmail] = useState(user.username);
     const [address, setAddress] = useState(user.userData.address);
-    const [phone, setPhone] = useState(user.userData.phone_number)  
+    const [phone, setPhone] = useState(user.userData.phone_number);
+    
+ 
+
+
     const [isMobile, setIsMobile] = useState(false);
     const [openModal,setOpenModal]= useState(false);
+    const readOnly = true;
 
 
     const handleLogout = () => {
@@ -93,22 +98,38 @@ const ProfilePage = () => {
     const handleSave = async () => {
         console.log("test")
         const newCustomerData = {
-          fullName, 
-          email,
-          phone,
-          address,
-          //image  
+            address: address,
+            fullname: fullName, 
+            phone_number: phone, 
+            
         };
-        const updatedCustomer = await updateCustomer(user.customerId, newCustomerData);
+        console.log(newCustomerData);
+        const updatedCustomer = await updateCustomer(userInfo.id, newCustomerData);
         
     };
 
     const updateCustomer = async (customerId, customerDto) => {
-        const response = await axios.put(`http://localhost:8080/api/v1/customer/${customerId}`, customerDto);
-        localStorage.setItem('user-info', JSON.stringify(response.data));
-        updateUserProfile(response.data);
-        console.log(response.data)
-        return response.data;
+        try {
+            const response = await axios.put(`http://localhost:8080/api/v1/users/details/${customerId}`, customerDto, {
+                headers: {
+                    'Authorization': `Bearer ${userInfo.token}`, 
+                    'Content-Type': 'application/json',
+                    'accept': '*',
+                },
+            });
+           
+            localStorage.setItem('user-info', JSON.stringify({ ...user, userData: response.data }));
+            window.location.reload(); 
+            alert("Profile updated successfully"); // You can replace this with a modal or other notification component
+            
+           
+            console.log(response.data);
+            return response.data;
+        } catch (error) {
+            console.error('Error updating customer:', error);
+            throw error; // Handle the error appropriately in your application
+        }
+       
     };
       
       
@@ -135,7 +156,16 @@ const ProfilePage = () => {
                             <hr></hr>
                             <div className="wrapper-Input-edit">
                                 <div className="Edit Name"><div className="tile-input">Name</div><input className="Input" value={fullName ? fullName: ''} onChange={(e) => setFullName(e.target.value)}></input></div>
-                                <div className="Edit Email"><div className="tile-input">Email</div><input className="Input" value={email ? email : ''} onChange={(e) =>setEmail(e.target.value)}></input></div>
+                                <div className="Edit Email">
+                                    <div className="tile-input">Email</div>
+                                    <input
+                                        className={`Input ${readOnly ? 'ReadOnly' : ''}`}
+                                        value={email ? email : ''}
+                                        onChange={(e) => setEmail(e.target.value)}
+                                        readOnly
+                                    />
+
+                                </div>
                                 <div className="Edit Phone"><div className="tile-input">Phone</div><input className="Input" value={phone ? phone: ''} onChange={(e) =>setPhone(e.target.value)}></input></div>
                                 <div className="Edit Address"><div className="tile-input">Address</div><input className="Input" value={address ? address: ''} onChange={(e) =>setAddress(e.target.value)}></input></div>
                                 {/* <Form>

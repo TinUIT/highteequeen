@@ -102,10 +102,209 @@
     background-color: #B16E4B;
 }
 .wrapper-body-oder{
-    width: 80%;;
+    width: 70%;
+    margin-left: 3%;
 }
 .Oder-management-Tab-Choose{
     background-color: #B16E4B;
     color: aliceblue;
 
 }
+/* ============================ */
+.all_total_user{
+    margin-left: 55%;
+    padding-bottom: 2px;
+}
+.all_purchase{
+    background-color: rgb(229 146 105 / 25%);
+    margin-bottom: 20px;
+    /* padding: 20px 20px 2px 20px; */
+    border-radius: 10px;
+}
+.order_product{
+    margin-left: 10%;
+    margin-right: 5%;
+}
+
+.all_purchase .row{
+    background-color: #FCD8D4;
+    margin-top: 20px;
+    padding: 10px;
+    border-radius: 10px;
+  }
+
+  .all_purchase .ruler_status{
+    border-bottom: 2px solid #FDF6F0;
+    display: flex;
+    padding: 5px;
+    /* padding-bottom: 0.5%; */
+    font-size: 15px;
+    background-color: rgba(177, 110, 75, 0.25);
+  }
+
+  .all_purchase .detail_purchase{
+    display: grid;
+    background-color: #FCD8D4;
+    padding: 1% 2% 0 2%;
+    margin-left: 5%;
+  }
+
+  .all_purchase .detail_purchase .col1{
+    flex: 15%;
+  }
+
+  .all_purchase .detail_purchase .col2{
+    flex: 50%;
+  }
+
+  .all_purchase .detail_purchase .col3{
+    flex: 30%;
+    padding-top: 5%;
+    display: flex;
+    margin-bottom: 2%;
+  }
+  .AllPrice{
+    margin-left: 2%;
+    font-size: 20px;
+    flex: 50%
+  }
+
+  .all_purchase .detail_purchase .buyagain{
+    background-color: #CD8042;
+    color: white;
+    border: none;
+    padding: 5px 15px;
+    border-radius: 5px;
+    font-family: Bellota ;
+    font-weight: bold;
+    font-size:1rem;
+    /* margin-right: 30%; */
+    margin-left: 16%;
+    width: 70%;
+    flex: 25%;
+  }
+  .all_purchase .detail_purchase a{
+    flex: 5%;
+    width: 50%;
+  }
+
+  .all_purchase .detail_purchase .rate{
+    background-color: white;
+    color: #8F3C02;
+    border: none;
+    padding: 5px 15px;
+    border-radius: 5px;
+    font-family: Bellota ;
+    font-weight: bold;
+    font-size:1rem;
+    flex: 0.125%;
+    margin-left: 10%;
+    width: 30%;
+  }
+
+  .all_purchase .detail_purchase .btn_purchase{
+    background-color: #CD8042;
+    color: white;
+    border: none;
+    padding: 5px 15px;
+    border-radius: 5px;
+    font-family: Bellota ;
+    font-weight: bold;
+    font-size:1rem;
+    margin-left: 33%;
+    width: 20%;
+    
+  }
+
+  .all_purchase #id{
+    flex: 30%;
+  }
+
+  .all_purchase #id_inf{
+    display: inline;;
+  }
+
+  .all_purchase #tradeDate_inf{
+    display: inline;;
+  }
+
+  .all_purchase #status_inf{
+    display: inline;;
+  }
+
+  .all_purchase #tradeDate{
+    flex: 15%;
+  }
+
+  .all_purchase #status{
+    flex: 15%;
+  }
+  .all_purchase #btn_detail{
+    flex: 17%;
+    background-color: white;
+    color: #8F3C02;
+    border: none;
+    padding: 2px 10px;
+    border-radius: 5px;
+    font-weight: bold;
+    font-size: 1rem;
+  }
+
+  .all_purchase #name{
+    font-weight:900;
+    font-size: large;
+  }
+
+  .all_purchase #unit_price_inf{
+    display: inline;
+  }
+
+  .all_purchase #total_price_inf{
+    display: inline;
+  }
+
+  .all_purchase #quantity_inf{
+    display: inline;
+  }
+
+  
+@media screen and (max-width:1095px) {
+  .MyOrders .rightSide {
+    flex: 90%;
+  }
+
+  .MyOrders .leftSide {
+    flex: 10%;
+  }
+}
+
+@media screen and (max-width:850px) {
+  .MyOrders .rightSide {
+    flex: 90%;
+  }
+
+  .MyOrders .leftSide {
+    flex: 10%;
+  }
+
+}
+
+.all_purchase .detail_purchase .btn_purchase:hover{
+  color:#8F3C02;
+  background-color: white;
+}
+
+/* đơn đã hủy */
+.cancelledPurchase .all_purchase .detail_purchase .btn_purchase{
+  width: 30%;
+  
+}
+.cancelledPurchase .all_purchase .detail_purchase a{
+  flex: 50%;
+}
+
+.completedpurchase .all_purchase .detail_purchase a{
+  flex: 25%;
+}
+
+

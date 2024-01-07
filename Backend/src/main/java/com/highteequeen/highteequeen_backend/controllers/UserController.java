@@ -2,6 +2,7 @@ package com.highteequeen.highteequeen_backend.controllers;
 
 import com.highteequeen.highteequeen_backend.components.LocalizationUtils;
 import com.highteequeen.highteequeen_backend.dtos.*;
+import com.highteequeen.highteequeen_backend.dtos.request.ForgotPasswordRequest;
 import com.highteequeen.highteequeen_backend.entity.Product;
 import com.highteequeen.highteequeen_backend.entity.ProductImage;
 import com.highteequeen.highteequeen_backend.entity.Token;
@@ -16,9 +17,11 @@ import com.highteequeen.highteequeen_backend.services.ITokenService;
 import com.highteequeen.highteequeen_backend.services.IUserService;
 import com.highteequeen.highteequeen_backend.services.impl.AuthenticationService;
 import com.highteequeen.highteequeen_backend.utils.MessageKeys;
+import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.internal.bytebuddy.utility.RandomString;
 import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -115,6 +118,34 @@ public class UserController {
             return ResponseEntity.badRequest().body(registerResponse);
         }
     }
+    @PostMapping("/forgot_password")
+    public ResponseEntity<?> processForgotPassword(HttpServletRequest request, @RequestBody ForgotPasswordRequest forgotPasswordRequest, BindingResult result) throws DataNotFoundException, MessagingException {
+        try {
+            String token = RandomString.make(30);
+            userService.updateResetPasswordToken(token, forgotPasswordRequest.getEmail());
+
+            String resetPasswordLink = getSiteURL(request) + "/reset_password?token=" + token;
+
+            User existingUser = userRepository.findByEmail(forgotPasswordRequest.getEmail())
+                    .orElseThrow(() -> new DataNotFoundException("User not found"));
+            String from = "ptt102002@gmail.com";
+            String to = existingUser.getEmail();
+            String subject = "Thông báo!";
+
+            String body = "Highteequeen xin chào! Nhấp vào " + resetPasswordLink + " để thay đổi mật khẩu";
+            MailInfo mail = new MailInfo(from, to, subject, body);
+            mailer.send(mail);
+            return ResponseEntity.ok().body("Check email to change password ");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+
+    }
+
+    public static String getSiteURL(HttpServletRequest request) {
+        String siteURL = request.getRequestURL().toString();
+        return siteURL.replace(request.getServletPath(), "");
+    }
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(
             @Valid @RequestBody UserLoginDTO userLoginDTO,
@@ -202,6 +233,23 @@ public class UserController {
             }
             User updatedUser = userService.updateUser(userId, updatedUserDTO);
             return ResponseEntity.ok(UserResponse.fromUser(updatedUser));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @GetMapping("/details/{userId}")
+    public ResponseEntity<UserResponse> getUserDetails(
+            @PathVariable Long userId,
+            @RequestHeader("Authorization") String authorizationHeader
+    ) {
+        try {
+            String extractedToken = authorizationHeader.substring(7);
+            User user = userService.getUserDetailsFromToken(extractedToken);
+            if (user.getId() != userId) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            }
+            return ResponseEntity.ok(UserResponse.fromUser(user));
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }
@@ -313,10 +361,12 @@ public class UserController {
                 String filename = userService.storeFile(file);
                 user.setAvatar(filename);
                 userRepository.save(user);
-            return ResponseEntity.ok().body("Avartar change suscessfully");
+            return ResponseEntity.ok().body(filename);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+
 }
 

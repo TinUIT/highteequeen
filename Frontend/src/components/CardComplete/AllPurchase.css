@@ -1,0 +1,240 @@
+.MyOrders{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    margin-top: 60px;
+    margin-bottom: 27%;
+}
+
+.MyOrders .leftSide {
+    height: 100%;
+    flex: 27%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+  
+  .MyOrders .rightSide {
+    height: 100%;
+    flex: 73%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin: 0 4% 0 2%;
+    border-radius: 3%;
+    color: #8F3C02;
+    padding: 20px 0;
+  }
+
+.NavbarOrders {
+    
+    margin-left: 0%;
+    height: auto;
+    background-color: #F8E2CF;
+}
+.NavbarOrders .List {
+    display: flex;
+}
+.NavbarOrders .List .row{
+    width: 100%;
+    height: 50px;
+    border-left: 1px solid white;
+    list-style-type: none;
+    margin: 0%;
+    display: flex;
+    flex-direction: row;
+    color: #8F3C02;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .NavbarOrders .List .row:hover{
+    cursor: pointer;
+    background-color: #F5C6AA;
+  }
+
+  .NavbarOrders .List #active{
+    background-color: #D77B44;
+  } 
+
+  .all_purchase .row{
+    background-color: #FCD8D4;
+    margin-top: 20px;
+    padding: 10px;
+    border-radius: 10px;
+  }
+
+  .all_purchase .ruler_status{
+    border-bottom: 2px solid #FDF6F0;
+    display: flex;
+    padding-bottom: 0.5%;
+    font-size: 15px;
+  }
+
+  .all_purchase .detail_purchase{
+    display: grid;
+    background-color: #FCD8D4;
+    padding: 1% 2% 0 2%;
+    margin-left: 5%;
+  }
+
+  .all_purchase .detail_purchase .col1{
+    flex: 15%;
+  }
+
+  .all_purchase .detail_purchase .col2{
+    flex: 50%;
+  }
+
+  .all_purchase .detail_purchase .col3{
+    flex: 30%;
+    padding-top: 5%;
+    display: flex;
+    margin-bottom: 2%;
+  }
+  .AllPrice{
+    margin-left: 2%;
+    font-size: 20px;
+    flex: 50%
+  }
+
+  .all_purchase .detail_purchase .buyagain{
+    background-color: #CD8042;
+    color: white;
+    border: none;
+    padding: 5px 15px;
+    border-radius: 5px;
+    font-family: Bellota ;
+    font-weight: bold;
+    font-size:1rem;
+    /* margin-right: 30%; */
+    margin-left: 16%;
+    width: 70%;
+    flex: 25%;
+  }
+  .all_purchase .detail_purchase a{
+    flex: 5%;
+    width: 50%;
+  }
+
+  .all_purchase .detail_purchase .rate{
+    background-color: white;
+    color: #8F3C02;
+    border: none;
+    padding: 5px 15px;
+    border-radius: 5px;
+    font-family: Bellota ;
+    font-weight: bold;
+    font-size:1rem;
+    flex: 0.125%;
+    margin-left: 10%;
+    width: 30%;
+  }
+
+  .all_purchase .detail_purchase .btn_purchase{
+    background-color: #CD8042;
+    color: white;
+    border: none;
+    padding: 5px 15px;
+    border-radius: 5px;
+    font-family: Bellota ;
+    font-weight: bold;
+    font-size:1rem;
+    margin-left: 33%;
+    width: 20%;
+    
+  }
+
+  .all_purchase #id{
+    flex: 30%;
+  }
+
+  .all_purchase #id_inf{
+    display: inline;;
+  }
+
+  .all_purchase #tradeDate_inf{
+    display: inline;;
+  }
+
+  .all_purchase #status_inf{
+    display: inline;;
+  }
+
+  .all_purchase #tradeDate{
+    flex: 15%;
+  }
+
+  .all_purchase #status{
+    flex: 15%;
+  }
+  .all_purchase #btn_detail{
+    flex: 17%;
+    background-color: white;
+    color: #8F3C02;
+    border: none;
+    padding: 2px 10px;
+    border-radius: 5px;
+    font-family: Bellota ;
+    font-weight: bold;
+    font-size: 1rem;
+  }
+
+  .all_purchase #name{
+    font-weight:900;
+    font-size: large;
+  }
+
+  .all_purchase #unit_price_inf{
+    display: inline;
+  }
+
+  .all_purchase #total_price_inf{
+    display: inline;
+  }
+
+  .all_purchase #quantity_inf{
+    display: inline;
+  }
+
+  
+@media screen and (max-width:1095px) {
+  .MyOrders .rightSide {
+    flex: 90%;
+  }
+
+  .MyOrders .leftSide {
+    flex: 10%;
+  }
+}
+
+@media screen and (max-width:850px) {
+  .MyOrders .rightSide {
+    flex: 90%;
+  }
+
+  .MyOrders .leftSide {
+    flex: 10%;
+  }
+
+}
+
+.all_purchase .detail_purchase .btn_purchase:hover{
+  color:#8F3C02;
+  background-color: white;
+}
+
+/* đơn đã hủy */
+.cancelledPurchase .all_purchase .detail_purchase .btn_purchase{
+  width: 30%;
+  
+}
+.cancelledPurchase .all_purchase .detail_purchase a{
+  flex: 50%;
+}
+
+.completedpurchase .all_purchase .detail_purchase a{
+  flex: 25%;
+}
+
+

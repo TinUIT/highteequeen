@@ -42,6 +42,10 @@
     font-weight: 300;
     background-color: rgba(177, 110, 75, 0.01)
 }
+.Bt-edit:hover{
+    cursor: pointer;
+    color: #b44e17;
+}
 .Info-person{
     width: 100%;
     display: flex;

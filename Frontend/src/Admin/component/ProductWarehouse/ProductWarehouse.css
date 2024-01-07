@@ -88,13 +88,17 @@
 }
 
 .wrapper-img-admin-add {
-  width: 20%;
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
 }
 
 .wrapper-item-img {
-  width: 80%;
-  padding-top: 5% !important;
-}
+  width: 50%;
+  box-sizing: border-box;
+  /* padding-top: 5% !important; */
+  padding: 0 2px;
+} 
 
 .delete-button {
   padding: 16px;
