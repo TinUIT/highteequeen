@@ -232,6 +232,7 @@ public class UserService implements IUserService {
         return userRepository.findByResetPasswordToken(token);
     }
 
+    @Override
     public void updatePassword(User customer, String newPassword) {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         String encodedPassword = passwordEncoder.encode(newPassword);

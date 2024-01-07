@@ -42,7 +42,10 @@ public class WebSecurityConfig {
                             .requestMatchers(
                                     String.format("%s/users/register", apiPrefix),
                                     String.format("%s/users/login", apiPrefix),
+                                    String.format("%s/users/forgot_password", apiPrefix),
                                     String.format("%s/users/activate/**", apiPrefix),
+                                    "/reset_password**",
+
                                     "/api-docs",
                                     "/api-docs/**",
                                     "/swagger-resources",
