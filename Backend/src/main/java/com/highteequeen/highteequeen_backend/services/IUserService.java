@@ -29,4 +29,6 @@ public interface IUserService {
     void updateResetPasswordToken(String token, String email) throws DataNotFoundException;
 
     User getByResetPasswordToken(String token);
+
+    void updatePassword(User customer, String newPassword);
 }
