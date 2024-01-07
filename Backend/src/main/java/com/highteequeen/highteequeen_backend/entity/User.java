@@ -1,6 +1,5 @@
 package com.highteequeen.highteequeen_backend.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -64,7 +63,6 @@ public class User extends BaseEntity implements UserDetails {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "product_id")
     )
-    @JsonBackReference
     private Set<Product> favoriteProducts = new HashSet<>();
 
     @Column(nullable = false)

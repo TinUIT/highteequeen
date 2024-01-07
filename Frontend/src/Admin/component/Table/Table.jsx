@@ -139,6 +139,7 @@ export default function BasicTable() {
       setIsCancel(Array(response.data.orders.length).fill(false));
       setCurrentPage(0); // Reset current page to 0 after fetching new data
       const totalPages = response.data.totalPages || 0;
+      console.log("token: ",userInfo.token);
       setPageCount(totalPages);
       console.log("total_page:", totalPages);
     } catch (error) {

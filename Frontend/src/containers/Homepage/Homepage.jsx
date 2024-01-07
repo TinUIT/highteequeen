@@ -20,6 +20,7 @@ import IMGPro5 from '../../assets/PorelessPowderClassicIvory.jpg'
 import IMGPro6 from '../../assets/oncealerPurplle.jpg'
 import IMGPro7 from '../../assets/PressedPowder.jpg'
 import ImgPro8 from '../../assets/EraserConcealer.jpg'
+
 const data = [
     {
       title:"BLACK ROUGE V5",
@@ -67,8 +68,12 @@ function Homepage() {
     const [MostFavoriterProduct, setBestBrandproduct] = useState(0);
     const [isselectsee, setisSelectSee] = useState(null);
 
+
+    const [userInfo, setUserInfo] = useState(JSON.parse(localStorage.getItem('user-info')));
+ 
+
     const getImageUrl = (imageName) => {
-        console.log(`http://localhost:8080/api/v1/products/images/${imageName}`)
+        // console.log(`http://localhost:8080/api/v1/products/images/${imageName}`)
         return `http://localhost:8080/api/v1/products/images/${imageName}`;
     };
 
@@ -81,6 +86,8 @@ function Homepage() {
     };
     const handleSaleproduct = (selected, e) => {
         setSaleProduct(selected);
+
+      
     };
     const handleBestSellerproduct = (selectedBest, e) => {
         setBestSellerproduct(selectedBest);
@@ -107,7 +114,7 @@ function Homepage() {
         axios.get("http://localhost:8080/api/v1/products/best-sellers?page=0&limit=8")
             .then(response => {
                 setBestSeller(response.data.products);
-                console.log("test", response.data);
+                // console.log("test", response.data);
             })
             .catch(error => {
                 console.error('There was an error!', error);
@@ -125,11 +132,11 @@ function Homepage() {
     }, []);
 
     useEffect(() => {
-        console.log("Best seller:" + bestSeller);
+        // console.log("Best seller:" + bestSeller);
     }, [bestSeller]);
 
     useEffect(() => {
-        console.log("product:" + product);
+      // console.log("product:" + product);
     }, [product]);
 
     return (

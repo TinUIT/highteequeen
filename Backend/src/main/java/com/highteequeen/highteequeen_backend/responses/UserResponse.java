@@ -9,7 +9,6 @@ import lombok.*;
 
 import java.util.Date;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -50,7 +49,7 @@ public class UserResponse {
     @Column(name = "avatar")
     private String avatar;
 
-    private Set<ProductResponse> favoriteProducts;
+    private Set<Product> favoriteProducts;
     public static UserResponse fromUser(User user) {
         return UserResponse.builder()
                 .id(user.getId())
@@ -62,9 +61,7 @@ public class UserResponse {
                 .facebookAccountId(user.getFacebookAccountId())
                 .googleAccountId(user.getGoogleAccountId())
                 .role(user.getRole())
-                .favoriteProducts(user.getFavoriteProducts().stream()
-                        .map(ProductResponse::fromProduct)
-                        .collect(Collectors.toSet()))
+                .favoriteProducts(user.getFavoriteProducts())
                 .avatar(user.getAvatar())
                 .build();
     }

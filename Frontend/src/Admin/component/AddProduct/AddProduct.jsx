@@ -1,21 +1,12 @@
 import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import "./AddProduct.css";
-// import {
-//   getStorage,
-//   ref,
-//   getDownloadURL,
-//   uploadBytesResumable
-// } from "firebase/storage";
-// import { app, storage } from "../../../firebase/firebase";
-
-
 
 const Addproduct = (props) => {
   const [imagePaths, setImagePaths] = useState([]);
   const [id, setId] = useState(props.product ? props.product.id : "");
   const [name, setName] = useState(props.product ? props.product.name : "");
-  const [brand_id, setBrand_id] = useState(props.product ? props.product.brand : "");
+  const [brand_id, setBrand_id] = useState(props.product ? props.product.brand_id : "");
   const [description, setDescription] = useState(props.product ? props.product.description : "");
   const [price, setPrice] = useState(props.product ? props.product.price : 0);
   // const [origin, setOrigin] = useState(props.product ? props.product.origin : "");
@@ -62,25 +53,6 @@ const Addproduct = (props) => {
     } catch (error) {
       console.error(error);
     }
-    // if (file) {
-    //   const storeRef = ref(storage, `${file.name}`);
-    //   const uploadTask = uploadBytesResumable(storeRef, file);
-
-    //   uploadTask.on(
-    //     "state_changed",
-    //     (snapshot) => {},
-    //     (error) => {
-    //       // Xử lý lỗi (nếu có)
-    //       console.log(error);
-    //     },
-    //     () => {
-    //       // Hoàn thành tải lên thành công
-    //       uploadTask.snapshot.ref.getDownloadURL().then((downloadUrl) => {
-    //         setUrl(downloadUrl);
-    //       });
-    //     }
-    //   );
-    // }
   };
 
   const handleAddProduct = () => {
@@ -90,7 +62,6 @@ const Addproduct = (props) => {
   const responseUpdateProduct = async () => {
     try {
       if (imagePaths.length > 0) {
-        // Nếu có hình ảnh mới, cập nhật chúng
         const formData = new FormData();
         imagePaths.forEach((image, index) => {
           formData.append(`images`, image.file);
@@ -112,7 +83,8 @@ const Addproduct = (props) => {
         description,
         category_id,
         // origin,
-        inStock
+        inStock,
+        discountPercent
       }, {
         headers: {
           'Authorization': `Bearer ${userInfo.token}`,
@@ -122,21 +94,6 @@ const Addproduct = (props) => {
     } catch (error) {
       console.error(error);
     }
-    // if (file) {
-    //   const storeRef = ref(storage, `${file.name}`);
-    //   const uploadTask = uploadBytesResumable(storeRef, file);
-
-    //   uploadTask.on('state_changed', 
-    //     (snapshot) => {},
-    //     (error) => console.log(error), 
-    //     () => {
-    //       getDownloadURL(uploadTask.snapshot.ref).then((downloadUrl) => {
-    //         console.log("Download URL: ", downloadUrl);
-    //         setUrl(downloadUrl);
-    //       });
-    //     }
-    //   );
-    // }
   };
 
   const handleUpdateProduct = () => {
@@ -256,16 +213,23 @@ const Addproduct = (props) => {
 
 
 
-  // useEffect(() => {
-  //   // Check if it's an update operation and there is a product with a categoryName
-  //   if (props.type === "Update" && props.product && props.product.categoryName) {
-  //     setCategoryName(getCategoryName(props.product.category_id));
-  //     setBrandName(getBrandName(props.product.brand_id));
-  //     // setSelectedCategory(getCategoryName(props.product.category_id));
-  //     // setSelectedBrand(getBrandName(props.product.brand_id));
-  //   }
-  // }, [props.product, props.type]);
+  useEffect(() => {
+    if (category_id) {
+      const category = categories.find((category) => category.id === category_id);
+      if (category) {
+        setSelectedCategory(category.name);
+      }
+    }
+  }, [category_id, categories]);
 
+  useEffect(() => {
+    if (brand_id) {
+      const brand = brands.find((brand) => brand.id === brand_id);
+      if (brand) {
+        setSelectedBrand(brand.name);
+      }
+    }
+  }, [brand_id, brands]);
 
   return (
     <div className="AddProduct">
@@ -376,7 +340,7 @@ const Addproduct = (props) => {
             </div>
           </div>
         )} */}
-        {props.type === "Update" &&  (
+        {props.type === "Update" && (
           <div>
             {/* {setCategoryName(getCategoryName(props.product.category_id))}
                 {setBrandName(getBrandName(props.product.brand_id))} */}
@@ -384,14 +348,19 @@ const Addproduct = (props) => {
               <div className="Title-Input">CATEGORY</div>
               <select
                 className="select"
+                // onChange={(e) => {
+                //   setCategory_id(getCategoryId(e.target.value));
+                //   setSelectedCategory(e.target.value);
+                // }}
+                // value={selectedCategory}
                 onChange={(e) => {
                   setCategory_id(getCategoryId(e.target.value));
                   setSelectedCategory(e.target.value);
                 }}
                 value={selectedCategory}
               >
-                
-                <option disabled hidden defaultValue={getCategoryName(category_id)}>
+
+                {/* <option disabled hidden defaultValue={getCategoryName(category_id)}>
                   {getCategoryName(category_id)}
                 </option>
                 
@@ -402,7 +371,12 @@ const Addproduct = (props) => {
                 <option value="Powder">Powder</option>
                 <option value="Eyeliner">Eyeliner</option>
                 <option value="Primer">Primer</option>
-                <option value="Blush">Blush</option>
+                <option value="Blush">Blush</option> */}
+                {categories.map((category) => (
+                  <option key={category.id} value={category.name}>
+                    {category.name}
+                  </option>
+                ))}
               </select>
             </div>
             <div className="input-add-product">
@@ -415,9 +389,10 @@ const Addproduct = (props) => {
                 }}
                 value={selectedBrand}
               >
-                <option disabled defaultValue={brandName} hidden>
-  {brandName}
-</option>
+
+                {/* <option disabled defaultValue={brandName} hidden>
+                  {brandName}
+                </option>
                 <option value="3CE">3CE</option>
                 <option value="Black Rouge">Black Rouge</option>
                 <option value="B.O.M">B.O.M</option>
@@ -427,7 +402,12 @@ const Addproduct = (props) => {
                 <option value="LaRoche Posay">LaRoche Posay</option>
                 <option value="Bioderma">Bioderma</option>
                 <option value="NARS">NARS</option>
-                <option value="L'Oreal">L'Oreal</option>
+                <option value="L'Oreal">L'Oreal</option> */}
+                {brands.map((brand) => (
+                  <option key={brand.id} value={brand.name}>
+                    {brand.name}
+                  </option>
+                ))}
               </select>
             </div>
           </div>

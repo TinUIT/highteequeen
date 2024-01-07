@@ -6,6 +6,7 @@ import axios from "axios";
 import { GoogleLogin } from 'react-google-login';
 import { UserContext } from "../../contexts/UserContext";
 import SuccessFull from "../../assets/Success.gif"
+import Modal from "../../components/Modal/Modal";
 
 
 function Register({ onClose }) {
@@ -18,6 +19,7 @@ function Register({ onClose }) {
   const [confirmPasswordError, setConfirmPasswordError] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [registrationSuccess, setRegistrationSuccess] = useState(false);
+  const [openModal,setOpenModal]= useState(false);
   const validateEmail = (email) => {
     const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     return regex.test(email);
@@ -71,18 +73,25 @@ function Register({ onClose }) {
     else {setConfirmPasswordError("")};
     try {
   
-      const response = await axios.post('http://localhost:8080/api/v1/auth/register', {
-        fullname,
-        email,
-        password,
+      const response = await axios.post('http://localhost:8080/api/v1/users/register', {
+        email: email,
+        password: password,
+        fullname: fullname,
+        retype_password: confirmPassword,
+        address: "none",
+        avatar: "string",
+        phone_number: "none",
+        date_of_birth: "2024-01-07T12:09:01.892Z",
+        facebook_account_id: 0,
+        google_account_id: 0,
       });
-      localStorage.setItem('user-info', JSON.stringify(response.data));
-      setRegistrationSuccess(true);
-      updateUserProfile(response.data);
       
-      setTimeout(() => {
-        onClose();
-      }, 1000);
+      
+     
+      if (response.data.message) {
+       
+        setOpenModal(true)
+      }
       
       
      
@@ -158,6 +167,16 @@ function Register({ onClose }) {
       >
         <Login onClose={() => { setOpenPopupLogin(false); setOpenPopupRegister(false); }} />
       </Dialog>
+      <Modal className="Modal-Verify"
+         style={{ left: "0px" }}
+        openModal={openModal}
+        content="Registered successfully! Verify email to log in!"
+        onYes={() => onClose()}
+
+        CancelShow={false}
+        stylebtn={{ justifyContent: "space-around" }}
+       
+      ></Modal>
      </div>) }
     </>
    

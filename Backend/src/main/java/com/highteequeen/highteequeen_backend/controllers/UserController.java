@@ -339,7 +339,7 @@ public class UserController {
 
     @PostMapping(value = "uploads/{id}",
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> uploadImages(
             @PathVariable("id") Long userId,
             @ModelAttribute("file") MultipartFile file,

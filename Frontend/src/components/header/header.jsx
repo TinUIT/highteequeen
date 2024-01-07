@@ -144,7 +144,7 @@ function Header(props) {
           // Save the user information in local storage
           localStorage.setItem('user-info', JSON.stringify({ ...user, userData: response.data }));
           setNameUser(response.data.fullname); 
-          console.log(NameUser)
+          
 
         })
         .catch(error => {
@@ -152,9 +152,11 @@ function Header(props) {
           console.error('Error fetching user details:', error);
         });
     }
+    
   }, [user.token]);
 
   useEffect(() => {
+    
     if (userInfo && userInfo.userData && userInfo.userData.avatar) {
       axios.get(`http://localhost:8080/api/v1/users/avatars/${userInfo.userData.avatar}`, {
         headers: {
@@ -171,7 +173,7 @@ function Header(props) {
           console.error('Có lỗi khi lấy ảnh!', error);
         });
     }
-  }, [userInfo]);
+  }, []);
 
 
 
@@ -320,7 +322,6 @@ function Header(props) {
                 <div className="div-tap-control">{selectedTab === 4 && <hr className="tap-control" />}</div>
               </NavLink>
             </div>
-            {console.log("selectedTab: ", selectedTab)}
             <div className="control">
               <div className="input-search-container">
                 <input
