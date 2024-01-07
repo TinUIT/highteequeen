@@ -39,10 +39,11 @@ const ProductDetail = () => {
   const [openPopupRegister, setOpenPopupRegister] = useState(false);
   const { user, updateUserProfile } = useContext(UserContext);
   const [openPopupLogin, setOpenPopupLogin] = useState(false);
+  const [productImages, setProductImages] = useState([]);
 
   const [isNameProductInList, setisNameProductInList] = useState(false)
 
-  
+
   const [odersdetailProductName, setOdersdetailProductName] = useState([]);
 
 
@@ -135,23 +136,24 @@ const ProductDetail = () => {
 
   }
 
-  // useEffect(() => {
-  //   const storage = getStorage(app);
-  //   var storageRef = ref(storage, "white.jpg");
-
-  //   if (image != null) {
-  //     storageRef = ref(storage, image);
-  //   }
-  //   console.log(image);
-  //   getDownloadURL(storageRef).then((url) => {
-  //     setImageUrl(url);
-  //   });
-  // }, [image]);
+  useEffect(() => {
+    axios.get(`http://localhost:8080/api/v1/products/${productId}`)
+      .then(response => {
+        // setReviews(response.data);
+        // Lấy danh sách hình ảnh từ dữ liệu nhận về
+        // const images = response.data.product_images.map(image => image.image_url);
+        setProductImages(response.data.product_images);
+        console.log(response.data.product_images);
+      })
+      .catch(error => {
+        console.error('There was an error!', error);
+      });
+  }, [productId]);
 
   const { addToCart } = useContext(CartContext);
   const handleAddToCart = () => {
-    console.log("fullname",userInfo.userData.fullname);
-    
+    console.log("fullname", userInfo.userData.fullname);
+
     if (userInfo.userData.fullname) {
       console.log(productId, nameProduct, price, imageUrl);
       const product = { productId, nameProduct, price, imageUrl, quantity: countProduct };
@@ -194,7 +196,7 @@ const ProductDetail = () => {
                   src={image}
                   alt="image product"
                 ></img>
-                <ul className="producttail-listsuggest">
+                {/* <ul className="producttail-listsuggest">
                   <li className="wrap-product-suggest-img" onClick={() => setImageUrl(product)}>
                     <img
                       className="product-suggest-img"
@@ -224,6 +226,17 @@ const ProductDetail = () => {
                       alt="immage product suggest"
                     ></img>
                   </li>
+                </ul> */}
+                <ul className="producttail-listsuggest">
+                  {productImages.map((image, index) => (
+                    <li className="wrap-product-suggest-img" key={index} onClick={() => setImageUrl(`http://localhost:8080/api/v1/products/images/${image.image_url}`)}>
+                      <img
+                        className="product-suggest-img"
+                        src={`http://localhost:8080/api/v1/products/images/`+ image.image_url}
+                        alt={`image product suggest ${index}`}
+                      ></img>
+                    </li>
+                  ))}
                 </ul>
               </div>
               <div className="product-right">
@@ -248,7 +261,7 @@ const ProductDetail = () => {
                   </li>
                 </ul>
                 <p className="productdetail-review desc">(0 Review)</p>
-                <p className="productdetail-code desc">Code SPMU3BRHNHWGHG </p>
+                <p className="productdetail-code desc"> Sold </p>
                 <h6 className="productdetail-price">${price}</h6>
                 <div className="productdetail-variant">
                   <p className="variant-title desc">Option</p>
