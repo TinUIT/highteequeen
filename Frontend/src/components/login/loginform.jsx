@@ -83,7 +83,7 @@ function Login({ onClose }) {
       
     }
     const userInfo = JSON.parse(localStorage.getItem('user-info'));
-    if (userInfo?.roles || userInfo?.roles?.includes("ROLE_ADMIN")) {
+    if (userInfo?.roles && userInfo?.roles?.includes("ROLE_ADMIN")) {
       console.log(userInfo.roles.includes("ROLE_ADMIN"))
       window.location.href = "/admin";
     } else {

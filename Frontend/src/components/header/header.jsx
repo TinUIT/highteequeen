@@ -108,21 +108,32 @@ function Header(props) {
 
 
   useEffect(() => {
-    if (user.role == "ADMIN") {
-      console.log("testbug")
-      window.location.href = "/admin";
+    
+    // if (user.role == "ADMIN") {
+    //   console.log("testbug")
+    //   window.location.href = "/admin";
 
-    }
+
     if (searchTerm) {
-      axios.get(`http://localhost:8080/api/products/search/autocomplete?name=${searchTerm}`)
-        .then(res => {
-          setSearchResults(res.data);
+      axios.get('http://localhost:8080/api/v1/products', {
+           headers: {
+          'Authorization': `Bearer ${userInfo?.token || ''}`,
+        },
+      })
+        .then(response => {
+          // Handle the response, set search results, or perform other actions
+          console.log(response.data);
+          setSearchResults(response.data); // Assuming response.data contains the search results
         })
-        .catch(err => console.error(err));
+        .catch(error => {
+          // Handle the error
+          console.error(error);
+        });
     } else {
       setSearchResults([]);
     }
-  }, [searchTerm]);
+  }, [searchTerm, userInfo?.token]);
+  
 
   const handleSelectProduct = (selectedIndexed, e) => {
     setProduct(selectedIndexed);
