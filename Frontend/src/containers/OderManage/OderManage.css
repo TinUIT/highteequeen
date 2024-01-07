@@ -111,9 +111,23 @@
 
 }
 /* ============================ */
+.button_deny button{
+  width: 100px;
+    height: 30px;
+    border-radius: 5px;
+    background-color:  rgba(255, 109, 109, 0.7);
+    border-color:  rgba(255, 109, 109, 0.7);
+    font-weight: bold;
+   
+}
+.button_deny {
+  margin-left: 10%;
+  margin-top: 10px;
+}
 .all_total_user{
     margin-left: 55%;
     padding-bottom: 2px;
+    display: flex;
 }
 .all_purchase{
     background-color: rgb(229 146 105 / 25%);
@@ -229,7 +243,8 @@
   }
 
   .all_purchase #status_inf{
-    display: inline;;
+    display: inline;
+    font-weight: bold;
   }
 
   .all_purchase #tradeDate{

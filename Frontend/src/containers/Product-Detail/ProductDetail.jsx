@@ -17,6 +17,7 @@ import { Dialog } from "@material-ui/core";
 import Modal from "../../components/Modal/Modal";
 import Uncomment from "../../assets/Uncomment.gif"
 
+
 const ProductDetail = () => {
   const location = useLocation()
   const { nameProduct } = location.state || {};
@@ -41,7 +42,7 @@ const ProductDetail = () => {
 
   const [isNameProductInList, setisNameProductInList] = useState(false)
 
-
+  
   const [odersdetailProductName, setOdersdetailProductName] = useState([]);
 
 
@@ -149,7 +150,10 @@ const ProductDetail = () => {
 
   const { addToCart } = useContext(CartContext);
   const handleAddToCart = () => {
-    if (user.fullName) {
+    console.log("fullname",userInfo.userData.fullname);
+    
+    if (userInfo.userData.fullname) {
+      console.log(productId, nameProduct, price, imageUrl);
       const product = { productId, nameProduct, price, imageUrl, quantity: countProduct };
       addToCart(product);
     }
@@ -360,7 +364,7 @@ const ProductDetail = () => {
 
 
           </div>
-          <div className="wrapper-show-comment-product">
+          {/* <div className="wrapper-show-comment-product">
             <div className="Show-comment-product">
               {reviews.length !== 0 ? (reviews.map((item) => <>
                 <div className="Avatar-user-container">
@@ -377,14 +381,14 @@ const ProductDetail = () => {
                 <hr></hr>
               </>
               )) : (<> <div>There are no reviews yet</div></>)
-              } </div></div>
+              } </div></div> */}
         </div>
         <div className="Product-detail-page-wrapper-right">
-          {products.map(product => (
+          {/* {products.map(product => (
             <div className="Product-detail-page">
               <Productdetail nameProduct={product.name} description={product.description} price={product.price} image={product.image} productId={product.id} sales={product.sales} />
             </div>
-          ))}
+          ))} */}
         </div>
       </div>
       <Dialog open={openPopupLogin} onClose={() => setOpenPopupLogin(false)}>
