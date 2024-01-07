@@ -19,10 +19,10 @@ import { UserContext } from "../../contexts/UserContext";
 const ProfilePage = () => {
     const [userInfo,setUserInfo] = useState(JSON.parse(localStorage.getItem('user-info')));   
     const { user, updateUserProfile } = useContext(UserContext);
-    const [fullName, setFullName] = useState(user.userData.fullname);
+    const [fullName, setFullName] = useState(user?.userData?.fullname || '');
     const [email, setEmail] = useState(user.username);
-    const [address, setAddress] = useState(user.userData.address);
-    const [phone, setPhone] = useState(user.userData.phone_number);
+    const [address, setAddress] = useState(user?.userData?.address ||'');
+    const [phone, setPhone] = useState(user?.userData?.phone_number || '');
     
  
 

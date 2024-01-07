@@ -7,6 +7,7 @@ import { atom, useAtom } from 'jotai';
 import { GoogleLogin } from 'react-google-login';
 import { UserContext } from "../../contexts/UserContext";
 import Modal from "../../components/Modal/Modal";
+import Modal3 from "../../components/Modal3/Modal3"
 
 const textAtom = atom([])
 const validateEmail = (email) => {
@@ -26,6 +27,7 @@ function Login({ onClose }) {
   const [name, setName]=useAtom(textAtom);
   const [emailError, setEmailError] = useState("");
   const [openModal,setOpenModal]= useState(false);
+  const [openModalForgot,setOpenModalForgot]=useState(false);
  
   useEffect(() => {
     if (email !== "") {
@@ -96,6 +98,7 @@ function Login({ onClose }) {
     
     
   };
+ 
   
 
   return (
@@ -119,7 +122,7 @@ function Login({ onClose }) {
         <div className="wrap-fotgot">
           <a
             className="forgot-pass"
-            href="https://www.facebook.com/profile.php?id=100077535672034"
+            onClick={()=> setOpenModalForgot(true)}
           >
             Forgot Password?
           </a>
@@ -179,6 +182,17 @@ function Login({ onClose }) {
         stylebtn={{ justifyContent: "space-around" }}
        
       ></Modal>
+        <Modal3 className="Modal-Error"
+         style={{ left: "0px" }}
+        openModal={openModalForgot}
+        content="Enter your email"
+        onCancel={() => setOpenModalForgot(false)}
+       
+
+       
+        stylebtn={{ justifyContent: "space-around" }}
+       
+      ></Modal3>
     </div>
   );
 }
