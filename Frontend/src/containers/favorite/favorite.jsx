@@ -8,6 +8,7 @@ import { Link } from "react-router-dom";
 import ProfileUser from "../../components/Profile-User/ProfileUser";
 import Modal from "../../components/Modal/Modal"
 import { useContext } from "react";
+import axios from 'axios';
 
 
 import React, { useState, useEffect } from 'react';
@@ -17,10 +18,13 @@ import EmtyPage from "../../assets/EmtyPage.gif";
 
 const Favorite = () => {
     const [isMobile, setIsMobile] = useState(false);
-    const [userInfo, setUserInfo] = useState(JSON.parse(localStorage.getItem('user-info')));
+    const [userInfo,setUserInfo] = useState(JSON.parse(localStorage.getItem('user-info')));
     const [openModal, setOpenModal] = useState(false);
     const {FavoriteCart,  removeFromFavortieCart} = useContext(FavoriteContext);
     const favoriteItems = FavoriteCart || [];
+    const [favoriteProducts, setFavoriteProducts] = useState([]);
+    const [userId, setUserId] = useState(/* initial value */);
+    const [currentPage, setCurrentPage] = useState(/* initial value */);
     const handleLogout = () => {
         localStorage.removeItem('user-info');
         setUserInfo("");
@@ -48,7 +52,26 @@ const Favorite = () => {
             window.removeEventListener("resize", handleResize);
         };
     }, [userInfo]);
-
+    useEffect(() => {
+        axios.get(`http://localhost:8080/api/v1/users/details/${userInfo.id}`, {
+            headers: {
+                'Authorization': `Bearer ${userInfo.token}`,
+            },
+        })
+        .then(response => {
+          if (response.data && response.data.favoriteProducts) {
+            setFavoriteProducts(response.data.favoriteProducts);
+            console.log(response.data.favoriteProducts)
+          } else {
+            console.error('Empty or invalid response data:', response.data);
+          }
+        })
+        .catch(error => {
+            console.error('Error fetching favorite products:', error);
+            // Display a user-friendly error message
+          });
+    }, [currentPage, userInfo.id, userInfo.token]);
+    console.log('Favorite Products:', favoriteProducts);
     return (
         <>
             <Header />
@@ -67,7 +90,7 @@ const Favorite = () => {
                             <div className="repone">Log out</div></div>
 
                     </div>
-                    {favoriteItems.length === 0 ? (
+                    {favoriteProducts.length === 0 ? (
                         <div className="Emty-CartPage-fa">
                             <div className="wrapper-gif-empty-fa">
                                 <img className="gif-empty-fa" src={EmtyPage} alt="Empty Cart" />
@@ -80,13 +103,13 @@ const Favorite = () => {
                         </div>
                     ) : (
                         <div className="Wrapper-Favorite-Product">
-                            {favoriteItems.map((item, index) => (
+                            {favoriteProducts.map((item, index) => (
                                 <FavoriteCard
-                                    key={index}
-                                    title={item.nameProduct}
-                                    colorProduct="Pink"
+                                    key={item.id}
+                                    title={item.name}
                                     price={item.price}
-                                    imgProduct={item.imageUrl}
+                                    // Access the first element of product_images array
+                                    imgProduct={item.product_images.length > 0 ? item.product_images[0].image_url : ""}
                                     onRemove={() => handleRemoveItem(index)}
                                 />
                             ))}

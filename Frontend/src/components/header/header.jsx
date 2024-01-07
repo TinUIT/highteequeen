@@ -158,7 +158,6 @@ function Header(props) {
   useEffect(() => {
     
     if (userInfo && userInfo.userData && userInfo.userData.avatar) {
-      console.log("ttttttttttttttttttttt")
       axios.get(`http://localhost:8080/api/v1/users/avatars/${userInfo.userData.avatar}`, {
         headers: {
           'Authorization': `Bearer ${userInfo.token}`,
@@ -166,11 +165,9 @@ function Header(props) {
         responseType: 'arraybuffer',
       })
         .then(response => {
-          console.log("res: " + response.data)
           const imageBlob = new Blob([response.data], { type: response.headers['content-type'] });
           const imageUrl = URL.createObjectURL(imageBlob);
           setUrl(imageUrl);
-          console.log(imageUrl);
         })
         .catch(error => {
           console.error('Có lỗi khi lấy ảnh!', error);
