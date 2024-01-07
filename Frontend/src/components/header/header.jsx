@@ -45,6 +45,7 @@ function Header(props) {
   const [product, setProduct] = useState(0);
   const [expandedProduct, setExpandedProduct] = useState(null);
   const [NameUser,setNameUser]= useState("");
+  const [image, setImage] = useState(userInfo ? userInfo.userData.avatar : "");
 
   const handleLogout = () => {
     localStorage.removeItem('user-info');
@@ -144,7 +145,7 @@ function Header(props) {
           // Save the user information in local storage
           localStorage.setItem('user-info', JSON.stringify({ ...user, userData: response.data }));
           setNameUser(response.data.fullname); 
-          console.log(NameUser)
+          
 
         })
         .catch(error => {
@@ -152,26 +153,31 @@ function Header(props) {
           console.error('Error fetching user details:', error);
         });
     }
+    
   }, [user.token]);
 
   useEffect(() => {
+    
     if (userInfo && userInfo.userData && userInfo.userData.avatar) {
-      axios.get(`http://localhost:8080/api/v1/users/avatars/${userInfo.userData.avatar}`, {
+      console.log("ttttttttttttttttttttt")
+      axios.get(`http://localhost:8080/api/v1/users/avatars/${image}`, {
         headers: {
           'Authorization': `Bearer ${userInfo.token}`,
         },
         responseType: 'arraybuffer',
       })
         .then(response => {
+          console.log("res: " + response.data)
           const imageBlob = new Blob([response.data], { type: response.headers['content-type'] });
           const imageUrl = URL.createObjectURL(imageBlob);
           setUrl(imageUrl);
+          console.log(imageUrl);
         })
         .catch(error => {
           console.error('Có lỗi khi lấy ảnh!', error);
         });
     }
-  }, [userInfo]);
+  }, []);
 
 
 
@@ -320,7 +326,6 @@ function Header(props) {
                 <div className="div-tap-control">{selectedTab === 4 && <hr className="tap-control" />}</div>
               </NavLink>
             </div>
-            {console.log("selectedTab: ", selectedTab)}
             <div className="control">
               <div className="input-search-container">
                 <input

@@ -68,7 +68,7 @@ function Homepage() {
     const [isselectsee, setisSelectSee] = useState(null);
 
     const getImageUrl = (imageName) => {
-        console.log(`http://localhost:8080/api/v1/products/images/${imageName}`)
+        // console.log(`http://localhost:8080/api/v1/products/images/${imageName}`)
         return `http://localhost:8080/api/v1/products/images/${imageName}`;
     };
 
@@ -107,7 +107,7 @@ function Homepage() {
         axios.get("http://localhost:8080/api/v1/products/best-sellers?page=0&limit=8")
             .then(response => {
                 setBestSeller(response.data.products);
-                console.log("test", response.data);
+                // console.log("test", response.data);
             })
             .catch(error => {
                 console.error('There was an error!', error);
@@ -125,11 +125,11 @@ function Homepage() {
     }, []);
 
     useEffect(() => {
-        console.log("Best seller:" + bestSeller);
+        // console.log("Best seller:" + bestSeller);
     }, [bestSeller]);
 
     useEffect(() => {
-        console.log("product:" + product);
+        // console.log("product:" + product);
     }, [product]);
 
     return (
