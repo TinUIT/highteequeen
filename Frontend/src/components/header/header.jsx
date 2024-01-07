@@ -45,7 +45,6 @@ function Header(props) {
   const [product, setProduct] = useState(0);
   const [expandedProduct, setExpandedProduct] = useState(null);
   const [NameUser,setNameUser]= useState("");
-  const [image, setImage] = useState(userInfo ? userInfo.userData.avatar : "");
 
   const handleLogout = () => {
     localStorage.removeItem('user-info');
@@ -160,7 +159,7 @@ function Header(props) {
     
     if (userInfo && userInfo.userData && userInfo.userData.avatar) {
       console.log("ttttttttttttttttttttt")
-      axios.get(`http://localhost:8080/api/v1/users/avatars/${image}`, {
+      axios.get(`http://localhost:8080/api/v1/users/avatars/${userInfo.userData.avatar}`, {
         headers: {
           'Authorization': `Bearer ${userInfo.token}`,
         },
