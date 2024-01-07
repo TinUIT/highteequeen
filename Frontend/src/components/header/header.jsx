@@ -154,13 +154,25 @@ function Header(props) {
     }
   }, [user.token]);
 
-  // useEffect(() => {
-  //   const storeRef = ref(storage, `Avartar-User/${user.image}`);
-  //   getDownloadURL(storeRef).then((downloadUrl) => {
-  //     console.log("Download URL: ", downloadUrl);
-  //     setUrl(downloadUrl);
-  //   });
-  // },[user])
+  useEffect(() => {
+    if (userInfo.userData.avatar) {
+      axios.get(`http://localhost:8080/api/v1/users/avatars/${userInfo.userData.avatar}`, {
+        headers: {
+          'Authorization': `Bearer ${userInfo.token}`,
+        },
+        responseType: 'arraybuffer',
+      })
+        .then(response => {
+          const imageBlob = new Blob([response.data], { type: response.headers['content-type'] });
+          const imageUrl = URL.createObjectURL(imageBlob);
+          setUrl(imageUrl);
+        })
+        .catch(error => {
+          console.error('Có lỗi khi lấy ảnh!', error);
+        });
+    }
+  }, []);
+
 
 
   return (
