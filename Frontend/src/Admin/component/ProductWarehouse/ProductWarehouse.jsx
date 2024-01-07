@@ -32,7 +32,6 @@ export default function ProductWarehouse() {
   const [productModals, setProductModals] = useState({});
   const [brands, setBrands] = useState([]);
   const [categories, setCategories] = useState([]);
-  // const [bearerToken, setBearerToken] = useState(null);
   const [userInfo, setUserInfoo] = useState(JSON.parse(localStorage.getItem('user-info')));
 
   const getCategoryName = (category_id) => {
