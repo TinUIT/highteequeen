@@ -35,6 +35,8 @@ function OderManage() {
     const [OnProcess, setOnProcess] = useState([]);
     const [Success, setSuccess] = useState([]);
     const [Cancel, setCancel] = useState([]);
+    const [isAccepted, setIsAccepted] = useState(Array(0).fill(false));
+    const [isCancel, setIsCancel] = useState(Array(0).fill(false));
     
 
 
@@ -43,53 +45,6 @@ function OderManage() {
     const [pageCount, setPageCount] = useState(0);
     const itemsPerPage = 5;
 
-    // useEffect(() => {
-    //     console.log("user_infor: ",userInfo);
-
-    //     if (userInfo && userInfo.orders && userInfo.orders.length > 0) {
-    //         const OnProcessPro = userInfo.orders.map((order) => {
-    //             if (order.status === "pending") {
-    //                 return order.orderDetails;
-    //             }
-
-
-    //             return "";
-    //         });
-    //         setOnProcess(OnProcessPro);
-    //     }
-       
-
-    // }, [userInfo]);
-
-    // useEffect(() => {
-    //     console.log("user_infor: ",userInfo);
-    //     if (userInfo && userInfo.orders && userInfo.orders.length > 0) {
-    //         const successPro = userInfo.orders.map((order) => {
-    //             if (order.status === "delivered") {
-    //                 return order.orderDetails;
-    //             }
-
-    //             return "";
-    //         });
-    //         setSuccess(successPro);
-    //     }
-
-    // }, [userInfo]);
-    // useEffect(() => {
-    //     console.log("user_infor: ",userInfo);
-    //     if (userInfo && userInfo.orders && userInfo.orders.length > 0) {
-    //         const CancelsPro = userInfo.orders.map((order) => {
-    //             if (order.status === "deny") {
-    //                 return order.orderDetails;
-    //             }
-
-    //             return "";
-    //         });
-    //         setCancel(CancelsPro);
-
-    //     }
-
-    // }, [userInfo]);
 
 
     const handlePageClick = ({ selected }) => {
@@ -140,6 +95,40 @@ function OderManage() {
             }
           fetchData(apiUrl);
         };
+        const handleUpdateStatus = async (orderId, userId, status_update) => {
+            try {
+              const apiUrl = `http://localhost:8080/api/v1/orders/${orderId}/status`;
+          
+              // Use the Authorization header with the user's token
+              const headers = {
+                accept: 'application/json',
+                Authorization: `Bearer ${userInfo.token}`,
+                'Content-Type': 'application/json',
+              };
+          
+              // Set the new status to "delivered" and provide the user_id
+              const requestData = {
+                status: status_update,
+                user_id: userId,
+              };
+          
+              // Update the local state immediately
+              const updatedListOrder = [...listOrder];
+              updatedListOrder[orderId - 1].status = status_update; // Assuming orderId is 1-indexed
+              setListOrder(updatedListOrder);
+          
+              // Update the local isAccepted state accordingly
+              const newIsAccepted = [...isAccepted];
+              newIsAccepted[orderId - 1] = true; // Assuming orderId is 1-indexed
+              setIsAccepted(newIsAccepted);
+          
+              // Make the API request
+              const response = await axios.put(apiUrl, requestData, { headers });
+              console.log('Order successfully accepted:', response.data);
+            } catch (error) {
+              console.error('Error accepting order:', error);
+            }
+          };
     
         useEffect(() => {
           const   apiUrl = `http://localhost:8080/api/v1/orders/user/${userInfo.id}?page=0&limit=10`;
@@ -304,6 +293,11 @@ function OderManage() {
                                         <div className="all_total_user">
                                             <h3> All total: {order.total_money}</h3>
 
+                                            {order.status === 'pending' && (
+                                                <div className="button_deny">
+                                                    <button onClick={() =>handleUpdateStatus(order.id,order.user_id,'cancelled')}>Cancel</button>
+                                                </div>
+                                            )}
                                         </div>
                                        
                                     </div>
@@ -358,7 +352,11 @@ function OderManage() {
                                     </div>
                                     <div className="all_total_user">
                                         <h3> All total: {order.total_money}</h3>
-
+                                        {order.status === 'pending' && (
+                                                <div className="button_deny">
+                                                    <button onClick={() =>handleUpdateStatus(order.id,order.user_id,'cancelled')}>Cancel</button>
+                                                </div>
+                                            )}
                                     </div>
                                    
                                     </div>

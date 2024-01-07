@@ -20,6 +20,7 @@ import IMGPro5 from '../../assets/PorelessPowderClassicIvory.jpg'
 import IMGPro6 from '../../assets/oncealerPurplle.jpg'
 import IMGPro7 from '../../assets/PressedPowder.jpg'
 import ImgPro8 from '../../assets/EraserConcealer.jpg'
+
 const data = [
     {
       title:"BLACK ROUGE V5",
@@ -67,6 +68,10 @@ function Homepage() {
     const [MostFavoriterProduct, setBestBrandproduct] = useState(0);
     const [isselectsee, setisSelectSee] = useState(null);
 
+
+    const [userInfo, setUserInfo] = useState(JSON.parse(localStorage.getItem('user-info')));
+ 
+
     const getImageUrl = (imageName) => {
         console.log(`http://localhost:8080/api/v1/products/images/${imageName}`)
         return `http://localhost:8080/api/v1/products/images/${imageName}`;
@@ -81,6 +86,8 @@ function Homepage() {
     };
     const handleSaleproduct = (selected, e) => {
         setSaleProduct(selected);
+
+      
     };
     const handleBestSellerproduct = (selectedBest, e) => {
         setBestSellerproduct(selectedBest);
@@ -130,6 +137,7 @@ function Homepage() {
 
     useEffect(() => {
         console.log("product:" + product);
+       
     }, [product]);
 
     return (
