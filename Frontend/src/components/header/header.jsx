@@ -155,7 +155,7 @@ function Header(props) {
   }, [user.token]);
 
   useEffect(() => {
-    if (userInfo.userData.avatar) {
+    if (userInfo && userInfo.userData && userInfo.userData.avatar) {
       axios.get(`http://localhost:8080/api/v1/users/avatars/${userInfo.userData.avatar}`, {
         headers: {
           'Authorization': `Bearer ${userInfo.token}`,
@@ -171,7 +171,7 @@ function Header(props) {
           console.error('Có lỗi khi lấy ảnh!', error);
         });
     }
-  }, []);
+  }, [userInfo]);
 
 
 
