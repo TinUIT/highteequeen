@@ -1,0 +1,192 @@
+.payment_body{
+    width: 100%;
+    float: left;
+    overflow: visible;
+    padding-top: 7%;
+    display: flex;
+}
+.payment_body h3{
+    color: #CD8042;
+}
+@media (max-width: 650px) {
+    .payment_body {
+      display: grid;
+    }
+  }
+#myForm input{
+  
+    border-radius: 5px;
+    border-color: #783b31;
+    width: 300px;
+    margin-top: 10px;
+    
+}
+#myForm {
+   
+    margin-left: 30px;
+   
+}
+#myForm label{
+    width: 80px;
+}
+/* ===============LEFT========== */
+
+.payment_body_left{
+    flex: 1;
+    float: left;
+    padding: 20px;
+    background: #fff;
+    box-sizing: border-box;
+    padding-right: 20px;
+}
+.address_info, .shipping_method, .checkout_method
+{
+    width: 100%;
+    float: left;
+    margin-bottom: 10px;
+    box-shadow: 0 1px 5px 0 rgba(0,0,0,0.49);
+    
+}
+.address_info p{
+    padding-left: 30px;
+}
+.checkout_method p{
+    padding-left: 30px;
+}
+.width_common {
+    width: 100%;
+    float: left;
+}
+.left{
+    float: left;
+}
+.left2{
+    float: left;
+    margin-left: 5%;
+}
+.right{
+    float: right;
+}
+.choose{
+    padding-left: 30px;
+    margin-bottom: 20px;
+    cursor: pointer;
+    position: relative;
+}
+
+/* =============RIGHT=========== */
+.payment_body_right{
+    flex: 1;
+    float: right;
+    padding: 20px;
+    background: #fff;
+}
+.block_check_donhang{
+    width: 100%;
+    float: right;
+    box-shadow: 0 1px 5px 0 rgba(0,0,0,0.49);
+}
+.relative{
+    display: flex;
+    gap: 1rem;
+    padding-top: 10px;
+    width: 100%;
+    float: left;
+    justify-content: end;
+}
+
+.donhang_tamtinh{
+    padding-top: 10px;
+    padding-bottom: 10px;
+    width: 100%;
+    float: left;
+}
+.form-control{
+    background-color: #fff;
+    background-image: none;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    color: #555;
+    display: block;
+    font-size: 14px;
+    height: 40px;
+    line-height: 1.42857;
+    padding: 6px 40px 6px 12px;
+    width: 60%;
+}
+.btn_chuasudung, .btn_site_2{
+    width: 25%;
+    height: 50px;
+    background: #CD8042;
+    color: #fff;
+    border: 0;
+    position: relative;
+    right: 1px;
+    top: 1px;
+    border-radius: 10px;
+    cursor: pointer;
+}
+.btn_dathang{
+    display: flex;
+    justify-content: end;
+}
+.btn_chuasudung:hover, .btn_site_2:hover{
+    background: #783b31
+}
+/* ======đơn hàng====== */
+.list_donhang .thumb_donhang{
+    width: 12%;
+    padding: 0 10px;
+    float: left;
+    margin: 0;
+}
+.list_donhang .thumb_donhang img{
+    border-radius: 5px;
+}
+
+.list_donhang{
+    padding-top: 10px;
+    padding-bottom: 10px;
+    width: 100%;
+    float: left;
+    border-bottom: 1px dotted #eaeaea;
+    display: flex;
+}
+.info_donhang{
+    width: 70%;
+    float: left;
+}
+
+.modalvoucher{
+    position: fixed;
+    top: 20%;
+    left: 40%;
+  width: 30%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgb(244, 232, 213);
+  z-index: 999;
+  padding: 2% 0;
+  border-radius: 10px;
+  
+}
+
+.modalvoucher .all_voucher{
+    /* display: flex; */
+    justify-items: center;
+}
+.modalvoucher #btn_close{
+    background-color: #CD8042;
+    border: none;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-size: 15px;
+    justify-items: center;
+}
+
+.modalvoucher #btn_close:hover{
+    color:#783b31;
+    background-color: #fff;
+}

@@ -20,6 +20,7 @@ function Productdetail  (props) {
   const { productId } = props;
   const {sales}=props;
   const {image}=props;
+  console.log("props",props);
   const [userInfo,setUserInfo] = useState(JSON.parse(localStorage.getItem('user-info')));
 
   const [countProduct, setCountProduct] = useState(1);
@@ -30,6 +31,7 @@ function Productdetail  (props) {
   const handleFavorite = () => {
     if (user.id) {
       const product = { productId, nameProduct, price, imageUrl, quantity: countProduct };
+      console.log("props",props);
   
       axios.put(`http://localhost:8080/api/v1/products/favorites/add?userId=${user.id}&productId=${productId}`, product, {
         headers: {
