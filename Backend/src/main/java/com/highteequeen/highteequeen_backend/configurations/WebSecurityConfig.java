@@ -44,6 +44,7 @@ public class WebSecurityConfig {
                                     String.format("%s/users/login", apiPrefix),
                                     String.format("%s/users/forgot_password", apiPrefix),
                                     String.format("%s/users/activate/**", apiPrefix),
+                                    String.format("%s/users/avatars/**", apiPrefix),
                                     "/reset_password**",
 
                                     "/api-docs",

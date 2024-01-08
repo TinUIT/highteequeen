@@ -32,7 +32,6 @@ export default function ProductWarehouse() {
   const [productModals, setProductModals] = useState({});
   const [brands, setBrands] = useState([]);
   const [categories, setCategories] = useState([]);
-  // const [bearerToken, setBearerToken] = useState(null);
   const [userInfo, setUserInfoo] = useState(JSON.parse(localStorage.getItem('user-info')));
 
   const getCategoryName = (category_id) => {
@@ -234,19 +233,23 @@ export default function ProductWarehouse() {
                   <TableCell align="left">
                     <div className="Product-img-admin">
                       <div className="wrapper-img-admin-add">
-                        
-                          {item.product_images.map((image, index) => (
-                            <div className="wrapper-item-img">
+
+                        {item.product_images.map((image, index) => (
+                          <div className="wrapper-item-img">
                             <img key={index} className="Img-Admin-add" src={"http://localhost:8080/api/v1/products/images/" + image.image_url} alt={`Product ${index}`} />
-                            </div>
-                          ))}
-                        
+                          </div>
+                        ))}
+
                       </div>
                     </div>
                   </TableCell>
                   <TableCell align="left">{getCategoryName(item.category_id)}</TableCell>
                   <TableCell align="left">{getBrandName(item.brand_id)}</TableCell>
-                  <TableCell align="left">{item.description}</TableCell>
+                  <TableCell align="left">
+                    {item.description.length > 50
+                      ? `${item.description.slice(0, 70)}...`
+                      : item.description}
+                  </TableCell>
                   <TableCell align="left">{item.inStock}</TableCell>
                   <TableCell align="left">{item.salesCount}</TableCell>
                   <TableCell align="left">{item.discountPercent}</TableCell>

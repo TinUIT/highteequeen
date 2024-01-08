@@ -44,7 +44,14 @@ function Header(props) {
   const { TileProduct, setTitleProduct } = props;
   const [product, setProduct] = useState(0);
   const [expandedProduct, setExpandedProduct] = useState(null);
-  const [NameUser,setNameUser]= useState("");
+  const [NameUser, setNameUser] = useState("");
+
+  // const { selectedCategory, setSelectedCategory } = props;
+  const handleCategoryClick = (categoryName) => {
+    // setSelectedCategory(categoryName);
+    // Gọi hàm để lọc sản phẩm ở trang ProductPage
+    props.handleFilterCategoryName(categoryName);
+  };
 
   const handleLogout = () => {
     localStorage.removeItem('user-info');
@@ -101,21 +108,32 @@ function Header(props) {
 
 
   useEffect(() => {
-    if (user.role == "ADMIN") {
-      console.log("testbug")
-      window.location.href = "/admin";
+    
+    // if (user.role == "ADMIN") {
+    //   console.log("testbug")
+    //   window.location.href = "/admin";
 
-    }
+
     if (searchTerm) {
-      axios.get(`http://localhost:8080/api/products/search/autocomplete?name=${searchTerm}`)
-        .then(res => {
-          setSearchResults(res.data);
+      axios.get('http://localhost:8080/api/v1/products', {
+           headers: {
+          'Authorization': `Bearer ${userInfo?.token || ''}`,
+        },
+      })
+        .then(response => {
+          // Handle the response, set search results, or perform other actions
+          console.log(response.data);
+          setSearchResults(response.data); // Assuming response.data contains the search results
         })
-        .catch(err => console.error(err));
+        .catch(error => {
+          // Handle the error
+          console.error(error);
+        });
     } else {
       setSearchResults([]);
     }
-  }, [searchTerm]);
+  }, [searchTerm, userInfo?.token]);
+  
 
   const handleSelectProduct = (selectedIndexed, e) => {
     setProduct(selectedIndexed);
@@ -143,8 +161,8 @@ function Header(props) {
 
           // Save the user information in local storage
           localStorage.setItem('user-info', JSON.stringify({ ...user, userData: response.data }));
-          setNameUser(response.data.fullname); 
-          
+          setNameUser(response.data.fullname);
+
 
         })
         .catch(error => {
@@ -152,13 +170,12 @@ function Header(props) {
           console.error('Error fetching user details:', error);
         });
     }
-    
+
   }, [user.token]);
 
   useEffect(() => {
-    
+
     if (userInfo && userInfo.userData && userInfo.userData.avatar) {
-      console.log("ttttttttttttttttttttt")
       axios.get(`http://localhost:8080/api/v1/users/avatars/${userInfo.userData.avatar}`, {
         headers: {
           'Authorization': `Bearer ${userInfo.token}`,
@@ -166,11 +183,9 @@ function Header(props) {
         responseType: 'arraybuffer',
       })
         .then(response => {
-          console.log("res: " + response.data)
           const imageBlob = new Blob([response.data], { type: response.headers['content-type'] });
           const imageUrl = URL.createObjectURL(imageBlob);
           setUrl(imageUrl);
-          console.log(imageUrl);
         })
         .catch(error => {
           console.error('Có lỗi khi lấy ảnh!', error);
@@ -198,14 +213,14 @@ function Header(props) {
             </button></Link>
           {user.message ?
             (<>
-             
-                <button
-                  className="RegisterButton"
-                  onClick={handleProfileClick}
-                >
-                  {NameUser} {/* Lấy tên người dùng từ userData.fullname */}
-                </button>
-              
+
+              <button
+                className="RegisterButton"
+                onClick={handleProfileClick}
+              >
+                {NameUser} {/* Lấy tên người dùng từ userData.fullname */}
+              </button>
+
               <HLCard>
                 <HLDropdown overlay={menu} trigger={["click"]}>
                   <Avatar
@@ -258,13 +273,16 @@ function Header(props) {
                     onClick={() => {
                       handleExpandProduct(0);
                       setTitleProduct("Blush");
+                      handleCategoryClick("Blush");
                     }}>
-                    Blush</Link>
+                    Blush
+                  </Link>
                   <Link to="/product"
                     expanded={expandedProduct === 1}
                     onClick={() => {
                       handleExpandProduct(1);
                       setTitleProduct("Cleanser");
+                      handleCategoryClick("Cleanser");
                     }}>
                     Cleanser</Link>
                   <Link to="/product"
@@ -272,6 +290,7 @@ function Header(props) {
                     onClick={() => {
                       handleExpandProduct(2);
                       setTitleProduct("Eyeshadow");
+                      handleCategoryClick("Eyeshadow");
                     }}>
                     Eyeshadow</Link>
                   <Link to="/product"
@@ -279,6 +298,7 @@ function Header(props) {
                     onClick={() => {
                       handleExpandProduct(3);
                       setTitleProduct("Toner");
+                      handleCategoryClick("Toner");
                     }}>
                     Toner</Link>
                   <Link to="/product"
@@ -286,6 +306,7 @@ function Header(props) {
                     onClick={() => {
                       handleExpandProduct(4);
                       setTitleProduct("Lipstick");
+                      handleCategoryClick("Lipstick");
                     }}>
                     Lipstick</Link>
                   <Link to="/product"
@@ -293,6 +314,7 @@ function Header(props) {
                     onClick={() => {
                       handleExpandProduct(5);
                       setTitleProduct("Powder");
+                      handleCategoryClick("Powder");
                     }}>
                     Powder</Link>
                   <Link to="/product"
@@ -300,6 +322,7 @@ function Header(props) {
                     onClick={() => {
                       handleExpandProduct(6);
                       setTitleProduct("Eyeliner");
+                      handleCategoryClick("Eyeliner");
                     }}>
                     Eyeliner</Link>
                   <Link to="/product"
@@ -307,6 +330,7 @@ function Header(props) {
                     onClick={() => {
                       handleExpandProduct(7);
                       setTitleProduct("Primer");
+                      handleCategoryClick("Primer");
                     }}>
                     Primer</Link>
 

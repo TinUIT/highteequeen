@@ -70,6 +70,7 @@ public class UserService implements IUserService {
                 .password(userDTO.getPassword())
                 .address(userDTO.getAddress())
                 .dateOfBirth(userDTO.getDateOfBirth())
+                .avatar("default-avatar-image.jpg")
                 .facebookAccountId(userDTO.getFacebookAccountId())
                 .googleAccountId(userDTO.getGoogleAccountId())
                 .create_at(now)

@@ -1,5 +1,6 @@
 package com.highteequeen.highteequeen_backend.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -54,5 +55,8 @@ public class Product extends BaseEntity{
     @Column(name = "discount_percent")
     private float discountPercent;
 
-    
+    @JsonManagedReference
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<CartItem> cartItems = new HashSet<>();
+
 }
