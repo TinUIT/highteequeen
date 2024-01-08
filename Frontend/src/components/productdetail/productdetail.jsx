@@ -82,15 +82,15 @@ function Productdetail  (props) {
       <div className='Background-ProducdetailtName'  state={{ nameProduct: props.nameProduct, price : props.price, image: props.image, description:props.description, productId: props.productId }}>  
       <div className='ProducdetailtName'>
       <div className='Name-product'>{props.nameProduct}</div>
-      <div className='Price-product'>${props.price}</div>
-      {/* {props.discountPercent===0 ? 
+      {/* <div className='Price-product'>${props.price}</div> */}
+     {discountPercent===0 ? 
       (<div className='Price-product'>${props.price}</div>):
       (
         <div className='wrapper-Product-seller'>
 
           <div className='Priceof Price-old'>${props.price}</div>
-          <div className='Priceof Price-seller'>${props.price - props.discountPercent}</div>
-        </div>)} */}
+          <div className='Priceof Price-seller'>${props.price - (discountPercent/100)*props.price}</div>
+        </div>)}
      
       <div className='wrapper-button'>
         <div className="wrapper-star">
