@@ -3,6 +3,7 @@ import { CartContext } from "../../contexts/CartContext";
 import Modal from "../Modal/Modal";
 import deleteIcon from "../../assets/delete-btn.png";
 import "./CardComplete.css";
+import { Link } from 'react-router-dom';
 // import { getStorage, ref, getDownloadURL } from "firebase/storage";
 // import {app} from "../../firebase/firebase";
 import axios from "axios";
@@ -12,17 +13,24 @@ const CardComplete = ({ productId, nameProduct, price, imageUrl, quantity, onRem
   const [openModal, setOpenModal] = useState(false);
   const [openModalCancel, setopenModalCancel] = useState(false);
   // const [imageUrlFirebase, setImageUrlFirebase] = useState(Image);
-  console.log("CardComplete",Image)
+  const [fetchedImageUrl, setFetchedImageUrl] = useState(null);
+  const [userInfo, setUserInfo] = useState(JSON.parse(localStorage.getItem('user-info')));
+  
+ 
   
 
   const { addToCart } = useContext(CartContext);
 
   const handleUpdateCart = (amount) => {
     setCountProduct(countProduct + amount);
-    const product = { nameProduct, price, imageUrl, quantity: amount };
+    const product = { nameProduct, price, Image, quantity: amount };
     addToCart(product);
   };
-  
+
+  //  const getImageUrl = (imageName) => {
+  //       console.log(`http://localhost:8080/api/v1/products/images/${imageName}`)
+  //       return `http://localhost:8080/api/v1/products/images/${imageName}`;
+  //   };
 
   const handleConfirmRemove = () => {
     setOpenModal(false);
@@ -40,11 +48,43 @@ const CardComplete = ({ productId, nameProduct, price, imageUrl, quantity, onRem
   //     setImageUrlFirebase(url);
   //   });
   // }, [isFirebase, Image]);
+  useEffect(() => {
+    const fetchImage = async () => {
+      try {
+        const response = await axios.get(`http://localhost:8080/api/v1/products/images/${Image}`, {
+          headers: {
+            accept: '*',
+            Authorization: `Bearer ${userInfo.token}`,
+          },
+        });
+        setFetchedImageUrl(response.data.url);
+        console.log('Image:', Image);
+        console.log('Fetched Image URL:', response.data.url);
+      } catch (error) {
+        console.error('Error fetching image:', error);
+      }
+    };
+  
+    if (Image) {
+      fetchImage();
+    }
+  }, [Image, userInfo.token]);
+  
+
 
   return (
     <div className="container-cardcomplete">
       <div className="cardcomplete-left">
-        <img className="productcard-image"  alt="product" />
+        {/* <img className="productcard-image"  alt="product" /> */}
+      
+      {/* <div className="productcard-image" style={{ backgroundImage: `url( ${Image})` }}></div> */}
+      {fetchedImageUrl ? (
+          <div className="productcard-image" style={{ backgroundImage: `url(${fetchedImageUrl})` }}></div>
+        ) : (
+          <div>Loading...</div>
+        )}
+  
+        
         <div className="productcomplete-desc">
           <h6 className="productcomplete-content">{nameProduct}</h6>
           <p className="productcomplete-content productcomplete-price">${price}</p>

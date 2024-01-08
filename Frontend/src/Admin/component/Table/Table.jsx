@@ -59,9 +59,6 @@ export default function BasicTable() {
   const [isAccepted, setIsAccepted] = useState(Array(0).fill(false));
   const [isCancel, setIsCancel] = useState(Array(0).fill(false));
   const [userInfo, setUserInfo] = useState(JSON.parse(localStorage.getItem('user-info')));
-
-
-
   
   const [listOrder, setListOrder] = useState([]);
   const [ID, setID] = useState();

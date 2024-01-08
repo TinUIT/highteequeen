@@ -18,9 +18,9 @@ function Productdetail  (props) {
   const { nameProduct = "" } = props;
   const { price } =  props;
   const { productId } = props;
-  // const {sales}=props;
+  const {sales}=props;
   const {image}=props;
-  const {discountPercent}=props;
+  console.log("props",props);
   const [userInfo,setUserInfo] = useState(JSON.parse(localStorage.getItem('user-info')));
 
   const [countProduct, setCountProduct] = useState(1);
@@ -31,6 +31,7 @@ function Productdetail  (props) {
   const handleFavorite = () => {
     if (user.id) {
       const product = { productId, nameProduct, price, imageUrl, quantity: countProduct };
+      console.log("props",props);
   
       axios.put(`http://localhost:8080/api/v1/products/favorites/add?userId=${user.id}&productId=${productId}`, product, {
         headers: {
@@ -80,15 +81,15 @@ function Productdetail  (props) {
       <div className='Background-ProducdetailtName'  state={{ nameProduct: props.nameProduct, price : props.price, image: props.image, description:props.description, productId: props.productId }}>  
       <div className='ProducdetailtName'>
       <div className='Name-product'>{props.nameProduct}</div>
-      <div className='Price-product'>${props.price}</div>
-      {/* {props.discountPercent===0 ? 
+      {sales===0 ? 
       (<div className='Price-product'>${props.price}</div>):
       (
         <div className='wrapper-Product-seller'>
 
           <div className='Priceof Price-old'>${props.price}</div>
-          <div className='Priceof Price-seller'>${props.price - props.discountPercent}</div>
-        </div>)} */}
+          <div className='Priceof Price-seller'>${salePro}</div>
+
+        </div>)}
      
       <div className='wrapper-button'>
         <div className="wrapper-star">
