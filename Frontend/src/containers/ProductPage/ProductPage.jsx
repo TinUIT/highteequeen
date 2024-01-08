@@ -45,16 +45,16 @@ const ProductPage = () => {
         setSelectedButton(buttonName);
         switch (buttonName) {
             case 'Best-seller':
-                setApiEndpoint("http://localhost:8080/api/v1/products/best-sellers");
+                setApiEndpoint("http://localhost:8080/api/v1/products/best-sellers?page=0&limit=10");
                 break;
             case 'Discount':
-                setApiEndpoint("http://localhost:8080/api/v1/products/sales");
+                setApiEndpoint("http://localhost:8080/api/v1/products/discounted?page=0&limit=10");
                 break;
             case 'Low-price':
-                setApiEndpoint("http://localhost:8080/api/v1/products/low-price");
+                setApiEndpoint("http://localhost:8080/api/v1/products?category_id=0&brand_id=0&page=0&limit=10&priceSort=asc");
                 break;
             case 'High-price':
-                setApiEndpoint("http://localhost:8080/api/v1/products/high-price");
+                setApiEndpoint("http://localhost:8080/api/v1/products?&category_id=0&brand_id=0&page=0&limit=10&priceSort=des");
                 break;
             default:
                 setApiEndpoint("http://localhost:8080/api/v1/products");
@@ -262,6 +262,7 @@ const ProductPage = () => {
                         image={getImageUrl(product.product_images[0]?.image_url || product.thumbnail)}
                         productId={product.id}
                         sales={product.salesCount}
+                        discountPercent={product.discountPercent}
                     />
                 ))}
             </div>
