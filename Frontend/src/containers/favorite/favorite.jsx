@@ -105,11 +105,11 @@ const Favorite = () => {
                         <div className="Wrapper-Favorite-Product">
                             {favoriteProducts.map((item, index) => (
                                 <FavoriteCard
-                                    key={item.id}
+                                    productId={item.id}
                                     title={item.name}
                                     price={item.price}
                                     // Access the first element of product_images array
-                                    imgProduct={item.product_images.length > 0 ? item.product_images[0].image_url : ""}
+                                    imageUrl={item.product_images.length > 0 ? item.product_images[0].image_url : ""}
                                     onRemove={() => handleRemoveItem(index)}
                                 />
                             ))}
