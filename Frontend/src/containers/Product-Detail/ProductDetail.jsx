@@ -16,6 +16,7 @@ import { Dialog } from "@material-ui/core";
 // import { Modal } from "react-bootstrap";
 import Modal from "../../components/Modal/Modal";
 import Uncomment from "../../assets/Uncomment.gif"
+import { useNavigate } from 'react-router-dom';
 
 
 const ProductDetail = () => {
@@ -46,7 +47,7 @@ const ProductDetail = () => {
 
 
   const [odersdetailProductName, setOdersdetailProductName] = useState([]);
-
+  const navigate = useNavigate();
 
   useEffect(() => {
 
@@ -62,14 +63,9 @@ const ProductDetail = () => {
       setOdersdetailProductName(productNameList);
       const NameProductInList = productNameList.includes(nameProduct);
       setisNameProductInList(NameProductInList)
-
-
     }
 
   }, [userInfo, nameProduct]);
-
-
-
 
   useEffect(() => {
     axios.get(`${apiEndpoint}?page=${currentPage}&size=8`)
@@ -80,18 +76,19 @@ const ProductDetail = () => {
       .catch(error => {
         console.error('There was an error!', error);
       });
+      
   }, [currentPage, apiEndpoint]);
 
-  useEffect(() => {
-    axios.get(`http://localhost:8080/api/review/product/${productId}`)
-      .then(response => {
-        setReviews(response.data);
+  // useEffect(() => {
+  //   axios.get(`http://localhost:8080/api/review/product/${productId}`)
+  //     .then(response => {
+  //       setReviews(response.data);
 
-      })
-      .catch(error => {
-        console.error('There was an error!', error);
-      });
-  }, []);
+  //     })
+  //     .catch(error => {
+  //       console.error('There was an error!', error);
+  //     });
+  // }, []);
 
   const handleReviewSubmit = (event) => {
     if (!customerId) {
@@ -164,6 +161,20 @@ const ProductDetail = () => {
     }
     else { setOpenPopupLogin(true) }
   };
+
+  const handleBuyButtonClick = () => {
+    const productData = {
+      product_id: productId,
+      product_num: countProduct,
+      
+    };
+    console.log("productData",productData);
+    // Navigate to PaymentOrder with data
+    navigate('/payment-order', { state: { productData } });
+  };
+
+
+
   const commetexample = [
     {
       name: "ABCD",
@@ -268,7 +279,7 @@ const ProductDetail = () => {
                 </div>
                 <div className="productdetail-btn">
                   <button className="btn-cta btn-add" onClick={handleAddToCart} >Add to card</button>
-                  <button className="btn-cta btn-buy">Buy</button>
+                  <button className="btn-cta btn-buy" onClick={handleBuyButtonClick}>Buy</button>
                 </div>
               </div>
             </section>

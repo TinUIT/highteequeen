@@ -143,6 +143,11 @@ function OderManage() {
         setOpenModal(false);
         window.location.href = "/";
     };
+    const getImageUrl = (imageName) => {
+        console.log(`http://localhost:8080/api/v1/products/images/${imageName}`)
+        return `http://localhost:8080/api/v1/products/images/${imageName}`;
+    };
+
     const dataExample = [
         {
             title: "Half n Half Water Glow Season 2",
@@ -279,7 +284,9 @@ function OderManage() {
                                                         nameProduct={orderDetail.product.name}
                                                         colorProduct={orderDetail.color}
                                                         price={orderDetail.price}
-                                                        Image={orderDetail.product.thumbnail}
+                                                        
+                                                        image={`http://localhost:8080/api/v1/products/images/${(orderDetail.product.thumbnail)}`} 
+                                                        // image={getImageUrl(orderDetail.product.thumbnail)} 
                                                         isChooseNumProduct={orderDetail.numberOfProducts}
                                                         number={orderDetail.numberOfProducts}
                                                         isCancel={false}
@@ -339,7 +346,8 @@ function OderManage() {
                                                     nameProduct={orderDetail.product.name}
                                                     colorProduct={orderDetail.color}
                                                     price={orderDetail.price}
-                                                    Image={orderDetail.product.thumbnail}
+                                                   
+                                                    image={orderDetail.product.thumbnail} 
                                                     isChooseNumProduct={orderDetail.numberOfProducts}
                                                     number={orderDetail.numberOfProducts}
                                                     isCancel={false}
@@ -398,6 +406,7 @@ function OderManage() {
                                                     colorProduct={orderDetail.color}
                                                     price={orderDetail.price}
                                                     Image={orderDetail.product.thumbnail}
+                                                   
                                                     isChooseNumProduct={orderDetail.numberOfProducts}
                                                     number={orderDetail.numberOfProducts}
                                                     isCancel={false}
@@ -450,6 +459,7 @@ function OderManage() {
                                                     nameProduct={orderDetail.product.name}
                                                     colorProduct={orderDetail.color}
                                                     price={orderDetail.price}
+                                                    
                                                     Image={orderDetail.product.thumbnail}
                                                     isChooseNumProduct={orderDetail.numberOfProducts}
                                                     number={orderDetail.numberOfProducts}

@@ -15,6 +15,7 @@ import Favorite from "./containers/favorite/favorite";
 import OderManage from "./containers/OderManage/OderManage";
 import Slidebar from "./Admin/component/Slidebar/Slidebar";
 import PaymentPayPal from "./containers/PaymentPaypal/PaymentPaypal";
+import PaymentOrder from "./containers/PaymentPaypal/Payment_order";
 
 function App() {
   return (
@@ -35,6 +36,7 @@ function App() {
       <Route path="/admin" element={<Slidebar/>} />
       <Route path="/payment-method" element={<PaymentPayPal/>} />
       
+      <Route path="/payment-order" element={<PaymentOrder />} />
     </Routes>
   );
 }

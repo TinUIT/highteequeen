@@ -70,6 +70,7 @@ public class UserService implements IUserService {
                 .password(userDTO.getPassword())
                 .address(userDTO.getAddress())
                 .dateOfBirth(userDTO.getDateOfBirth())
+                .avatar("default-avatar-image.jpg")
                 .facebookAccountId(userDTO.getFacebookAccountId())
                 .googleAccountId(userDTO.getGoogleAccountId())
                 .create_at(now)
@@ -161,6 +162,17 @@ public class UserService implements IUserService {
                 .orElseThrow(() -> new DataNotFoundException("Product not found"));
 
         user.getFavoriteProducts().add(product);
+        userRepository.save(user);
+    }
+
+    @Override
+    public void removeProductToFavorites(Long userId, Long productId) throws DataNotFoundException {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new DataNotFoundException("User not found"));
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new DataNotFoundException("Product not found"));
+
+        user.getFavoriteProducts().remove(product);
         userRepository.save(user);
     }
 
