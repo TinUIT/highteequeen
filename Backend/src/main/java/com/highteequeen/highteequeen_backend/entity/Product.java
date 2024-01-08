@@ -1,5 +1,6 @@
 package com.highteequeen.highteequeen_backend.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
@@ -43,6 +44,7 @@ public class Product extends BaseEntity{
     private Category category;
 
     @ManyToMany(mappedBy = "favoriteProducts")
+    @JsonBackReference
     private Set<User> favoritedByUsers = new HashSet<>();
 
     @ManyToOne

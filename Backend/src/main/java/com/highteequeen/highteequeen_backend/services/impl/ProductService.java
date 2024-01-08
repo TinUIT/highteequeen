@@ -2,17 +2,16 @@ package com.highteequeen.highteequeen_backend.services.impl;
 
 import com.highteequeen.highteequeen_backend.dtos.ProductDTO;
 import com.highteequeen.highteequeen_backend.dtos.ProductImageDTO;
-import com.highteequeen.highteequeen_backend.entity.Brand;
-import com.highteequeen.highteequeen_backend.entity.Category;
-import com.highteequeen.highteequeen_backend.entity.Product;
-import com.highteequeen.highteequeen_backend.entity.ProductImage;
+import com.highteequeen.highteequeen_backend.entity.*;
 import com.highteequeen.highteequeen_backend.exeptions.DataNotFoundException;
 import com.highteequeen.highteequeen_backend.exeptions.InvalidParamException;
+import com.highteequeen.highteequeen_backend.helper.MailInfo;
 import com.highteequeen.highteequeen_backend.repositories.BrandRepository;
 import com.highteequeen.highteequeen_backend.repositories.CategoryRepository;
 import com.highteequeen.highteequeen_backend.repositories.ProductImageRepository;
 import com.highteequeen.highteequeen_backend.repositories.ProductRepository;
 import com.highteequeen.highteequeen_backend.responses.ProductResponse;
+import com.highteequeen.highteequeen_backend.services.IMailService;
 import com.highteequeen.highteequeen_backend.services.IProductService;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -41,6 +40,7 @@ public class ProductService implements IProductService {
     private final CategoryRepository categoryRepository;
     private final BrandRepository brandRepository;
     private final ProductImageRepository productImageRepository;
+    private final IMailService mailer;
     private static String UPLOADS_FOLDER = "uploads";
     @Override
     @Transactional
@@ -121,6 +121,17 @@ public class ProductService implements IProductService {
             }
             if(productDTO.getDiscountPercent() > 0) {
                 existingProduct.setDiscountPercent(productDTO.getDiscountPercent());
+                Set<User> users = existingProduct.getFavoritedByUsers();
+                for(User user : users) {
+                    String from = "ptt102002@gmail.com";
+                    String to = user.getEmail();
+                    String subject = "Welcome!";
+                    String body = "Highteequeen xin chào! Sản phẩm " + existingProduct.getName() +
+                            " đang được giảm giá. Nhanh tay để chọn sản phẩm với giá tốt nhất.";
+                    MailInfo mail = new MailInfo(from, to, subject, body);
+                    mailer.send(mail);
+                }
+
             }
             return productRepository.save(existingProduct);
         }
