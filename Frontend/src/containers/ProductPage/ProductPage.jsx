@@ -14,14 +14,16 @@ const ProductPage = () => {
     const [products, setProducts] = useState([]);
     const [currentPage, setCurrentPage] = useState(0);
     const [totalPages, setTotalPages] = useState(0);
-    const [TileProduct,setTitleProduct]=useState();
-    const [apiEndpoint, setApiEndpoint] = useState("http://localhost:8080/api/v1/products");
+    const [TileProduct, setTitleProduct] = useState();
+    const [apiEndpoint, setApiEndpoint] = useState(`http://localhost:8080/api/v1/products?page=${currentPage}&limit=6`);
     const location = useLocation();
     const isselectsee = location?.state?.isselectsee;
-    const [selectedButton, setSelectedButton] = useState(null);
+    const [selectedButton, setSelectedButton] = useState('All');
+    const [categories, setCategories] = useState([]);
+
     useEffect(() => {
-       
-        axios.get(`${apiEndpoint}?page=${currentPage}&limit=6`)
+
+        axios.get(`${apiEndpoint}`)
             .then(response => {
                 setProducts(response.data.products);
                 setTotalPages(response.data.totalPages);
@@ -30,10 +32,14 @@ const ProductPage = () => {
             .catch(error => {
                 console.error('There was an error!', error);
             });
-    }, [currentPage, apiEndpoint]);
+    }, [apiEndpoint]);
 
     const [product, setProduct] = useState(0);
     const [expandedProduct, setExpandedProduct] = useState(null); // New state for expanded product
+
+    const getImageUrl = (imageName) => {
+        return `http://localhost:8080/api/v1/products/images/${imageName}`;
+    };
 
     const handleButtonClick = (buttonName) => {
         setSelectedButton(buttonName);
@@ -56,7 +62,7 @@ const ProductPage = () => {
     };
 
     const handleFilterCategoryName = (categoryName) => {
-        setApiEndpoint(`http://localhost:8080/api/v1/products/category/${categoryName}`)
+        setApiEndpoint(`http://localhost:8080/api/v1/products?page=${currentPage}&limit=6&category_id=${getCategoryId(categoryName)}`);
     }
     const handleSelectProduct = (selectedIndexed, e) => {
         setProduct(selectedIndexed);
@@ -93,13 +99,28 @@ const ProductPage = () => {
     }
     const pageNumbers = [...Array((endPage + 1) - startPage).keys()].map(i => startPage + i);
 
+    useEffect(() => {
+        axios.get(`http://localhost:8080/api/v1/categories?page=0&limit=10`)
+            .then(response => {
+                setCategories(response.data);
+            })
+            .catch(error => {
+                console.error('There was an error fetching brands!', error);
+            });
+    }, []);
+
+    const getCategoryId = (category_name) => {
+        const category = categories.find(category => category.name === category_name);
+        console.log(category);
+        return category ? category.id : "";
+    };
 
     return (
         <>
-            <Header setTitleProduct={setTitleProduct} />
+            <Header setTitleProduct={setTitleProduct} handleFilterCategoryName={handleFilterCategoryName} />
             <div className="Wrapper-HeaderProduct-ProductPage">
                 <Carousel activeIndex={product} onSelect={handleSelectProduct} >
-                   
+
                     <Carousel.Item >
                         <div className='Wrapper-Product-page'>
                             <div className="wrapper-header-product">
@@ -107,8 +128,11 @@ const ProductPage = () => {
                                     background={require("../../assets/Blush.png")}
                                     nameProduct="Blush"
                                     expanded={expandedProduct === 8}
-                                    onClick={() => {handleExpandProduct(8);
-                                        setTitleProduct("Blush");}}
+                                    onClick={() => {
+                                        handleFilterCategoryName("Blush");
+                                        handleExpandProduct(8);
+                                        setTitleProduct("Blush");
+                                    }}
                                 />
                             </div>
                             <div className="wrapper-header-product">
@@ -116,8 +140,11 @@ const ProductPage = () => {
                                     background={require("../../assets/Cleanser.jpg")}
                                     nameProduct="Cleanser"
                                     expanded={expandedProduct === 1}
-                                    onClick={() => { handleExpandProduct(1);
-                                            setTitleProduct("Cleanser");}}
+                                    onClick={() => {
+                                        handleExpandProduct(1);
+                                        handleFilterCategoryName("Cleanser");
+                                        setTitleProduct("Cleanser");
+                                    }}
                                 />
                             </div>
                             <div className="wrapper-header-product">
@@ -125,19 +152,23 @@ const ProductPage = () => {
                                     background={require("../../assets/Eye.png")}
                                     nameProduct="Eyeshadow"
                                     expanded={expandedProduct === 2}
-                                    onClick={() => {handleExpandProduct(2);
-                                        setTitleProduct("Eyeshadow");}}
+                                    onClick={() => {
+                                        handleFilterCategoryName("Eyeshadow");
+                                        handleExpandProduct(2);
+                                        setTitleProduct("Eyeshadow");
+                                    }}
                                 />
                             </div>
                             <div className="wrapper-header-product">
                                 <Headerproduct
                                     background={require("../../assets/Toner.jpg")}
                                     nameProduct="Toner"
-                                    expanded={expandedProduct ===3}
+                                    expanded={expandedProduct === 3}
                                     onClick={() => {
                                         handleExpandProduct(3);
+                                        handleFilterCategoryName("Toner");
                                         setTitleProduct("Toner");
-                                      }}
+                                    }}
                                 />
                             </div>
                         </div>
@@ -149,9 +180,11 @@ const ProductPage = () => {
                                     background={require("../../assets/Lips.png")}
                                     nameProduct="Liptick"
                                     expanded={expandedProduct === 4}
-                                    onClick={() => {handleExpandProduct(4);
+                                    onClick={() => {
+                                        handleExpandProduct(4);
                                         handleFilterCategoryName("Lipstick");
-                                        setTitleProduct("Lipstick");}}
+                                        setTitleProduct("Lipstick");
+                                    }}
                                 />
                             </div>
                             <div className="wrapper-header-product">
@@ -159,9 +192,11 @@ const ProductPage = () => {
                                     background={require("../../assets/Powder.jpg")}
                                     nameProduct="Powder"
                                     expanded={expandedProduct === 5}
-                                    onClick={() => { handleExpandProduct(5);
-                                            handleFilterCategoryName("Powder");
-                                            setTitleProduct("Powder");}}
+                                    onClick={() => {
+                                        handleExpandProduct(5);
+                                        handleFilterCategoryName("Powder");
+                                        setTitleProduct("Powder");
+                                    }}
                                 />
                             </div>
                             <div className="wrapper-header-product">
@@ -169,8 +204,11 @@ const ProductPage = () => {
                                     background={require("../../assets/EyeLine.jpg")}
                                     nameProduct="Eyeliner"
                                     expanded={expandedProduct === 6}
-                                    onClick={() => {handleExpandProduct(6);
-                                        setTitleProduct("Eyeliner");}}
+                                    onClick={() => {
+                                        handleFilterCategoryName("Eyeliner");
+                                        handleExpandProduct(6);
+                                        setTitleProduct("Eyeliner");
+                                    }}
                                 />
                             </div>
                             <div className="wrapper-header-product">
@@ -179,9 +217,10 @@ const ProductPage = () => {
                                     nameProduct="Primer"
                                     expanded={expandedProduct === 7}
                                     onClick={() => {
+                                        handleFilterCategoryName("Primer");
                                         handleExpandProduct(7);
                                         setTitleProduct("Primer");
-                                      }}
+                                    }}
                                 />
                             </div>
                         </div>
@@ -215,10 +254,15 @@ const ProductPage = () => {
 
             </div>
             <div className="Wrapper-Product-detail">
-                {products.map(product => (
-                    <div className="Product-detail">
-                       <Productdetail  nameProduct={product.name} description={product.description} price={product.price} image={product.image} productId={product.id} sales={product.sales}/>
-                        </div>
+                {products.slice(0, 4).map(product => (
+                    <Productdetail
+                        nameProduct={product.name}
+                        description={product.description}
+                        price={product.price}
+                        image={getImageUrl(product.product_images[0]?.image_url || product.thumbnail)}
+                        productId={product.id}
+                        sales={product.salesCount}
+                    />
                 ))}
             </div>
 
@@ -246,7 +290,7 @@ const ProductPage = () => {
             </div>
 
             <Footer />
-           
+
         </>
     );
 };
