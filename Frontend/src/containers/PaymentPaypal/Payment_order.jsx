@@ -2,7 +2,7 @@
 import "./Payment_order.css";
 import axios from "axios";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect , useRef } from "react";
 
 // import CardOrder from "../components/CardOrder";
 // import OrderDetail from "../components/OrderDetail";
@@ -102,6 +102,25 @@ const PaymentOrder = () => {
       }
     };
 
+    // const fetchData = async (url) => {
+    //   try {
+    //     const response = await axios.get(url, {
+    //       headers: {
+    //         accept: '*',
+    //         Authorization: `Bearer ${userInfo.token}`,
+    //       },
+    //     });
+    //     setProduct(response.data);
+    //     // console.log("product",response.data);
+    //     console.log('Product:', product);
+    //     console.log("price: ", product?.price);
+
+    //   } catch (error) {
+    //     console.error('There was an error!', error);
+    //   }
+  
+    // };
+    
     const fetchData = async (url) => {
       try {
         const response = await axios.get(url, {
@@ -111,20 +130,27 @@ const PaymentOrder = () => {
           },
         });
         setProduct(response.data);
-
+        console.log('Product:', response.data);
       } catch (error) {
         console.error('There was an error!', error);
       }
-  
     };
     useEffect(() => {
-      // Check if productData.product_id is available before fetching data
-      if (productData.product_id) {
-        const apiUrl = `http://localhost:8080/api/v1/products/${productData.product_id}`;
-        fetchData(apiUrl);
-        console.log('Product Data:', productData);
-      }
-    }, [productData.product_id]);
+      
+      const apiUrl = `http://localhost:8080/api/v1/products/${productData.product_id}`;
+      fetchData(apiUrl);
+  
+    }, []);
+    // useEffect(() => {
+    //   // Check if productData.product_id is available before fetching data
+    //   if (productData.product_id) {
+    //     const apiUrl = `http://localhost:8080/api/v1/products/${productData.product_id}`;
+    //     fetchData(apiUrl);
+        
+
+
+    //   }
+    // }, [productData.product_id]);
   
     const calculateOrderTotal = () => {
       // if (product && !isNaN(product.price) && !isNaN(product.product_num)) {
@@ -134,7 +160,7 @@ const PaymentOrder = () => {
       // return 0;
 
 
-      return productData.product_num * product.price;
+      return productData.product_num * product?.price;
     };
     
 
@@ -216,8 +242,8 @@ const PaymentOrder = () => {
               colorProduct={"a"}
               price={product?.price || 0}
               Image={product?.thumbnail || ''}
-              isChooseNumProduct={product?.product_num|| 1}
-              number={product?.product_num|| 1}
+              isChooseNumProduct={productData.product_num|| 1}
+              number={productData.product_num|| 1}
               isCancel={false}
               isClose={false}
               key={"2"}
