@@ -1,8 +1,9 @@
 
 import "./Payment_order.css";
 import axios from "axios";
-
+import Modal from "../../components/Modal/Modal";
 import React, { useState, useEffect , useRef } from "react";
+import { Link, useHistory } from "react-router-dom";
 
 // import CardOrder from "../components/CardOrder";
 // import OrderDetail from "../components/OrderDetail";
@@ -17,6 +18,7 @@ import CardComplete from "../../components/CardComplete/CardComplete";
 const PaymentOrder = () => {
   const [inputValue, setInputValue] = useState('');
   const [selectedVoucher, setSelectedVoucher] = useState(null);
+  const [openModal,setOpenModal]= useState(false);
   
   const location = useLocation();
 
@@ -27,7 +29,7 @@ const PaymentOrder = () => {
 
   const { productData } = location.state || {};
   console.log('Product Data:', productData);
-  const ShippingMethod = () => {
+ 
     const [selectedOption, setSelectedOption] = useState("");// Lấy những sản phẩm đã chọn bên giỏ hàng.
     const handleOptionSelect = (event) => {
       setSelectedOption(event.target.value);
@@ -60,34 +62,37 @@ const PaymentOrder = () => {
       setIsModalOpen(true);
     };
     const handleAddOrder = async () => {
-      try {
-        const address = document.getElementById('address').value;
+      const address = document.getElementById('address').value;
         const note = document.getElementById('Note').value;
   
         const orderData = {
-          email: userInfo.username,
-          address: address,
-          note: note,
-          status: "pending",
-          user_id: userInfo.userData.id,
-          fullname: userInfo.userData.fullname,
-          phone_number: userInfo.userData.phone_number,
-          total_money: productData.product_num * product.price,
-          shipping_method: selectedOption, // Add the selected shipping method
-          shipping_address: address,
-          shipping_date: "2024-01-08", // Update with the actual shipping date
-          payment_method: "Cash on Delivery", // Update with the actual payment method
-          cart_items: [
+          'email': userInfo.username,
+          'address': address,
+          'note': note,
+          'status': "pending",
+          'user_id': userInfo.userData.id,
+          'fullname': userInfo.userData.fullname,
+          'phone_number': userInfo.userData.phone_number,
+          'total_money': productData.product_num * product?.price,
+          // shipping_method: selectedOption, // Add the selected shipping method
+          'shipping_method': "m",
+          'shipping_address': address,
+          'shipping_date': "2024-01-08", // Update with the actual shipping date
+          'payment_method': "Cash on Delivery", // Update with the actual payment method
+          'cart_items': [
             {
               product_id: productData.product_id,
               quantity: productData.product_num, // Update with the actual quantity
             },
           ],
         };
+        console.log("orderData  ",orderData);
+      try {
+        
   
         const response = await axios.post('http://localhost:8080/api/v1/orders', orderData, {
           headers: {
-            accept: '*',
+            
             Authorization: `Bearer ${userInfo.token}`,
             'Content-Type': 'application/json',
           },
@@ -95,12 +100,15 @@ const PaymentOrder = () => {
   
         // Handle the response, e.g., show a success message
         console.log('Order placed successfully:', response.data);
+        setOpenModal(true);
   
       } catch (error) {
         // Handle errors, e.g., show an error message
         console.error('Error placing order:', error);
       }
     };
+    
+    
 
     // const fetchData = async (url) => {
     //   try {
@@ -130,16 +138,15 @@ const PaymentOrder = () => {
           },
         });
         setProduct(response.data);
-        console.log('Product:', response.data);
+        // console.log('Product:', response.data);
       } catch (error) {
         console.error('There was an error!', error);
       }
     };
     useEffect(() => {
-      
+      console.log("useEffect");
       const apiUrl = `http://localhost:8080/api/v1/products/${productData.product_id}`;
       fetchData(apiUrl);
-  
     }, []);
     // useEffect(() => {
     //   // Check if productData.product_id is available before fetching data
@@ -162,7 +169,9 @@ const PaymentOrder = () => {
 
       return productData.product_num * product?.price;
     };
-    
+    const handleModalYes = () => {
+      window.location.href = "/";
+    };
 
 
     return (
@@ -286,7 +295,7 @@ const PaymentOrder = () => {
                           className="btn_site_2"
                           onClick={handleAddOrder}
                         >
-                          Đặt Hàng
+                          Send Order
                         </button>
                       </div>
                     </div>
@@ -304,11 +313,22 @@ const PaymentOrder = () => {
             </div>
           </div>
         )}
+         <Modal className="Modal-Order"
+         style={{ left: "0px" }}
+        openModal={openModal}
+        content="Successfull"
+        onYes={handleModalYes}
+
+        CancelShow={false}
+        stylebtn={{ justifyContent: "space-around" }}
+       
+      > <Link to="/order-management">
+      <button>Yes</button>
+    </Link></Modal>
       </>
     );
   };
 
-  return <ShippingMethod />;
-};
+  
 
 export default PaymentOrder;

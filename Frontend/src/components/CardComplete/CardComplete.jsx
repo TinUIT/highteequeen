@@ -68,7 +68,7 @@ const CardComplete = ({ productId, nameProduct, price, imageUrl, quantity, onRem
     if (Image) {
       fetchImage();
     }
-  }, [Image, userInfo.token]);
+  }, []);
   
 
 
