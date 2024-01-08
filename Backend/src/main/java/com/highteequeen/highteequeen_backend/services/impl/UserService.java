@@ -165,6 +165,17 @@ public class UserService implements IUserService {
         userRepository.save(user);
     }
 
+    @Override
+    public void removeProductToFavorites(Long userId, Long productId) throws DataNotFoundException {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new DataNotFoundException("User not found"));
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new DataNotFoundException("Product not found"));
+
+        user.getFavoriteProducts().remove(product);
+        userRepository.save(user);
+    }
+
 
     @Override
     @Transactional

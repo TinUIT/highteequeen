@@ -17,6 +17,9 @@ public interface IUserService {
     User getUserDetailsFromToken(String token) throws Exception;
     User getUserDetailsFromRefreshToken(String token) throws Exception;
     User updateUser(Long userId, UpdateUserDTO updatedUserDTO) throws Exception;
+
+    void removeProductToFavorites(Long userId, Long productId) throws DataNotFoundException;
+
     void resetPassword(Long userId, String newPassword)
             throws InvalidPasswordException, DataNotFoundException ;
     public void blockOrEnable(Long userId, Boolean active) throws DataNotFoundException;

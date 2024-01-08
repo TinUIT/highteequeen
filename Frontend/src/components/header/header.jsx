@@ -115,15 +115,13 @@ function Header(props) {
 
 
     if (searchTerm) {
-      axios.get('http://localhost:8080/api/v1/products', {
-           headers: {
-          'Authorization': `Bearer ${userInfo?.token || ''}`,
-        },
+      axios.get(`http://localhost:8080/api/v1/products?keyword=${searchTerm}&category_id=0&brand_id=0&page=0&limit=10&priceSort=asc`, {
+          
       })
         .then(response => {
           // Handle the response, set search results, or perform other actions
           console.log(response.data);
-          setSearchResults(response.data); // Assuming response.data contains the search results
+          setSearchResults(response.data.products); // Assuming response.data contains the search results
         })
         .catch(error => {
           // Handle the error

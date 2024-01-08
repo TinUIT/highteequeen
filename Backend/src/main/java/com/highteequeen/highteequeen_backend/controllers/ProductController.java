@@ -329,4 +329,11 @@ public class ProductController {
         userService.addProductToFavorites(userId, productId);
         return ResponseEntity.ok("Product added to favorites");
     }
+
+    @DeleteMapping("/favorites/add")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public ResponseEntity<String> removeFavorite(@RequestParam Long userId, @RequestParam Long productId) throws DataNotFoundException {
+        userService.removeProductToFavorites(userId, productId);
+        return ResponseEntity.ok("Product removed to favorites");
+    }
 }
