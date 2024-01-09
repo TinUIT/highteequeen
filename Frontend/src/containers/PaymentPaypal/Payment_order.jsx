@@ -262,7 +262,7 @@ const PaymentOrder = () => {
                
                 <div className="donhang_tamtinh">
                   <div className="tamtinh_price">
-                  <h3>Tạm tính: {calculateOrderTotal()} VNĐ</h3>
+                  <h3>Price: {calculateOrderTotal()} </h3>
                   </div>
                   <div className="relative">
                     <input
@@ -278,15 +278,16 @@ const PaymentOrder = () => {
                       type="button"
                       onClick={handleModal}
                     >
-                      Chọn voucher
+                      Choose voucher
                     </button>
                   </div>
                   <div>
                     <div className="block_total_order width_common ">
                       <div className="thanhtien width_common space_bottom_10">
-                        <div className="tamtinh_left left"><h3>Thành tiền:</h3></div>
+                        <div className="tamtinh_left left"></div>
                         <div className="tamtinh_right right txt_color_2">
-                          {/* <h3>{calculateTotalPrice() - (calculateTotalPrice() * (inputValue / 100))} VNĐ</h3> */}
+                       
+                        
                         </div>
                       </div>
                       <div className="btn_dathang width_common space_bottom_10">
