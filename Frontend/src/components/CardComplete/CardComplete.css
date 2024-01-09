@@ -20,7 +20,9 @@
   margin-right: 20px;
   max-height: 100%;
 }
+.productcard-image img{width: 100%;
 
+}
 .productcomplete-content {
   font-family: 'Nunito Sans', sans-serif;
   font-style: normal;

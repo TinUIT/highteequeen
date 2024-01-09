@@ -225,6 +225,7 @@ function Homepage() {
                                 image={getImageUrl(product.product_images[0]?.image_url || product.thumbnail)} 
                                 productId={product.id} 
                                 sales={product.salesCount} 
+                                discountPercent={product.discountPercent}
                             />
                             ))}
                         </div>
@@ -268,6 +269,7 @@ function Homepage() {
                                     image={getImageUrl(product.product_images[0]?.image_url || product.thumbnail)} 
                                     productId={product.id} 
                                     sales={product.salesCount} 
+                                    discountPercent={product.discountPercent}
                                 />
                             ))}
                         </div>
@@ -291,13 +293,14 @@ function Homepage() {
                                 image={getImageUrl(product.product_images[0]?.image_url || product.thumbnail)} 
                                 productId={product.id} 
                                 sales={product.salesCount} 
+                                discountPercent={product.discountPercent}
                             />                            ))}
                         </div>
                     </Carousel.Item>
                     <Carousel.Item >
                         <div className='Sale-Product'>
                             {mostFavorite.slice(4, 8).map(product => (
-                                <Productdetail nameProduct={product.name} description={product.description} price={product.price} image={product.image} productId={product.id} sales={product.sales} />
+                                <Productdetail nameProduct={product.name} description={product.description} price={product.price} image={product.image} productId={product.id} sales={product.sales} discountPercent={product.discountPercent} />
                             ))}
                         </div>
                     </Carousel.Item>

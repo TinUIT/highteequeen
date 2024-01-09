@@ -205,7 +205,7 @@ useEffect(() => {
           </TableContainer>
           <div className="all_total">
          
-            <h2>All total: ${all_total} VNĐ</h2>
+            <h2>All total: ${all_total}</h2>
           </div>
 
         </div>

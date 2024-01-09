@@ -13,7 +13,7 @@ const CardComplete = ({ productId, nameProduct, price, imageUrl, quantity, onRem
   const [openModal, setOpenModal] = useState(false);
   const [openModalCancel, setopenModalCancel] = useState(false);
   // const [imageUrlFirebase, setImageUrlFirebase] = useState(Image);
-  const [fetchedImageUrl, setFetchedImageUrl] = useState(null);
+  const [fetchedImageUrl, setFetchedImageUrl] = useState(`http://localhost:8080/api/v1/products/images/${Image}`);
   const [userInfo, setUserInfo] = useState(JSON.parse(localStorage.getItem('user-info')));
   
  
@@ -57,9 +57,9 @@ const CardComplete = ({ productId, nameProduct, price, imageUrl, quantity, onRem
             Authorization: `Bearer ${userInfo.token}`,
           },
         });
-        setFetchedImageUrl(response.data.url);
+        setFetchedImageUrl(`http://localhost:8080/api/v1/products/images/${Image}`);
         console.log('Image:', Image);
-        console.log('Fetched Image URL:', response.data.url);
+        console.log('Fetched Image URL:', fetchedImageUrl);
       } catch (error) {
         console.error('Error fetching image:', error);
       }
@@ -68,7 +68,7 @@ const CardComplete = ({ productId, nameProduct, price, imageUrl, quantity, onRem
     if (Image) {
       fetchImage();
     }
-  }, []);
+  }, [fetchedImageUrl]);
   
 
 
@@ -78,12 +78,9 @@ const CardComplete = ({ productId, nameProduct, price, imageUrl, quantity, onRem
         {/* <img className="productcard-image"  alt="product" /> */}
       
       {/* <div className="productcard-image" style={{ backgroundImage: `url( ${Image})` }}></div> */}
-      {fetchedImageUrl ? (
-          <div className="productcard-image" style={{ backgroundImage: `url(${fetchedImageUrl})` }}></div>
-        ) : (
-          <div>Loading...</div>
-        )}
-  
+      <div className="productcard-image">
+        <img src={`http://localhost:8080/api/v1/products/images/${Image}`}></img>
+        </div>  
         
         <div className="productcomplete-desc">
           <h6 className="productcomplete-content">{nameProduct}</h6>

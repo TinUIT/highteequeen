@@ -492,17 +492,17 @@ function OderManage() {
                                     <div className="ruler_status" key={order.id}>
                                         {/* Display order information */}
                                         <div id="id">
-                                            <div id="id_inf">Mã số đơn hàng: {order.id} </div>
+                                            <div id="id_inf">Order Id: {order.id} </div>
                                         </div>
                                         <div id="tradeDate">
-                                            <div id="tradeDate_inf"> Ngày đặt hàng: {`${order.order_date[2]} / ${order.order_date[1]} / ${order.order_date[0]}`}</div>
+                                            <div id="tradeDate_inf"> date: {`${order.order_date[2]} / ${order.order_date[1]} / ${order.order_date[0]}`}</div>
                                         </div>
                                         <div id="status">
-                                            <div id="status_inf"> Trạng thái: {order.status}</div>
+                                            <div id="status_inf"> Status: {order.status}</div>
                                         </div>
                                         <div>
                                             <button id="btn_detail">
-                                                Xem chi tiết <i className="fa-solid fa-arrow-right"></i>
+                                                See detail <i className="fa-solid fa-arrow-right"></i>
                                             </button>
                                         </div>
                                     </div>

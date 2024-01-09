@@ -87,7 +87,7 @@ export default function ProductWarehouse() {
 
 
   useEffect(() => {
-    axios.get(`http://localhost:8080/api/v1/products?page=${currentPage}&size=5`, {
+    axios.get(`http://localhost:8080/api/v1/products?page=${currentPage}&limit=5`, {
       headers: {
         'Authorization': `Bearer ${userInfo.token}`,
       },
@@ -149,7 +149,7 @@ export default function ProductWarehouse() {
       },
     })
       .then(response => {
-        return axios.get(`http://localhost:8080/api/v1/products?page=${currentPage}&size=5`, {
+        return axios.get(`http://localhost:8080/api/v1/products?page=${currentPage}&limit=5`, {
           headers: {
             'Authorization': `Bearer ${userInfo.token}`,
           },

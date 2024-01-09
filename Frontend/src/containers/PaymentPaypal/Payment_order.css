@@ -143,7 +143,9 @@
 .list_donhang .thumb_donhang img{
     border-radius: 5px;
 }
-
+.btn_dathang{
+    margin-top: 20px;
+}
 .list_donhang{
     padding-top: 10px;
     padding-bottom: 10px;
