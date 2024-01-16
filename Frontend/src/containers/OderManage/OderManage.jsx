@@ -285,7 +285,7 @@ function OderManage() {
                                                         colorProduct={orderDetail.color}
                                                         price={orderDetail.price}
                                                         
-                                                        image={`http://localhost:8080/api/v1/products/images/${(orderDetail.product.thumbnail)}`} 
+                                                        Image={orderDetail.product.thumbnail}
                                                         // image={getImageUrl(orderDetail.product.thumbnail)} 
                                                         isChooseNumProduct={orderDetail.numberOfProducts}
                                                         number={orderDetail.numberOfProducts}
@@ -347,7 +347,7 @@ function OderManage() {
                                                     colorProduct={orderDetail.color}
                                                     price={orderDetail.price}
                                                    
-                                                    image={orderDetail.product.thumbnail} 
+                                                    Image={orderDetail.product.thumbnail} 
                                                     isChooseNumProduct={orderDetail.numberOfProducts}
                                                     number={orderDetail.numberOfProducts}
                                                     isCancel={false}

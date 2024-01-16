@@ -79,7 +79,7 @@ const CardComplete = ({ productId, nameProduct, price, imageUrl, quantity, onRem
       
       {/* <div className="productcard-image" style={{ backgroundImage: `url( ${Image})` }}></div> */}
       <div className="productcard-image">
-        <img src={`http://localhost:8080/api/v1/products/images/${Image}`}></img>
+        <img src={fetchedImageUrl}></img>
         </div>  
         
         <div className="productcomplete-desc">
