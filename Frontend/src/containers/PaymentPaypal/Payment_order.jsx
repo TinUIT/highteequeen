@@ -77,7 +77,7 @@ const PaymentOrder = () => {
           // shipping_method: selectedOption, // Add the selected shipping method
           'shipping_method': "m",
           'shipping_address': address,
-          'shipping_date': "2024-01-08", // Update with the actual shipping date
+          'shipping_date': new Date().toISOString().split('T')[0], // Update with the actual shipping date
           'payment_method': "Cash on Delivery", // Update with the actual payment method
           'cart_items': [
             {
