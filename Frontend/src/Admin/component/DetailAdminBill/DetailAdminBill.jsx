@@ -18,61 +18,14 @@ import Item from "antd/es/list/Item";
 
 
 
-function createData(productId, productName, price, quantity, Subtotal,trackingId) {
-  return {
-    productId,
-    productName,
-    price,
-    quantity,
-    Subtotal,
-    trackingId,
-  };
-}
-const dataExample = [
-  {
-    productId: "#123",
-    productName: "Half n Half Water Glow Season 1 ",    
-    price: "$150",
-    quantity: 1,
-    Subtotal:25,
-    trackingId:18908424,
-    
-  },
-  {
-    productId: "#123",
-    productName: "Half n Half Water Glow Season 1 ",    
-    price: "$150",
-    quantity: 2,
-    Subtotal:30,
-    trackingId:18908422,
-  },
-  {
-    productId: "#123",
-    productName: "Half n Half Water Glow Season 1 ",    
-    price: "$150",
-    quantity: 3,
-    Subtotal:50,
-    trackingId:18908424,
-  },
-  
-];
-const Userexample = [
-    {
-      NameUser: "ABC",
-      Email: "ABC@gmail.com ",    
-      Phone:"0123456789",
-      Address:"Dd,tp,Bt"
-            
-    },]
-
 // export default function DetailAdminBill(props) {
-  export default function DetailAdminBill({ product, onClose, ID, ID_User,all_total }) {
+  export default function DetailAdminBill({ order, onClose, ID, ID_User,all_total }) {
   const [isAddingProduct, setIsAddingProduct] = React.useState(false);
   const [posts, setPosts] = useState([]);
   // const  [ContentBill,setContentBill]=useState([]);
   // const [DetailContentBill,setDetailContentBill]=useState([]);
-  const [ContentBill, setContentBill] = useState([product]);
-  const [DetailContentBill, setDetailContentBill] = useState(dataExample);
+  // const [ContentBill, setContentBill] = useState([product]);
+  // const [DetailContentBill, setDetailContentBill] = useState(dataExample);
   const [userInfo, setUserInfo] = useState([]);
   const [orderDetails, setOrderDetails] = useState([]);
 
@@ -116,6 +69,7 @@ useEffect(() => {
       console.log('Order Details Response:', orderDetailsResponse.data);
       console.log('user Response:', userInfoRespone.data);
       console.log('user id: ',ID_User);
+      console.log ("order: ",order);
 
     } catch (error) {
       console.error('Error:', error.message);
@@ -191,8 +145,11 @@ useEffect(() => {
                       key={product.id}
                       sx={{ "&:last-child td, &:last-child th": { border: 0 } }} >
                       <TableCell align="left">{product.id}</TableCell>
-                      {/* Use the correct property name for product name */}
-                      <TableCell align="left">{/* Replace with product.productName or relevant property */}</TableCell>
+                   
+                      {order.order_details.map((detail, index) => (
+                        <TableCell key={index} align="left">{detail.product.name}</TableCell>
+                      ))}
+
                       <TableCell align="left">{product.price}</TableCell>
                       <TableCell align="left">{product.number_of_products}</TableCell>
                       <TableCell align="left">{product.total_money}</TableCell>

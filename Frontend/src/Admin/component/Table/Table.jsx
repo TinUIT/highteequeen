@@ -67,7 +67,7 @@ export default function BasicTable() {
     setSelectedProduct(product);
     setID(index);
     console.log("ID", index);
-    console.log(product);
+    console.log("product select",product);
   };
 
   const handleCloseDetail = () => {
@@ -270,7 +270,7 @@ export default function BasicTable() {
                   <TableRow>
                     <TableCell align="left" colSpan={5}>
                       <DetailAdminBill
-                        product={selectedProduct}
+                        order={selectedProduct}
                         onClose={handleCloseDetail}
                         ID={row.id}
                         ID_User={row.user_id}
