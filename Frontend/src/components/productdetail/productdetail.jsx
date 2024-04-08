@@ -9,6 +9,7 @@ import { FavoriteContext } from '../../contexts/FavoriteContext';
 import { useLocation } from 'react-router-dom';
 import { CartContext } from '../../contexts/CartContext';
 import axios from 'axios';
+import {API_BASE_URL} from "../../api/config" 
 
 function Productdetail  (props) {
   const location = useLocation()
@@ -34,7 +35,7 @@ function Productdetail  (props) {
       const product = { productId, nameProduct, price, imageUrl, quantity: countProduct };
       console.log("props",props);
   
-      axios.put(`http://localhost:8080/api/v1/products/favorites/add?userId=${user.id}&productId=${productId}`, product, {
+      axios.put(`${API_BASE_URL}/products/favorites/add?userId=${user.id}&productId=${productId}`, product, {
         headers: {
           'Authorization': `Bearer ${userInfo.token}`,
           'Content-Type': 'application/json', // Set the content type

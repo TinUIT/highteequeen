@@ -17,6 +17,7 @@ import { Dialog } from "@material-ui/core";
 import Modal from "../../components/Modal/Modal";
 import Uncomment from "../../assets/Uncomment.gif"
 import { useNavigate } from 'react-router-dom';
+import {API_BASE_URL} from "../../api/config"
 
 
 const ProductDetail = () => {
@@ -27,7 +28,7 @@ const ProductDetail = () => {
   const [imageUrl, setImageUrl] = useState(image);
   const [countProduct, setCountProduct] = useState(1);
   const [products, setProducts] = useState([]);
-  const [apiEndpoint, setApiEndpoint] = useState("http://localhost:8080/api/v1/products");
+  const [apiEndpoint, setApiEndpoint] = useState(`${API_BASE_URL}/products`);
   const [totalPages, setTotalPages] = useState(0);
   const [currentPage, setCurrentPage] = useState(0);
   const userInfo = JSON.parse(localStorage.getItem('user-info'));
@@ -135,7 +136,7 @@ const ProductDetail = () => {
   }
 
   useEffect(() => {
-    axios.get(`http://localhost:8080/api/v1/products/${productId}`)
+    axios.get(`${API_BASE_URL}/products/${productId}`)
       .then(response => {
         // setReviews(response.data);
         // Lấy danh sách hình ảnh từ dữ liệu nhận về
@@ -212,10 +213,10 @@ const ProductDetail = () => {
                 ></img>
                 <ul className="producttail-listsuggest">
                   {productImages.map((image, index) => (
-                    <li className="wrap-product-suggest-img" key={index} onClick={() => setImageUrl(`http://localhost:8080/api/v1/products/images/${image.image_url}`)}>
+                    <li className="wrap-product-suggest-img" key={index} onClick={() => setImageUrl(`${API_BASE_URL}/products/images/${image.image_url}`)}>
                       <img
                         className="product-suggest-img"
-                        src={`http://localhost:8080/api/v1/products/images/` + image.image_url}
+                        src={`${API_BASE_URL}/products/images/` + image.image_url}
                         alt={`image product suggest ${index}`}
                       ></img>
                     </li>

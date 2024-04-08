@@ -9,6 +9,7 @@ import { Link } from "react-router-dom";
 
 import { UserContext } from "../../contexts/UserContext";
 import axios from 'axios';
+import {API_BASE_URL} from "../../api/config"
 
 const ProfileUser = () => {
   const [userInfo, setUserInfo] = useState(JSON.parse(localStorage.getItem('user-info')));
@@ -50,7 +51,7 @@ const ProfileUser = () => {
 
   useEffect(() => {
     if (userInfo.userData.avatar) {
-      axios.get(`http://localhost:8080/api/v1/users/avatars/${userInfo.userData.avatar}`, {
+      axios.get(`${API_BASE_URL}/users/avatars/${userInfo.userData.avatar}`, {
         headers: {
           'Authorization': `Bearer ${userInfo.token}`,
         },
@@ -78,7 +79,7 @@ const ProfileUser = () => {
         formData.append('file', newFile);
 
         // Gọi API upload ảnh
-        const response = await axios.post(`http://localhost:8080/api/v1/users/uploads/${userInfo.id}?id=${userInfo.id}&Authorization=${userInfo.token}`, formData, {
+        const response = await axios.post(`${API_BASE_URL}/users/uploads/${userInfo.id}?id=${userInfo.id}&Authorization=${userInfo.token}`, formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
             'Authorization': `Bearer ${userInfo.token}`,

@@ -20,6 +20,7 @@ import IMGPro5 from '../../assets/PorelessPowderClassicIvory.jpg'
 import IMGPro6 from '../../assets/oncealerPurplle.jpg'
 import IMGPro7 from '../../assets/PressedPowder.jpg'
 import ImgPro8 from '../../assets/EraserConcealer.jpg'
+import {API_BASE_URL} from "../../api/config"
 
 const data = [
     {
@@ -74,7 +75,7 @@ function Homepage() {
 
     const getImageUrl = (imageName) => {
         // console.log(`http://localhost:8080/api/v1/products/images/${imageName}`)
-        return `http://localhost:8080/api/v1/products/images/${imageName}`;
+        return `${API_BASE_URL}/products/images/${imageName}`;
     };
 
 
@@ -101,7 +102,7 @@ function Homepage() {
     const [mostFavorite, setBestBrand] = useState([]);
 
     useEffect(() => {
-        axios.get("http://localhost:8080/api/v1/products/discounted?page=0&limit=8")
+        axios.get(`${API_BASE_URL}/products/discounted?page=0&limit=8`)
             .then(response => {
                 setProducts(response.data.products);
             })
@@ -111,7 +112,7 @@ function Homepage() {
     }, []);
 
     useEffect(() => {
-        axios.get("http://localhost:8080/api/v1/products/best-sellers?page=0&limit=8")
+        axios.get(`${API_BASE_URL}/products/best-sellers?page=0&limit=8`)
             .then(response => {
                 setBestSeller(response.data.products);
                 // console.log("test", response.data);
@@ -122,7 +123,7 @@ function Homepage() {
     }, []);
 
     useEffect(() => {
-        axios.get("http://localhost:8080/api/v1/products/most-favorite?page=0&limit=8")
+        axios.get(`${API_BASE_URL}/products/most-favorite?page=0&limit=8`)
             .then(response => {
                 setBestBrand(response.data.products);
             })
