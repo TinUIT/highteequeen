@@ -6,6 +6,7 @@ import Avartar from "../../assets/avatar.png";
 import Form from 'react-bootstrap/Form';
 import React, { useState, useEffect} from 'react';
 import { Link, useH } from "react-router-dom";
+import {API_BASE_URL} from "../../api/config"
 
 // import { getStorage, ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
 // import {app, storage} from "../../firebase/firebase";
@@ -110,7 +111,7 @@ const ProfilePage = () => {
 
     const updateCustomer = async (customerId, customerDto) => {
         try {
-            const response = await axios.put(`http://localhost:8080/api/v1/users/details/${customerId}`, customerDto, {
+            const response = await axios.put(`${API_BASE_URL}/users/details/${customerId}`, customerDto, {
                 headers: {
                     'Authorization': `Bearer ${userInfo.token}`, 
                     'Content-Type': 'application/json',

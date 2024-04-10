@@ -21,7 +21,7 @@ import { UserContext } from "../../contexts/UserContext";
 // import { app, storage } from "../../firebase/firebase";
 import { FavoriteContext } from "../../contexts/FavoriteContext";
 import { NavDropdown } from "react-bootstrap";
-
+import {API_BASE_URL} from "../../api/config"
 
 function Header(props) {
   const [searchTerm, setSearchTerm] = useState('');
@@ -115,7 +115,7 @@ function Header(props) {
 
 
     if (searchTerm) {
-      axios.get(`http://localhost:8080/api/v1/products?keyword=${searchTerm}&category_id=0&brand_id=0&page=0&limit=10&priceSort=asc`, {
+      axios.get(`${API_BASE_URL}/products?keyword=${searchTerm}&category_id=0&brand_id=0&page=0&limit=10&priceSort=asc`, {
           
       })
         .then(response => {
@@ -148,7 +148,7 @@ function Header(props) {
     // Check if user is authenticated
     if (user && user.token) {
       // Make a request to the API to get user details
-      axios.post('http://localhost:8080/api/v1/users/details', {}, {
+      axios.post(`${API_BASE_URL}/users/details`, {}, {
         headers: {
           'Authorization': `Bearer ${user.token}`,
           'accept': '*/*',
@@ -174,7 +174,7 @@ function Header(props) {
   useEffect(() => {
 
     if (userInfo && userInfo.userData && userInfo.userData.avatar) {
-      axios.get(`http://localhost:8080/api/v1/users/avatars/${userInfo.userData.avatar}`, {
+      axios.get(`${API_BASE_URL}/users/avatars/${userInfo.userData.avatar}`, {
         headers: {
           'Authorization': `Bearer ${userInfo.token}`,
         },

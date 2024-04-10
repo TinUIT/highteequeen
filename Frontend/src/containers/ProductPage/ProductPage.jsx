@@ -8,6 +8,7 @@ import React, { useState, useEffect } from 'react';
 import Carousel from 'react-bootstrap/Carousel';
 import axios from "axios";
 import { useLocation } from 'react-router-dom';
+import { API_BASE_URL } from "../../api/config";
 
 
 const ProductPage = () => {
@@ -15,7 +16,7 @@ const ProductPage = () => {
     const [currentPage, setCurrentPage] = useState(0);
     const [totalPages, setTotalPages] = useState(0);
     const [TileProduct, setTitleProduct] = useState();
-    const [apiEndpoint, setApiEndpoint] = useState(`http://localhost:8080/api/v1/products?page=${currentPage}&limit=6`);
+    const [apiEndpoint, setApiEndpoint] = useState(`${API_BASE_URL}/products?page=${currentPage}&limit=6`);
     const location = useLocation();
     const isselectsee = location?.state?.isselectsee;
     const [selectedButton, setSelectedButton] = useState('All');
@@ -38,31 +39,31 @@ const ProductPage = () => {
     const [expandedProduct, setExpandedProduct] = useState(null); // New state for expanded product
 
     const getImageUrl = (imageName) => {
-        return `http://localhost:8080/api/v1/products/images/${imageName}`;
+        return `${API_BASE_URL}/products/images/${imageName}`;
     };
 
     const handleButtonClick = (buttonName) => {
         setSelectedButton(buttonName);
         switch (buttonName) {
             case 'Best-seller':
-                setApiEndpoint("http://localhost:8080/api/v1/products/best-sellers?page=0&limit=10");
+                setApiEndpoint(`${API_BASE_URL}/products/best-sellers?page=0&limit=10`);
                 break;
             case 'Discount':
-                setApiEndpoint("http://localhost:8080/api/v1/products/discounted?page=0&limit=10");
+                setApiEndpoint(`${API_BASE_URL}/products/discounted?page=0&limit=10`);
                 break;
             case 'Low-price':
-                setApiEndpoint("http://localhost:8080/api/v1/products?category_id=0&brand_id=0&page=0&limit=10&priceSort=asc");
+                setApiEndpoint(`${API_BASE_URL}/products?category_id=0&brand_id=0&page=0&limit=10&priceSort=asc`);
                 break;
             case 'High-price':
-                setApiEndpoint("http://localhost:8080/api/v1/products?&category_id=0&brand_id=0&page=0&limit=10&priceSort=des");
+                setApiEndpoint(`${API_BASE_URL}/products?&category_id=0&brand_id=0&page=0&limit=10&priceSort=des`);
                 break;
             default:
-                setApiEndpoint("http://localhost:8080/api/v1/products");
+                setApiEndpoint(`${API_BASE_URL}/products`);
         }
     };
 
     const handleFilterCategoryName = (categoryName) => {
-        setApiEndpoint(`http://localhost:8080/api/v1/products?page=${currentPage}&limit=6&category_id=${getCategoryId(categoryName)}`);
+        setApiEndpoint(`${API_BASE_URL}/products?page=${currentPage}&limit=6&category_id=${getCategoryId(categoryName)}`);
     }
     const handleSelectProduct = (selectedIndexed, e) => {
         setProduct(selectedIndexed);
@@ -100,7 +101,7 @@ const ProductPage = () => {
     const pageNumbers = [...Array((endPage + 1) - startPage).keys()].map(i => startPage + i);
 
     useEffect(() => {
-        axios.get(`http://localhost:8080/api/v1/categories?page=0&limit=10`)
+        axios.get(`${API_BASE_URL}/categories?page=0&limit=10`)
             .then(response => {
                 setCategories(response.data);
             })
