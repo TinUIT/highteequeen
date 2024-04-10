@@ -7,7 +7,8 @@ import { atom, useAtom } from 'jotai';
 import { GoogleLogin } from 'react-google-login';
 import { UserContext } from "../../contexts/UserContext";
 import Modal from "../../components/Modal/Modal";
-import Modal3 from "../../components/Modal3/Modal3"
+import Modal3 from "../../components/Modal3/Modal3";
+import {API_BASE_URL} from "../../api/config"
 
 const textAtom = atom([])
 const validateEmail = (email) => {
@@ -44,7 +45,7 @@ function Login({ onClose }) {
   const responseGoogle = async (response) => {
     // try {
     //   const { tokenId } = response;
-    //   const result = await axios.post('http://localhost:8080/api/v1/auth/google', { tokenId });
+    //   const result = await axios.post(`${API_BASE_URL}/auth/google`, { tokenId });
       
     //   // Handle response here
     //   console.log(result.data);
@@ -64,7 +65,7 @@ function Login({ onClose }) {
     event.preventDefault();
     
     try {
-      const response = await axios.post('http://localhost:8080/api/v1/users/login', {
+      const response = await axios.post(`${API_BASE_URL}/users/login`, {
         email,
         password,
       });

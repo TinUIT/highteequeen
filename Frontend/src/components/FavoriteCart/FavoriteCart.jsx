@@ -3,6 +3,7 @@ import deleteIcon from "../../assets/delete-btn.png"
 import { useState } from "react";
 import Modal from "../Modal/Modal";
 import { Link } from 'react-router-dom';
+import {API_BASE_URL} from "../../api/config"
 
 const FavoriteCard = ({
   title,
@@ -22,9 +23,9 @@ const FavoriteCard = ({
   return (
     <>
       <div className="container-cardcomplete-fa">
-      <Link state={{ nameProduct: title,productId: productId, price, image: `http://localhost:8080/api/v1/products/images/${imageUrl}` }} to="/product-detail">
+      <Link state={{ nameProduct: title,productId: productId, price, image: `${API_BASE_URL}/products/images/${imageUrl}` }} to="/product-detail">
       <div className="cardcomplete-left-fa">
-      <img className="productcard-image-fa" src={`http://localhost:8080/api/v1/products/images/${imageUrl}`} alt="product" />
+      <img className="productcard-image-fa" src={`${API_BASE_URL}/products/images/${imageUrl}`} alt="product" />
         <div className="productcomplete-desc-fa">
           <h6 className="productcomplete-content-fa">{title}</h6>
           <p className="productcomplete-content productcomplete-price-fa">

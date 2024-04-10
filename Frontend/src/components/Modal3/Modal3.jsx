@@ -1,6 +1,7 @@
 import axios from 'axios';
 import "./Modal3.css";
 import React, { useEffect, useState,useContext } from "react";
+import {API_BASE_URL} from "../../api/config"
 
 const Modal3 = ({ openModal, content, onCancel, style, stylebtn, onEmailSubmit }) => {
   const [responseData, setResponseData] = useState(null);
@@ -11,7 +12,7 @@ const Modal3 = ({ openModal, content, onCancel, style, stylebtn, onEmailSubmit }
       const email = document.getElementById('emailInput').value;
 
       // Make API call
-      const response = await axios.post('http://localhost:8080/api/v1/users/forgot_password', {
+      const response = await axios.post(`${API_BASE_URL}/users/forgot_password`, {
         email: email,
       });
 

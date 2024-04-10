@@ -7,6 +7,7 @@ import { GoogleLogin } from 'react-google-login';
 import { UserContext } from "../../contexts/UserContext";
 import SuccessFull from "../../assets/Success.gif"
 import Modal from "../../components/Modal/Modal";
+import {API_BASE_URL} from "../../api/config"
 
 
 function Register({ onClose }) {
@@ -37,7 +38,7 @@ function Register({ onClose }) {
  
   const responseGoogle = async (response) => {
     try {
-      const res = await axios.post('http://localhost:8080/api/v1/auth/register/google', {
+      const res = await axios.post(`${API_BASE_URL}/auth/register/google`, {
         token: response.tokenId,
       });
       console.log(res.data);
@@ -73,7 +74,7 @@ function Register({ onClose }) {
     else {setConfirmPasswordError("")};
     try {
   
-      const response = await axios.post('http://localhost:8080/api/v1/users/register', {
+      const response = await axios.post(`${API_BASE_URL}/users/register`, {
         email: email,
         password: password,
         fullname: fullname,

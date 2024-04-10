@@ -7,13 +7,14 @@ import { Link } from 'react-router-dom';
 // import { getStorage, ref, getDownloadURL } from "firebase/storage";
 // import {app} from "../../firebase/firebase";
 import axios from "axios";
+import {API_BASE_URL} from "../../api/config"
 
 const CardComplete = ({ productId, nameProduct, price, imageUrl, quantity, onRemove, isChooseNumber, number=0, isClose, isCancel,isFirebase,Image,IDproduct }) => {
   const [countProduct, setCountProduct] = useState(quantity);
   const [openModal, setOpenModal] = useState(false);
   const [openModalCancel, setopenModalCancel] = useState(false);
   // const [imageUrlFirebase, setImageUrlFirebase] = useState(Image);
-  const [fetchedImageUrl, setFetchedImageUrl] = useState(`http://localhost:8080/api/v1/products/images/${Image}`);
+  const [fetchedImageUrl, setFetchedImageUrl] = useState(`${API_BASE_URL}/products/images/${Image}`);
   const [userInfo, setUserInfo] = useState(JSON.parse(localStorage.getItem('user-info')));
   
  
@@ -28,8 +29,8 @@ const CardComplete = ({ productId, nameProduct, price, imageUrl, quantity, onRem
   };
 
   //  const getImageUrl = (imageName) => {
-  //       console.log(`http://localhost:8080/api/v1/products/images/${imageName}`)
-  //       return `http://localhost:8080/api/v1/products/images/${imageName}`;
+  //       console.log(`${API_BASE_URL}/products/images/${imageName}`)
+  //       return `${API_BASE_URL}/products/images/${imageName}`;
   //   };
 
   const handleConfirmRemove = () => {
@@ -51,13 +52,13 @@ const CardComplete = ({ productId, nameProduct, price, imageUrl, quantity, onRem
   useEffect(() => {
     const fetchImage = async () => {
       try {
-        const response = await axios.get(`http://localhost:8080/api/v1/products/images/${Image}`, {
+        const response = await axios.get(`${API_BASE_URL}/products/images/${Image}`, {
           headers: {
             accept: '*',
             Authorization: `Bearer ${userInfo.token}`,
           },
         });
-        setFetchedImageUrl(`http://localhost:8080/api/v1/products/images/${Image}`);
+        setFetchedImageUrl(`${API_BASE_URL}/products/images/${Image}`);
         console.log('Image:', Image);
         console.log('Fetched Image URL:', fetchedImageUrl);
       } catch (error) {
