@@ -10,7 +10,7 @@ import ProfileUser from '../../components/Profile-User/ProfileUser';
 import Modal from '../../components/Modal/Modal';
 import { FavoriteContext } from '../../contexts/FavoriteContext';
 import EmtyPage from '../../assets/EmtyPage.gif';
-
+import {API_BASE_URL} from "../../api/config"
 import './favorite.css';
 
 const Favorite = () => {
@@ -40,7 +40,7 @@ const handleRemoveItem = (index, productId, title, price, imageUrl) => {
 
       axios
         .delete(
-          `http://localhost:8080/api/v1/products/favorites/add?userId=${userInfo.id}&productId=${productId}`,
+          `${API_BASE_URL}/products/favorites/add?userId=${userInfo.id}&productId=${productId}`,
           {
             headers: {
               Authorization: `Bearer ${userInfo.token}`,
@@ -50,7 +50,7 @@ const handleRemoveItem = (index, productId, title, price, imageUrl) => {
           }
         )
         .then((response) => {
-          return axios.get(`http://localhost:8080/api/v1/users/details/${userInfo.id}`, {
+          return axios.get(`${API_BASE_URL}/users/details/${userInfo.id}`, {
             headers: {
               Authorization: `Bearer ${userInfo.token}`,
             },
@@ -92,7 +92,7 @@ const handleRemoveItem = (index, productId, title, price, imageUrl) => {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:8080/api/v1/users/details/${userInfo?.id}`, {
+      .get(`${API_BASE_URL}/users/details/${userInfo?.id}`, {
         headers: {
           Authorization: `Bearer ${userInfo?.token}`,
         },

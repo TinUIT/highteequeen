@@ -12,6 +12,7 @@ import ProfileUser from "../../components/Profile-User/ProfileUser";
 import Modal from "../../components/Modal/Modal";
 import axios from 'axios';
 import ReactPaginate from 'react-paginate';
+import {API_BASE_URL} from "../../api/config"
 
 import {
     MDBIcon,
@@ -50,7 +51,7 @@ function OderManage() {
     const handlePageClick = ({ selected }) => {
         const newPage = selected ; // Pagination starts from 0, but your API seems to start from 1
         setCurrentPage(newPage);
-        const apiUrl = `http://localhost:8080/api/v1/orders/user/${userInfo.id}?page=${newPage}&limit=10`;
+        const apiUrl = `${API_BASE_URL}/orders/user/${userInfo.id}?page=${newPage}&limit=10`;
         
         fetchData(apiUrl);
     };
@@ -88,16 +89,16 @@ function OderManage() {
             let apiUrl;
             console.log("keyword",keyword);
             if(keyword=="all orders"){
-                apiUrl = `http://localhost:8080/api/v1/orders/user/${userInfo.id}?page=0&limit=10`;
+                apiUrl = `${API_BASE_URL}/orders/user/${userInfo.id}?page=0&limit=10`;
             }
             else{
-                apiUrl = `http://localhost:8080/api/v1/orders/user/${userInfo.id}?keyword=${keyword}&page=0&limit=10`;
+                apiUrl = `${API_BASE_URL}/orders/user/${userInfo.id}?keyword=${keyword}&page=0&limit=10`;
             }
           fetchData(apiUrl);
         };
         const handleUpdateStatus = async (orderId, userId, status_update) => {
             try {
-              const apiUrl = `http://localhost:8080/api/v1/orders/${orderId}/status`;
+              const apiUrl = `${API_BASE_URL}/v1/orders/${orderId}/status`;
           
               // Use the Authorization header with the user's token
               const headers = {
@@ -131,7 +132,7 @@ function OderManage() {
           };
     
         useEffect(() => {
-          const   apiUrl = `http://localhost:8080/api/v1/orders/user/${userInfo.id}?page=0&limit=10`;
+          const   apiUrl = `${API_BASE_URL}/orders/user/${userInfo.id}?page=0&limit=10`;
       
           fetchData(apiUrl);
           console.log("user_id: ",userInfo.id);
@@ -144,8 +145,8 @@ function OderManage() {
         window.location.href = "/";
     };
     const getImageUrl = (imageName) => {
-        console.log(`http://localhost:8080/api/v1/products/images/${imageName}`)
-        return `http://localhost:8080/api/v1/products/images/${imageName}`;
+        console.log(`${API_BASE_URL}/products/images/${imageName}`)
+        return `${API_BASE_URL}/products/images/${imageName}`;
     };
 
     const dataExample = [

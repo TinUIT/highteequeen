@@ -14,6 +14,7 @@ import { useLocation } from "react-router-dom";
 // import { VoucherData } from "../components/VoucherData";
 // import CardAddressUsed from "../components/CardAddressUsed";
 import CardComplete from "../../components/CardComplete/CardComplete";
+import {API_BASE_URL} from "../../api/config"
 
 const PaymentOrder = () => {
   const [inputValue, setInputValue] = useState('');
@@ -90,7 +91,7 @@ const PaymentOrder = () => {
       try {
         
   
-        const response = await axios.post('http://localhost:8080/api/v1/orders', orderData, {
+        const response = await axios.post('${API_BASE_URL}/orders', orderData, {
           headers: {
             
             Authorization: `Bearer ${userInfo.token}`,
@@ -145,7 +146,7 @@ const PaymentOrder = () => {
     };
     useEffect(() => {
       console.log("useEffect");
-      const apiUrl = `http://localhost:8080/api/v1/products/${productData.product_id}`;
+      const apiUrl = `${API_BASE_URL}/products/${productData.product_id}`;
       fetchData(apiUrl);
     }, []);
     // useEffect(() => {
